@@ -2,14 +2,24 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { Locale } from '@/i18n/translations';
-import { Sprout, Menu, X, Globe, Scale, TrendingUp, Truck, Users, CreditCard, ShieldCheck } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import {
+  Sprout,
+  Globe,
+  Mic,
+  X,
+  ChevronDown,
+} from 'lucide-react';
+import { FarmerVoiceAssistant } from '@/components/farmer/FarmerVoiceAssistant';
+import { MobileNav } from '@/components/layout/MobileNav';
 
 export function Navbar() {
+  const pathname = usePathname();
   const { locale, setLocale, t } = useLanguage();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isVoiceOpen, setIsVoiceOpen] = useState(false);
+  const [isGovernanceOpen, setIsGovernanceOpen] = useState(false);
 
   const languages: { code: Locale; label: string }[] = [
     { code: 'en', label: 'English' },
@@ -18,252 +28,226 @@ export function Navbar() {
     { code: 'hi', label: 'हिन्दी' },
   ];
 
+  const primaryNavItems = [
+    { href: '/farmer', label: t.nav.farmer },
+    { href: '/buyer', label: t.nav.buyer },
+    { href: '/transporter', label: t.nav.transporter },
+    { href: '/markets', label: t.nav.markets },
+    { href: '/calculator', label: t.nav.calculator },
+    { href: '/lots', label: t.nav.lots },
+    { href: '/transactions', label: t.nav.transactions },
+  ];
+
+  const isActive = (href: string) => {
+    if (href === '/') return pathname === '/';
+    return pathname.startsWith(href);
+  };
+
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-emerald-100 shadow-xs">
-      {/* Top Govt / Agricultural Initiative Bar */}
-      <div className="bg-emerald-900 text-emerald-100 px-4 py-1 text-xs font-medium text-center flex items-center justify-between">
-        <div className="container mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="hidden sm:inline">
-              Government of Maharashtra • Agricultural Marketing & Price Discovery
-            </span>
-            <span className="sm:hidden text-center w-full">Govt of Maharashtra • Krishi Panan</span>
-          </div>
-          <div className="hidden md:flex items-center gap-3 text-emerald-200 text-[11px]">
-            <Link href="/inspector" className="hover:text-white transition-colors">Inspector</Link>
-            <span>•</span>
-            <Link href="/disputes" className="hover:text-white transition-colors">Grievances</Link>
-            <span>•</span>
-            <Link href="/admin" className="hover:text-white transition-colors">State Admin</Link>
+    <>
+      <header className="sticky top-0 z-40 bg-[#FFFFFF] border-b border-[#D8D2C4]">
+        {/* Top Government Initiative Header Strip */}
+        <div className="bg-[#1B4332] text-[#EAF2ED] px-4 py-1 text-xs font-medium border-b border-[#2D6A4F]">
+          <div className="container mx-auto max-w-7xl flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="hidden sm:inline">
+                Government of Maharashtra • Agricultural Marketing & Price Discovery
+              </span>
+              <span className="sm:hidden text-center w-full">
+                Govt of Maharashtra • Krishi Panan
+              </span>
+            </div>
+            <div className="hidden md:flex items-center gap-3 text-emerald-200 text-[11px]">
+              <Link href="/inspector" className="hover:text-white transition-colors">
+                {t.nav.inspector}
+              </Link>
+              <span>•</span>
+              <Link href="/disputes" className="hover:text-white transition-colors">
+                {t.nav.disputes}
+              </Link>
+              <span>•</span>
+              <Link href="/admin" className="hover:text-white transition-colors">
+                {t.nav.admin}
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Main Navigation Bar */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          {/* Logo & Identity */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-700 flex items-center justify-center text-white shadow-md group-hover:bg-emerald-800 transition-colors">
-              <Sprout className="w-7 h-7" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-extrabold tracking-tight text-emerald-900">
-                  {t.brand.name}
-                </span>
-                <span className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-semibold border border-amber-200">
-                  MH
-                </span>
+        {/* Main Desktop & Mobile Header Bar */}
+        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo & Identity */}
+            <Link href="/" className="flex items-center gap-2.5 group">
+              <div className="w-10 h-10 rounded-[4px] bg-[#1B4332] flex items-center justify-center text-white transition-colors group-hover:bg-[#2D6A4F]">
+                <Sprout className="w-6 h-6" />
               </div>
-              <p className="text-xs text-gray-500 font-medium hidden sm:block">
-                {t.brand.tagline}
-              </p>
-            </div>
-          </Link>
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xl font-extrabold font-heading tracking-tight text-[#1B4332]">
+                    {t.brand.name}
+                  </span>
+                  <span className="text-[10px] bg-[#ECE7DE] text-[#635E59] px-1.5 py-0.2 rounded-[2px] font-semibold border border-[#D8D2C4]">
+                    MH
+                  </span>
+                </div>
+                <p className="text-[11px] font-body text-[#635E59] font-medium hidden sm:block leading-none">
+                  {t.brand.tagline}
+                </p>
+              </div>
+            </Link>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-1">
-            <Link
-              href="/farmer"
-              className="px-3 py-2 rounded-lg text-sm font-semibold text-gray-700 hover:text-emerald-800 hover:bg-emerald-50 transition-colors flex items-center gap-1.5"
-            >
-              <Users className="w-4 h-4 text-emerald-700" />
-              {t.nav.farmer}
-            </Link>
-            <Link
-              href="/buyer"
-              className="px-3 py-2 rounded-lg text-sm font-semibold text-gray-700 hover:text-emerald-800 hover:bg-emerald-50 transition-colors"
-            >
-              {t.nav.buyer}
-            </Link>
-            <Link
-              href="/transporter"
-              className="px-3 py-2 rounded-lg text-sm font-semibold text-gray-700 hover:text-emerald-800 hover:bg-emerald-50 transition-colors flex items-center gap-1.5"
-            >
-              <Truck className="w-4 h-4 text-emerald-700" />
-              {t.nav.transporter}
-            </Link>
-            <Link
-              href="/markets"
-              className="px-3 py-2 rounded-lg text-sm font-semibold text-gray-700 hover:text-emerald-800 hover:bg-emerald-50 transition-colors flex items-center gap-1.5"
-            >
-              <TrendingUp className="w-4 h-4 text-emerald-700" />
-              {t.nav.markets}
-            </Link>
-            <Link
-              href="/calculator"
-              className="px-3 py-2 rounded-lg text-sm font-semibold text-amber-900 bg-amber-50 hover:bg-amber-100 transition-colors border border-amber-200 flex items-center gap-1.5"
-            >
-              <Scale className="w-4 h-4 text-amber-700" />
-              {t.nav.calculator}
-            </Link>
-            <Link
-              href="/transactions"
-              className="px-3 py-2 rounded-lg text-sm font-semibold text-emerald-900 bg-emerald-50 hover:bg-emerald-100 transition-colors border border-emerald-200 flex items-center gap-1.5"
-            >
-              <CreditCard className="w-4 h-4 text-emerald-700" />
-              <span>{t.transactions?.hubTitle ? 'Transactions' : 'Transactions'}</span>
-            </Link>
-          </nav>
+            {/* Desktop Navigation Links */}
+            <nav className="hidden lg:flex items-center gap-1" aria-label="Main Navigation">
+              {primaryNavItems.map((item) => {
+                const active = isActive(item.href);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`px-2.5 py-1.5 rounded-[4px] text-xs font-semibold transition-colors ${
+                      active
+                        ? 'bg-[#1B4332] text-white'
+                        : 'text-[#262320] hover:text-[#1B4332] hover:bg-[#ECE7DE]'
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
 
-          {/* Language Selector & CTA */}
-          <div className="hidden sm:flex items-center gap-3">
-            {/* Language Pills */}
-            <div className="flex items-center bg-gray-100 rounded-xl p-1 border border-gray-200">
-              <Globe className="w-4 h-4 text-gray-500 ml-2 mr-1" />
-              {languages.map((lang) => (
+              {/* Governance Dropdown */}
+              <div className="relative">
                 <button
-                  key={lang.code}
-                  onClick={() => setLocale(lang.code)}
-                  className={`px-2.5 py-1 text-xs font-bold rounded-lg transition-all ${
-                    locale === lang.code
-                      ? 'bg-emerald-800 text-white shadow-xs'
-                      : 'text-gray-700 hover:text-emerald-800'
-                  }`}
+                  type="button"
+                  onClick={() => setIsGovernanceOpen(!isGovernanceOpen)}
+                  className="px-2.5 py-1.5 rounded-[4px] text-xs font-semibold text-[#635E59] hover:text-[#262320] hover:bg-[#ECE7DE] flex items-center gap-1 transition-colors"
                 >
-                  {lang.label}
+                  <span>Governance</span>
+                  <ChevronDown className="w-3 h-3" />
                 </button>
-              ))}
+
+                {isGovernanceOpen && (
+                  <div
+                    className="absolute right-0 mt-1 w-48 bg-white border border-[#D8D2C4] rounded-[4px] shadow-sm py-1 z-50"
+                    onMouseLeave={() => setIsGovernanceOpen(false)}
+                  >
+                    <Link
+                      href="/inspector"
+                      onClick={() => setIsGovernanceOpen(false)}
+                      className="block px-3 py-2 text-xs text-[#262320] hover:bg-[#ECE7DE]"
+                    >
+                      {t.nav.inspector}
+                    </Link>
+                    <Link
+                      href="/disputes"
+                      onClick={() => setIsGovernanceOpen(false)}
+                      className="block px-3 py-2 text-xs text-[#262320] hover:bg-[#ECE7DE]"
+                    >
+                      {t.nav.disputes}
+                    </Link>
+                    <Link
+                      href="/admin"
+                      onClick={() => setIsGovernanceOpen(false)}
+                      className="block px-3 py-2 text-xs text-[#262320] hover:bg-[#ECE7DE]"
+                    >
+                      {t.nav.admin}
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </nav>
+
+            {/* Language Selector & Voice Action (Desktop & Mobile) */}
+            <div className="flex items-center gap-2">
+              {/* Voice Access Button */}
+              <button
+                type="button"
+                onClick={() => setIsVoiceOpen(true)}
+                aria-label="Open voice assistant"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] text-xs font-semibold border border-[#1B4332] text-[#1B4332] bg-[#EAF2ED] hover:bg-[#1B4332] hover:text-white transition-colors min-h-[38px] sm:min-h-[36px]"
+              >
+                <Mic className="w-4 h-4" />
+                <span className="hidden sm:inline">{t.nav.speak}</span>
+              </button>
+
+              {/* Desktop Language Selector Pills */}
+              <div className="hidden sm:flex items-center bg-[#ECE7DE] rounded-[4px] p-0.5 border border-[#D8D2C4]">
+                <Globe className="w-3.5 h-3.5 text-[#635E59] ml-1.5 mr-1" />
+                {languages.map((lang) => (
+                  <button
+                    key={lang.code}
+                    onClick={() => setLocale(lang.code)}
+                    className={`px-2 py-0.5 text-xs font-bold rounded-[3px] transition-all ${
+                      locale === lang.code
+                        ? 'bg-[#1B4332] text-white'
+                        : 'text-[#635E59] hover:text-[#1B4332]'
+                    }`}
+                  >
+                    {lang.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Mobile Quick Language Toggle */}
+              <button
+                type="button"
+                onClick={() => {
+                  const next: Record<Locale, Locale> = { en: 'mr', mr: 'te', te: 'hi', hi: 'en' };
+                  setLocale(next[locale]);
+                }}
+                className="sm:hidden px-2.5 py-1.5 text-xs font-bold bg-[#ECE7DE] text-[#1B4332] border border-[#D8D2C4] rounded-[4px] flex items-center gap-1 min-h-[38px]"
+                aria-label="Switch language"
+              >
+                <Globe className="w-3.5 h-3.5" />
+                <span>
+                  {locale === 'en' ? 'EN' : locale === 'mr' ? 'मराठी' : locale === 'te' ? 'తెలుగు' : 'हिन्दी'}
+                </span>
+              </button>
             </div>
-
-            <Link href="/farmer">
-              <Button size="md" variant="primary">
-                {t.nav.getStarted}
-              </Button>
-            </Link>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="flex items-center gap-2 lg:hidden">
-            {/* Quick language toggle for mobile */}
-            <button
-              onClick={() => {
-                const next: Record<Locale, Locale> = { en: 'mr', mr: 'te', te: 'hi', hi: 'en' };
-                setLocale(next[locale]);
-              }}
-              className="px-2.5 py-1 text-xs font-bold bg-gray-100 text-emerald-900 border border-gray-300 rounded-lg flex items-center gap-1"
-            >
-              <Globe className="w-3.5 h-3.5" />
-              {locale === 'en' ? 'EN' : locale === 'mr' ? 'मराठी' : locale === 'te' ? 'తెలుగు' : 'हिन्दी'}
-            </button>
-
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-xl text-gray-700 hover:bg-gray-100 focus:outline-none"
-              aria-label="Toggle navigation menu"
-            >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Mobile Drawer */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-gray-200 bg-white px-4 pt-3 pb-6 space-y-3">
-          <div className="grid grid-cols-4 gap-1 p-1 bg-gray-100 rounded-xl mb-3">
-            {languages.map((lang) => (
+      {/* Global Farmer Voice Assistant Modal */}
+      {isVoiceOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fadeIn">
+          <div
+            className="fixed inset-0"
+            onClick={() => setIsVoiceOpen(false)}
+            aria-hidden="true"
+          />
+          <div className="relative bg-[#FFFFFF] border border-[#D8D2C4] rounded-[8px] max-w-xl w-full p-4 sm:p-6 shadow-xl max-h-[90vh] overflow-y-auto z-10">
+            <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#D8D2C4]">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-[4px] bg-[#1B4332] text-white flex items-center justify-center">
+                  <Mic className="w-4 h-4" />
+                </div>
+                <div>
+                  <h2 className="font-heading font-bold text-base text-[#262320]">
+                    {t.voice?.buttonLabel || 'Farmer Voice Assistant'}
+                  </h2>
+                  <p className="text-xs font-body text-[#635E59]">
+                    {t.voice?.buttonHint || 'Ask about prices, buyers, transport, or net profit'}
+                  </p>
+                </div>
+              </div>
               <button
-                key={lang.code}
-                onClick={() => setLocale(lang.code)}
-                className={`py-2 text-xs font-bold rounded-lg text-center ${
-                  locale === lang.code
-                    ? 'bg-emerald-800 text-white shadow-xs'
-                    : 'text-gray-700 hover:text-emerald-800'
-                }`}
+                type="button"
+                onClick={() => setIsVoiceOpen(false)}
+                className="p-1.5 text-[#635E59] hover:text-[#262320] rounded-[4px] hover:bg-[#ECE7DE]"
+                aria-label="Close voice dialog"
               >
-                {lang.label}
+                <X className="w-5 h-5" />
               </button>
-            ))}
-          </div>
-
-          <div className="flex flex-col space-y-1">
-            <Link
-              href="/farmer"
-              onClick={() => setMobileMenuOpen(false)}
-              className="px-4 py-3 rounded-xl font-semibold text-gray-800 hover:bg-emerald-50 hover:text-emerald-800 flex items-center gap-3 text-base"
-            >
-              <Users className="w-5 h-5 text-emerald-700" />
-              {t.nav.farmer}
-            </Link>
-            <Link
-              href="/buyer"
-              onClick={() => setMobileMenuOpen(false)}
-              className="px-4 py-3 rounded-xl font-semibold text-gray-800 hover:bg-emerald-50 hover:text-emerald-800 text-base"
-            >
-              {t.nav.buyer}
-            </Link>
-            <Link
-              href="/transporter"
-              onClick={() => setMobileMenuOpen(false)}
-              className="px-4 py-3 rounded-xl font-semibold text-gray-800 hover:bg-emerald-50 hover:text-emerald-800 flex items-center gap-3 text-base"
-            >
-              <Truck className="w-5 h-5 text-emerald-700" />
-              {t.nav.transporter}
-            </Link>
-            <Link
-              href="/markets"
-              onClick={() => setMobileMenuOpen(false)}
-              className="px-4 py-3 rounded-xl font-semibold text-gray-800 hover:bg-emerald-50 hover:text-emerald-800 flex items-center gap-3 text-base"
-            >
-              <TrendingUp className="w-5 h-5 text-emerald-700" />
-              {t.nav.markets}
-            </Link>
-            <Link
-              href="/calculator"
-              onClick={() => setMobileMenuOpen(false)}
-              className="px-4 py-3 rounded-xl font-semibold text-amber-900 bg-amber-50 hover:bg-amber-100 flex items-center gap-3 text-base"
-            >
-              <Scale className="w-5 h-5 text-amber-700" />
-              {t.nav.calculator}
-            </Link>
-            <Link
-              href="/transactions"
-              onClick={() => setMobileMenuOpen(false)}
-              className="px-4 py-3 rounded-xl font-semibold text-emerald-900 bg-emerald-50 hover:bg-emerald-100 flex items-center gap-3 text-base"
-            >
-              <CreditCard className="w-5 h-5 text-emerald-700" />
-              Transactions Hub
-            </Link>
-            <div className="pt-2 border-t border-gray-100 mt-2 space-y-1">
-              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-4 block">Governance & Roles</span>
-              <Link
-                href="/inspector"
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-4 py-2 rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-50 flex items-center gap-3"
-              >
-                <ShieldCheck className="w-4 h-4 text-emerald-700" />
-                Quality Inspector Desk
-              </Link>
-              <Link
-                href="/disputes"
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-4 py-2 rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-50 flex items-center gap-3"
-              >
-                <Scale className="w-4 h-4 text-rose-700" />
-                Disputes & Grievances
-              </Link>
-              <Link
-                href="/admin"
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-4 py-2 rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-50 flex items-center gap-3"
-              >
-                <Users className="w-4 h-4 text-purple-700" />
-                State Admin Portal
-              </Link>
             </div>
-          </div>
 
-          <div className="pt-2">
-            <Link href="/farmer" onClick={() => setMobileMenuOpen(false)}>
-              <Button size="lg" variant="primary" fullWidth>
-                {t.nav.getStarted}
-              </Button>
-            </Link>
+            <FarmerVoiceAssistant />
           </div>
         </div>
       )}
-    </header>
+
+      {/* Mount Mobile Navigation Bar */}
+      <MobileNav onOpenVoice={() => setIsVoiceOpen(true)} />
+    </>
   );
 }

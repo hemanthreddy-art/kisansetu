@@ -19,6 +19,13 @@ export interface TranslationDictionary {
     markets: string;
     calculator: string;
     getStarted: string;
+    lots: string;
+    transactions: string;
+    more: string;
+    speak: string;
+    inspector: string;
+    disputes: string;
+    admin: string;
   };
   hero: {
     badge: string;
@@ -644,6 +651,13 @@ export const translations: Record<Locale, TranslationDictionary> = {
       markets: 'Mandi Intelligence',
       calculator: 'Net Realisation',
       getStarted: 'Get Started',
+      lots: 'My Lots',
+      transactions: 'Transactions',
+      more: 'More',
+      speak: 'Speak',
+      inspector: 'Quality Inspector',
+      disputes: 'Grievances',
+      admin: 'State Admin',
     },
     hero: {
       badge: 'Maharashtra & Coastal Agriculture Market Linkage',
@@ -1283,6 +1297,13 @@ export const translations: Record<Locale, TranslationDictionary> = {
       markets: 'बाजार भाव माहिती',
       calculator: 'निव्वळ परतावा',
       getStarted: 'सुरू करा',
+      lots: 'माझे लॉट्स',
+      transactions: 'व्यवहार',
+      more: 'अधिक',
+      speak: 'बोला',
+      inspector: 'गुणवत्ता निरीक्षक',
+      disputes: 'तक्रारी व वाद',
+      admin: 'राज्य प्रशासन',
     },
     hero: {
       badge: 'महाराष्ट्र आणि किनारी कृषी बाजार जोडणी',
@@ -1922,6 +1943,13 @@ export const translations: Record<Locale, TranslationDictionary> = {
       markets: 'మార్కెట్ సమాచారం',
       calculator: 'నికర లాభం',
       getStarted: 'ప్రారంభించండి',
+      lots: 'నా లాట్లు',
+      transactions: 'లావాదేవీలు',
+      more: 'మరిన్ని',
+      speak: 'మాట్లాడండి',
+      inspector: 'క్వాలిటీ ఇన్స్పెక్టర్',
+      disputes: 'ఫిర్యాదులు',
+      admin: 'రాష్ట్ర అడ్మిన్',
     },
     hero: {
       badge: 'వ్యవసాయ మార్కెట్ లింకేజ్ మరియు ధరల గుర్తింపు',
@@ -2559,7 +2587,14 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "transporter": "ट्रांसपोर्टर",
       "markets": "मंडी भाव व आंकड़े",
       "calculator": "शुद्ध लाभ कैलकुलेटर",
-      "getStarted": "शुरू करें"
+      "getStarted": "शुरू करें",
+      "lots": "मेरे लॉट्स",
+      "transactions": "सौदे",
+      "more": "अधिक",
+      "speak": "बोलें",
+      "inspector": "गुणवत्ता निरीक्षक",
+      "disputes": "विवाद व शिकायतें",
+      "admin": "राज्य प्रशासन"
     },
     "hero": {
       "badge": "महाराष्ट्र एवं विजाग कृषि बाजार लिंकेज",

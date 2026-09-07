@@ -3,32 +3,76 @@
 @tailwind utilities;
 
 :root {
-  --background: #fcfdfd;
-  --foreground: #0f172a;
+  /* Google Stitch Agricultural Marketplace Design Tokens */
+  --stitch-primary: #1B4332;       /* Deep neem / agricultural green */
+  --stitch-primary-hover: #2D6A4F; /* Supporting field green */
+  --stitch-ochre: #B45309;         /* Restrained ochre/mustard accent */
+  --stitch-ochre-dark: #92400E;
+  
+  --stitch-bg-page: #F4F1EA;       /* Warm parchment page background */
+  --stitch-surface-white: #FFFFFF; /* White card surface */
+  --stitch-surface-muted: #ECE7DE; /* Muted parchment surface */
+  --stitch-surface-subtle: #F9F8F5; /* Very subtle warm tint */
+  
+  --stitch-text-main: #262320;     /* Deep charcoal / primary text */
+  --stitch-text-muted: #5A554E;    /* Balanced secondary text */
+  --stitch-text-subtle: #7C766D;   /* Tertiary labels & footnotes */
+  
+  --stitch-border: #D8D2C4;        /* Crisp 1px border */
+  --stitch-border-subtle: #E8E3D8; /* Faint divider */
+
+  /* Semantic Trust Colors */
+  --stitch-verified-bg: #EAF2ED;
+  --stitch-verified-text: #1B4332;
+  --stitch-verified-border: #B7D5C4;
+
+  --stitch-provisional-bg: #FEF3C7;
+  --stitch-provisional-text: #92400E;
+  --stitch-provisional-border: #FDE68A;
+
+  /* Typography Stacks */
+  --font-heading: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-body: 'Noto Sans', 'Noto Sans Devanagari', 'Noto Sans Telugu', system-ui, -apple-system, sans-serif;
+
+  /* Modest Shape Radii */
+  --radius-btn: 4px;
+  --radius-card: 8px;
+  --radius-input: 4px;
+
+  /* Theme variables for existing classes */
+  --background: #F4F1EA;
+  --foreground: #262320;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: var(--stitch-text-main);
+  background-color: var(--stitch-bg-page);
+  font-family: var(--font-body);
   -webkit-tap-highlight-color: transparent;
+  line-height: 1.5;
 }
 
-/* Custom scrollbar for data tables */
+/* Headings use Plus Jakarta Sans */
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: var(--font-heading);
+  letter-spacing: -0.015em;
+}
+
+/* Custom scrollbar matching warm agricultural theme */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: var(--stitch-surface-muted);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 9999px;
+  background: var(--stitch-border);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: var(--stitch-text-subtle);
 }

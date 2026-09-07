@@ -7,7 +7,6 @@ import {
   Store,
   Truck,
   TrendingUp,
-  PackageCheck,
   Scale,
   CreditCard,
   AlertTriangle,
@@ -64,71 +63,79 @@ export function Roadmap() {
       badgeVariant: 'emerald' as const,
     },
     {
-      title: 'Quality Verification Desk',
-      code: 'QUALITY DESK',
-      description: 'Two-tier verification: AI visual screening separated from official physical inspection certificates.',
-      icon: <PackageCheck className="w-5 h-5" />,
-      href: '/inspector',
-      status: 'Available' as const,
-      badgeVariant: 'emerald' as const,
-    },
-    {
-      title: 'Transactions & Escrow',
-      code: 'ESCROW SETTLEMENT',
-      description: 'Deal agreements, delivery tracking milestones, and secured escrow payout settlements.',
+      title: 'Commercial Transactions',
+      code: 'ESCROW & PAY',
+      description: 'Milestone escrow payments, delivery acknowledgments, and dispute mediation.',
       icon: <CreditCard className="w-5 h-5" />,
       href: '/transactions',
       status: 'Available' as const,
       badgeVariant: 'emerald' as const,
     },
     {
-      title: 'Evidence-Based Disputes',
-      code: 'GRIEVANCE',
-      description: 'Grievance resolution backed by agreed lot specs, weighing slips, and inspector certificates.',
+      title: 'Quality Verification Desk',
+      code: 'QUALITY ASSAY',
+      description: 'Tier 1 AI visual screening and Tier 2 assayer physical inspection workflows.',
+      icon: <Sparkles className="w-5 h-5" />,
+      href: '/inspector',
+      status: 'Available' as const,
+      badgeVariant: 'emerald' as const,
+    },
+    {
+      title: 'Voice-First Assistant',
+      code: 'VOICE ACCESS',
+      description: 'Multilingual speech inquiry for farmers in Marathi, Hindi, Telugu, and English.',
+      icon: <Bot className="w-5 h-5" />,
+      href: '/farmer',
+      status: 'Available' as const,
+      badgeVariant: 'emerald' as const,
+    },
+    {
+      title: 'Grievance Redressal',
+      code: 'DISPUTES',
+      description: 'Transparent APMC arbitrator notes, evidence uploads, and dispute resolution.',
       icon: <AlertTriangle className="w-5 h-5" />,
       href: '/disputes',
       status: 'Available' as const,
       badgeVariant: 'emerald' as const,
     },
     {
-      title: 'State Governance Admin',
-      code: 'GOVERNANCE',
-      description: 'Maharashtra Agriculture & APMC oversight monitoring price stabilization and grievances.',
+      title: 'State APMC Administration',
+      code: 'ADMIN PORTAL',
+      description: 'Statewide market linkages, price discovery analytics, and governance controls.',
       icon: <Settings className="w-5 h-5" />,
       href: '/admin',
-      status: 'Available' as const,
-      badgeVariant: 'emerald' as const,
-    },
-    {
-      title: 'Multilingual Voice UI',
-      code: 'VOICE ASSISTANT',
-      description: 'Voice-based Marathi, Telugu, and Hindi audio queries for rural farmers with limited literacy.',
-      icon: <Bot className="w-5 h-5 text-purple-700" />,
-      href: '/farmer',
       status: 'Available' as const,
       badgeVariant: 'emerald' as const,
     },
   ];
 
   return (
-    <section className="py-16 bg-gray-50 border-b border-gray-100">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto text-center space-y-3 mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-wider">
-            <Sparkles className="w-4 h-4" />
-            <span>Platform Capabilities</span>
-          </div>
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
-            Integrated Agricultural Ecosystem
+    <section className="py-12 bg-[#F4F1EA] border-b border-[#D8D2C4]">
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto text-center space-y-2 mb-8">
+          <span className="text-xs font-bold text-[#1B4332] uppercase tracking-wider block">
+            Platform Capabilities
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-bold font-heading text-[#262320] tracking-tight">
+            System Modules & Transparency
           </h2>
-          <p className="text-gray-600 text-sm sm:text-base">
-            End-to-end transparent market linkage connecting farmers, buyers, quality inspectors, and logistics providers.
+          <p className="text-sm sm:text-base font-body text-[#635E59]">
+            All core modules are functional in the prototype demonstration with transparent status indicators.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {modules.map((m) => (
-            <ModuleCard key={m.code} {...m} />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
+          {modules.map((m, idx) => (
+            <ModuleCard
+              key={idx}
+              title={m.title}
+              code={m.code}
+              description={m.description}
+              icon={m.icon}
+              href={m.href}
+              status={m.status}
+              badgeVariant={m.badgeVariant}
+            />
           ))}
         </div>
       </div>

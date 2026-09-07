@@ -1,77 +1,67 @@
 'use client';
 
 import React from 'react';
-import { useLanguage } from '@/i18n/LanguageContext';
-import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card';
 import { TrendingUp, Scale, ShieldCheck, Truck } from 'lucide-react';
 
 export function ValueProps() {
-  const { t } = useLanguage();
-
-  const props = [
+  const pillars = [
     {
-      title: t.valueProps.p1Title,
-      description: t.valueProps.p1Desc,
-      icon: <TrendingUp className="w-6 h-6 text-emerald-700" />,
-      tag: 'PRICING & ARRIVALS',
+      icon: TrendingUp,
+      title: '1. Market Prices',
+      description: 'Compare modal rates and daily arrival volumes across nearby APMC mandis and regional trading hubs.',
     },
     {
-      title: t.valueProps.p2Title,
-      description: t.valueProps.p2Desc,
-      icon: <Scale className="w-6 h-6 text-amber-700" />,
-      tag: 'CORE USP ENGINE',
+      icon: Scale,
+      title: '2. Net Realisation',
+      description: 'Deduct road freight, warehouse rent, and mandi fees upfront to discover your true take-home earnings.',
     },
     {
-      title: t.valueProps.p3Title,
-      description: t.valueProps.p3Desc,
-      icon: <ShieldCheck className="w-6 h-6 text-emerald-800" />,
-      tag: 'KYC & PHYSICAL CHECKS',
+      icon: ShieldCheck,
+      title: '3. Verified Buyers',
+      description: 'Connect directly with verified food processors and institutional buyers with independent trade ratings.',
     },
     {
-      title: t.valueProps.p4Title,
-      description: t.valueProps.p4Desc,
-      icon: <Truck className="w-6 h-6 text-sky-700" />,
-      tag: 'DOORSTEP FLEET',
+      icon: Truck,
+      title: '4. Transport & Storage',
+      description: 'Include reliable corridor logistics and MSWC warehouse holding costs directly in your selling decision.',
     },
   ];
 
   return (
-    <section className="py-16 bg-white border-b border-gray-100">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto text-center space-y-3 mb-12">
-          <span className="text-xs font-bold uppercase tracking-widest text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full">
-            Core Value Proposition
+    <section className="py-12 bg-[#F4F1EA] border-b border-[#D8D2C4]">
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto text-center space-y-2 mb-8">
+          <span className="text-xs font-bold text-[#1B4332] uppercase tracking-wider block">
+            Platform Pillars
           </span>
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
-            {t.valueProps.title}
+          <h2 className="text-2xl sm:text-3xl font-bold font-heading text-[#262320] tracking-tight">
+            Why KisanSetu
           </h2>
-          <p className="text-gray-600 text-sm sm:text-base">
-            {t.valueProps.subtitle}
+          <p className="text-sm sm:text-base font-body text-[#635E59]">
+            Built specifically to solve post-harvest price uncertainty for Maharashtra and Andhra Pradesh producers.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-          {props.map((p, idx) => (
-            <Card
-              key={idx}
-              className="hover:border-emerald-300 hover:shadow-md transition-all duration-200"
-            >
-              <CardHeader className="space-y-3">
-                <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center border border-gray-100">
-                  {p.icon}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
+          {pillars.map((p, idx) => {
+            const Icon = p.icon;
+            return (
+              <div
+                key={idx}
+                className="bg-white border border-[#D8D2C4] rounded-[8px] p-5 space-y-3"
+              >
+                <div className="w-10 h-10 rounded-[4px] bg-[#EAF2ED] text-[#1B4332] flex items-center justify-center">
+                  <Icon className="w-5 h-5" />
                 </div>
-                <div>
-                  <span className="text-[10px] font-mono font-bold tracking-widest text-gray-400 block mb-1">
-                    {p.tag}
-                  </span>
-                  <CardTitle className="text-lg font-bold">{p.title}</CardTitle>
-                </div>
-                <CardDescription className="text-sm text-gray-600 leading-relaxed">
+                <h3 className="font-heading font-bold text-base text-[#262320]">
+                  {p.title}
+                </h3>
+                <p className="text-xs sm:text-sm font-body text-[#635E59] leading-relaxed">
                   {p.description}
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          ))}
+                </p>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

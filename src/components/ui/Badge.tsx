@@ -3,27 +3,30 @@ import { cn } from '@/lib/utils';
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: 'emerald' | 'amber' | 'blue' | 'gray' | 'purple' | 'red';
+  pill?: boolean;
 }
 
 export function Badge({
   className,
   variant = 'emerald',
+  pill = false,
   children,
   ...props
 }: BadgeProps) {
   const variants = {
-    emerald: 'bg-emerald-100 text-emerald-800 border-emerald-300',
-    amber: 'bg-amber-100 text-amber-800 border-amber-300',
-    blue: 'bg-sky-100 text-sky-800 border-sky-300',
-    gray: 'bg-gray-100 text-gray-700 border-gray-300',
-    purple: 'bg-purple-100 text-purple-800 border-purple-300',
-    red: 'bg-rose-100 text-rose-800 border-rose-300',
+    emerald: 'bg-[#EAF2ED] text-[#1B4332] border-[#B7D5C4]',
+    amber: 'bg-[#FEF3C7] text-[#92400E] border-[#FDE68A]',
+    blue: 'bg-[#E0F2FE] text-[#0369A1] border-[#BAE6FD]',
+    gray: 'bg-[#ECE7DE] text-[#262320] border-[#D8D2C4]',
+    purple: 'bg-[#F3E8FF] text-[#6B21A8] border-[#D8B4FE]',
+    red: 'bg-[#FEE2E2] text-[#991B1B] border-[#FCA5A5]',
   };
 
   return (
     <span
       className={cn(
-        'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border tracking-wide uppercase',
+        'inline-flex items-center px-2 py-0.5 text-xs font-semibold border tracking-wider uppercase',
+        pill ? 'rounded-full' : 'rounded-[4px]',
         variants[variant],
         className
       )}
