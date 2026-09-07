@@ -36,7 +36,6 @@ import {
   Calendar,
   FileText,
   Building2,
-  BadgeCheck,
   Star,
   Send,
   Lock,
@@ -2224,41 +2223,41 @@ function LotDetailPageContent() {
       </section>
 
       {/* ========================================================================= */}
-      {/* MODULE T: TRANSPORT & LOGISTICS MANAGEMENT (PHASE 5) */}
+      {/* MODULE T: TRANSPORT & LOGISTICS MANAGEMENT */}
       {/* ========================================================================= */}
       <section className="space-y-6 pt-4 border-t border-[#D8D2C4]">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <Badge variant="purple">Module T • Phase 5 Active</Badge>
-              <span className="text-xs font-mono text-gray-500 font-bold">LOGISTICS & DISPATCH ENGINE</span>
+              <Badge variant="gray">Transport & Logistics</Badge>
+              <span className="text-xs font-mono text-[#5A5243] font-bold">CORRIDOR FREIGHT & BOOKING</span>
             </div>
-            <h2 className="text-2xl font-heading font-black text-[#262320] tracking-tight flex items-center gap-2.5">
-              <Truck className="w-7 h-7 text-purple-700" />
+            <h2 className="text-xl sm:text-2xl font-heading font-black text-[#262320] tracking-tight flex items-center gap-2.5">
+              <Truck className="w-6 h-6 text-[#1B4332]" />
               <span>{t.transport.lotTransportTitle}</span>
             </h2>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-[#5A5243]">
               {t.transport.lotTransportSubtitle}
             </p>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono bg-purple-50 text-purple-900 border border-purple-200 px-3 py-1 rounded-full font-bold">
+            <span className="text-xs font-mono bg-[#F4F1EA] text-[#1B4332] border border-[#D8D2C4] px-3 py-1 rounded font-bold">
               PICKUP: {lot.location || lot.locationDistrict}
             </span>
           </div>
         </div>
 
-        {/* SIH Net Realisation Transparent Cost Formula Banner */}
-        <div className="p-4 rounded-[8px] bg-gradient-to-r from-purple-50 via-indigo-50 to-purple-50 border border-purple-200 text-xs text-purple-950 space-y-1.5 shadow-none">
-          <div className="flex items-center gap-2 font-bold text-sm text-purple-900">
-            <Gauge className="w-4 h-4 text-purple-700" />
+        {/* Transparent Cost Formula Banner */}
+        <div className="p-4 rounded-lg bg-[#F4F1EA] border border-[#D8D2C4] text-xs text-[#262320] space-y-1.5 shadow-none">
+          <div className="flex items-center gap-2 font-bold text-sm text-[#1B4332] font-heading">
+            <Gauge className="w-4 h-4 text-[#1B4332]" />
             <span>{t.transport.formulaTitle}</span>
           </div>
-          <p className="font-mono bg-white/80 p-2 rounded-xl border border-purple-200/60 font-semibold text-[11px] text-purple-900">
+          <p className="font-mono bg-white p-2 rounded border border-[#D8D2C4] font-semibold text-[11px] text-[#1B4332]">
             {t.transport.formulaText}
           </p>
-          <p className="text-[11px] text-purple-800/90 leading-relaxed">
+          <p className="text-[11px] text-[#5A5243] leading-relaxed">
             {t.transport.netRealisationNote}
           </p>
         </div>
@@ -2266,16 +2265,16 @@ function LotDetailPageContent() {
         {/* Active Transport Bookings for this Lot */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-base font-bold text-[#262320] flex items-center gap-2">
-              <Clock className="w-4 h-4 text-gray-600" />
+            <h3 className="text-base font-bold font-heading text-[#262320] flex items-center gap-2">
+              <Clock className="w-4 h-4 text-[#5A5243]" />
               <span>{t.transport.activeBookingsTitle} ({transportRequests.length})</span>
             </h3>
           </div>
 
           {transportRequests.length === 0 ? (
-            <div className="p-4 rounded-[8px] bg-gray-50 border border-dashed border-[#D8D2C4] text-xs text-gray-600 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center shrink-0">
-                <Truck className="w-4 h-4 text-gray-500" />
+            <div className="p-4 rounded-lg bg-[#FDFBF7] border border-dashed border-[#D8D2C4] text-xs text-[#5A5243] flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-[#F4F1EA] border border-[#D8D2C4] flex items-center justify-center shrink-0">
+                <Truck className="w-4 h-4 text-[#8C827A]" />
               </div>
               <p>{t.transport.noBookingsYet}</p>
             </div>
@@ -2302,56 +2301,56 @@ function LotDetailPageContent() {
                 }
 
                 return (
-                  <Card key={req.id} className="border-purple-200 bg-purple-50/20 shadow-none">
-                    <CardHeader className="pb-2 border-b border-purple-100">
+                  <Card key={req.id} className="border-[#D8D2C4] bg-[#FDFBF7] shadow-none rounded-lg">
+                    <CardHeader className="pb-2 border-b border-[#D8D2C4]/60">
                       <div className="flex items-center justify-between gap-2">
-                        <span className="font-bold text-[#262320] text-sm">
+                        <span className="font-bold text-[#262320] text-sm font-heading">
                           {req.transporter?.businessName || 'Assigned Logistics Carrier'}
                         </span>
                         <Badge variant={statusBadgeVariant} className="text-[11px] font-bold">
                           {statusText}
                         </Badge>
                       </div>
-                      <span className="text-xs text-gray-500 font-mono">
+                      <span className="text-xs text-[#8C827A] font-mono">
                         REQ #{req.id.slice(-8).toUpperCase()}
                       </span>
                     </CardHeader>
                     <CardContent className="pt-3 text-xs space-y-2">
                       <div className="grid grid-cols-2 gap-2 text-[11px]">
                         <div>
-                          <span className="text-gray-500 block">Corridor:</span>
-                          <span className="font-bold text-gray-800">{req.pickupLocation} → {req.dropLocation}</span>
+                          <span className="text-[#5A5243] block">Corridor:</span>
+                          <span className="font-bold text-[#262320]">{req.pickupLocation} → {req.dropLocation}</span>
                         </div>
                         <div>
-                          <span className="text-gray-500 block">Distance & Trips:</span>
-                          <span className="font-bold text-gray-800">{req.distanceKm} km • {req.estimatedTrips || 1} Trip(s)</span>
+                          <span className="text-[#5A5243] block">Distance & Trips:</span>
+                          <span className="font-bold text-[#262320]">{req.distanceKm} km • {req.estimatedTrips || 1} Trip(s)</span>
                         </div>
                         <div>
-                          <span className="text-gray-500 block">Vehicle:</span>
-                          <span className="font-bold text-gray-800">{req.vehicle?.vehicleName || req.vehicle?.registrationNumber || 'Registered Cargo Fleet'}</span>
+                          <span className="text-[#5A5243] block">Vehicle:</span>
+                          <span className="font-bold text-[#262320]">{req.vehicle?.vehicleName || req.vehicle?.registrationNumber || 'Registered Cargo Fleet'}</span>
                         </div>
                         <div>
-                          <span className="text-gray-500 block">Total Freight:</span>
-                          <span className="font-black text-purple-900 text-sm">₹{Number(req.estimatedCost).toLocaleString('en-IN')}</span>
+                          <span className="text-[#5A5243] block">Total Freight:</span>
+                          <span className="font-black text-[#1B4332] text-sm font-heading">{formatINR(req.estimatedCost)}</span>
                         </div>
                       </div>
 
                       {req.scheduledPickup && (
-                        <div className="text-[11px] text-gray-600 bg-white/80 p-2 rounded-xl border border-purple-100 flex items-center gap-1.5">
-                          <Calendar className="w-3.5 h-3.5 text-purple-700" />
-                          <span>{t.transport.scheduledPickupLabel}: <b>{new Date(req.scheduledPickup).toLocaleDateString()}</b></span>
+                        <div className="text-[11px] text-[#5A5243] bg-white p-2 rounded-lg border border-[#D8D2C4] flex items-center gap-1.5">
+                          <Calendar className="w-3.5 h-3.5 text-[#1B4332]" />
+                          <span>{t.transport.scheduledPickupLabel}: <strong className="text-[#262320]">{new Date(req.scheduledPickup).toLocaleDateString()}</strong></span>
                         </div>
                       )}
 
                       {req.actualDelivery && (
-                        <div className="text-[11px] text-[#1B4332] bg-emerald-50 p-2 rounded-xl border border-[#B7D5C4] flex items-center gap-1.5">
+                        <div className="text-[11px] text-[#1B4332] bg-emerald-50 p-2 rounded-lg border border-[#B7D5C4] flex items-center gap-1.5">
                           <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                          <span>{t.transport.actualDeliveryLabel}: <b>{new Date(req.actualDelivery).toLocaleDateString()}</b></span>
+                          <span>{t.transport.actualDeliveryLabel}: <strong>{new Date(req.actualDelivery).toLocaleDateString()}</strong></span>
                         </div>
                       )}
 
                       {req.notes && (
-                        <p className="text-[11px] text-gray-500 italic bg-white p-2 rounded-lg border border-[#D8D2C4]">
+                        <p className="text-[11px] text-[#5A5243] italic bg-white p-2 rounded-lg border border-[#D8D2C4]">
                           &quot;{req.notes}&quot;
                         </p>
                       )}
@@ -2364,22 +2363,22 @@ function LotDetailPageContent() {
         </div>
 
         {/* Destination & Options Controls */}
-        <div className="bg-white border border-[#D8D2C4] rounded-[8px] p-5 shadow-none space-y-4">
+        <div className="bg-white border border-[#D8D2C4] rounded-lg p-5 shadow-none space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="text-xs font-bold text-gray-700 block mb-1">
+                <label className="text-xs font-bold text-[#262320] block mb-1">
                   {t.transport.destinationLabel}
                 </label>
                 <div className="relative">
-                  <MapPin className="w-4 h-4 text-gray-400 absolute left-3 top-2.5" />
+                  <MapPin className="w-4 h-4 text-[#8C827A] absolute left-3 top-2.5" />
                   <select
                     value={selectedDestination}
                     onChange={(e) => {
                       setSelectedDestination(e.target.value);
                       handleRecalculateTransport(e.target.value, preferRefrigerated);
                     }}
-                    className="w-full pl-9 pr-3 py-2 text-xs font-medium rounded-xl border border-[#D8D2C4] focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white"
+                    className="w-full pl-9 pr-3 py-2 text-xs font-medium rounded-lg border border-[#D8D2C4] focus:outline-none focus:ring-2 focus:ring-[#1B4332] bg-white text-[#262320]"
                   >
                     <option value="Pune">Pune Market Yard (Pune)</option>
                     <option value="Mumbai">Vashi APMC (Navi Mumbai / Thane)</option>
@@ -2403,9 +2402,9 @@ function LotDetailPageContent() {
                     setPreferRefrigerated(e.target.checked);
                     handleRecalculateTransport(selectedDestination, e.target.checked);
                   }}
-                  className="w-4 h-4 text-purple-600 rounded border-[#D8D2C4] focus:ring-purple-500"
+                  className="w-4 h-4 text-[#1B4332] rounded border-[#D8D2C4] focus:ring-[#1B4332]"
                 />
-                <label htmlFor="preferReefer" className="text-xs font-semibold text-gray-800 cursor-pointer">
+                <label htmlFor="preferReefer" className="text-xs font-semibold text-[#262320] cursor-pointer">
                   {t.transport.preferColdChainLabel}
                 </label>
               </div>
@@ -2416,7 +2415,7 @@ function LotDetailPageContent() {
               size="sm"
               disabled={loadingTransport}
               onClick={() => handleRecalculateTransport(selectedDestination, preferRefrigerated)}
-              className="gap-2 text-xs border-purple-300 text-purple-900 hover:bg-purple-50 self-end sm:self-center"
+              className="gap-2 text-xs border-[#D8D2C4] text-[#1B4332] hover:bg-[#F4F1EA] self-end sm:self-center min-h-[36px]"
             >
               {loadingTransport ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Gauge className="w-3.5 h-3.5" />}
               <span>{t.transport.findTransportersBtn}</span>
@@ -2425,13 +2424,13 @@ function LotDetailPageContent() {
 
           {/* Success / Error Messages */}
           {bookingSuccessMsg && (
-            <div className="p-3 bg-emerald-50 border border-[#B7D5C4] text-[#1B4332] rounded-xl text-xs flex items-center gap-2 animate-fadeIn">
+            <div className="p-3 bg-emerald-50 border border-[#B7D5C4] text-[#1B4332] rounded-lg text-xs flex items-center gap-2 animate-fadeIn">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
               <span>{bookingSuccessMsg}</span>
             </div>
           )}
           {bookingErrorMsg && (
-            <div className="p-3 bg-red-50 border border-red-200 text-red-800 rounded-xl text-xs flex items-center gap-2 animate-fadeIn">
+            <div className="p-3 bg-red-50 border border-red-200 text-red-800 rounded-lg text-xs flex items-center gap-2 animate-fadeIn">
               <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
               <span>{bookingErrorMsg}</span>
             </div>
@@ -2439,17 +2438,17 @@ function LotDetailPageContent() {
 
           {/* Matching Vehicles Grid */}
           <div className="space-y-3 pt-2">
-            <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wider">
+            <h4 className="text-xs font-bold text-[#5A5243] uppercase tracking-wider font-heading">
               {t.transport.matchingTransportersTitle} ({transportOptions.length})
             </h4>
 
             {loadingTransport ? (
-              <div className="py-8 text-center text-xs text-gray-500 space-y-2">
-                <Loader2 className="w-6 h-6 animate-spin mx-auto text-purple-600" />
+              <div className="py-8 text-center text-xs text-[#5A5243] space-y-2">
+                <Loader2 className="w-6 h-6 animate-spin mx-auto text-[#1B4332]" />
                 <p>Calculating optimal corridors and freight rates...</p>
               </div>
             ) : transportOptions.length === 0 ? (
-              <div className="p-6 text-center text-xs text-gray-500 border border-dashed rounded-[8px]">
+              <div className="p-6 text-center text-xs text-[#5A5243] border border-dashed border-[#D8D2C4] rounded-lg bg-[#FDFBF7]">
                 {t.transport.noTransportersAvailable}
               </div>
             ) : (
@@ -2457,46 +2456,42 @@ function LotDetailPageContent() {
                 {transportOptions.map((opt) => (
                   <Card
                     key={`${opt.transporterId}-${opt.vehicleId}`}
-                    className="border-[#D8D2C4] hover:border-purple-300 transition-all shadow-none flex flex-col justify-between"
+                    className="border-[#D8D2C4] hover:border-[#1B4332]/40 transition-all shadow-none flex flex-col justify-between rounded-lg bg-white"
                   >
                     <div>
-                      <CardHeader className="pb-3 border-b border-gray-100">
+                      <CardHeader className="pb-3 border-b border-[#D8D2C4]/60">
                         <div className="flex items-start justify-between gap-2">
-                          <div>
-                            <span className="font-bold text-[#262320] text-sm block">
+                          <div className="space-y-1">
+                            <span className="font-bold text-[#262320] text-sm block font-heading">
                               {opt.transporterName}
                             </span>
-                            <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-                              {opt.verified ? (
-                                <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-[#1B4332] bg-emerald-50 border border-[#B7D5C4] px-2 py-0.5 rounded-md">
-                                  <BadgeCheck className="w-3 h-3 text-emerald-700" />
-                                  {t.transport.verifiedPermit}
-                                </span>
-                              ) : (
-                                <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-md">
-                                  <AlertCircle className="w-3 h-3 text-amber-700" />
-                                  {t.transport.unverifiedPermit}
-                                </span>
-                              )}
-                              <span className="text-[11px] text-gray-500">
-                                ★ {opt.ratingScore.toFixed(1)} • {opt.onTimeDeliveryPercent}% on-time
-                              </span>
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <VerificationBadge
+                                type={opt.verified ? 'identity' : 'provisional'}
+                                customLabel={opt.verified ? t.transport.verifiedPermit : t.transport.unverifiedPermit}
+                              />
+                              <ReputationCluster
+                                ratingScore={opt.ratingScore}
+                                completedDealsCount={100}
+                                onTimeDeliveryPercent={opt.onTimeDeliveryPercent}
+                                size="sm"
+                              />
                             </div>
                           </div>
 
-                          <Badge variant="purple" className="text-xs font-black">
+                          <Badge variant="gray" className="text-xs font-bold border border-[#D8D2C4]">
                             {opt.matchScore}% Match
                           </Badge>
                         </div>
                       </CardHeader>
 
                       <CardContent className="pt-3 text-xs space-y-3">
-                        <div className="flex items-center justify-between bg-gray-50 p-2.5 rounded-xl border border-gray-100">
+                        <div className="flex items-center justify-between bg-[#F4F1EA] p-2.5 rounded-lg border border-[#D8D2C4]/60">
                           <div>
-                            <span className="font-bold text-[#262320] text-xs block">
+                            <span className="font-bold text-[#262320] text-xs block font-heading">
                               {opt.vehicleName}
                             </span>
-                            <span className="text-[10px] font-mono text-gray-500">
+                            <span className="text-[10px] font-mono text-[#5A5243]">
                               {opt.registrationNumber} • {opt.capacityQuintals} Qtl ({opt.capacityTonnes} Tonnes)
                             </span>
                           </div>
@@ -2512,23 +2507,23 @@ function LotDetailPageContent() {
                         </div>
 
                         {/* Cost Equation Box */}
-                        <div className="bg-purple-50/70 p-3 rounded-[8px] border border-purple-200/80 space-y-1">
+                        <div className="bg-[#FDFBF7] p-3 rounded-lg border border-[#D8D2C4] space-y-1">
                           <div className="flex items-baseline justify-between">
-                            <span className="text-xs font-medium text-purple-900">Total Freight:</span>
+                            <span className="text-xs font-medium text-[#5A5243]">Estimated Freight:</span>
                             <div className="text-right">
-                              <span className="text-lg font-black text-purple-900">
-                                ₹{opt.estimatedCost.toLocaleString('en-IN')}
+                              <span className="text-lg font-black text-[#1B4332] font-heading">
+                                {formatINR(opt.estimatedCost)}
                               </span>
-                              <span className="text-[11px] text-purple-700 font-bold block">
+                              <span className="text-[11px] text-[#1B4332] font-bold block">
                                 (₹{opt.costPerQuintal}/Qtl)
                               </span>
                             </div>
                           </div>
-                          <div className="text-[11px] font-mono text-purple-800 pt-1 border-t border-purple-200/60 flex items-center justify-between">
+                          <div className="text-[11px] font-mono text-[#1B4332] pt-1 border-t border-[#D8D2C4]/60 flex items-center justify-between">
                             <span>Equation:</span>
                             <span>{opt.costEquation}</span>
                           </div>
-                          <div className="text-[10px] text-gray-600 flex items-center justify-between pt-0.5">
+                          <div className="text-[10px] text-[#5A5243] flex items-center justify-between pt-0.5">
                             <span>Transit corridor:</span>
                             <span>{opt.distanceKm} km (~{opt.estimatedHours} hrs)</span>
                           </div>
@@ -2576,7 +2571,7 @@ function LotDetailPageContent() {
                           setBookingSuccessMsg(null);
                           setIsBookingModalOpen(true);
                         }}
-                        className="gap-2 bg-purple-700 hover:bg-purple-800 text-white shadow-none"
+                        className="gap-2 bg-[#1B4332] hover:bg-[#1B4332]/90 text-white shadow-none rounded-lg min-h-[36px]"
                       >
                         <Truck className="w-4 h-4" />
                         <span>{t.transport.bookTransportBtn}</span>
@@ -3346,25 +3341,25 @@ function LotDetailPageContent() {
       )}
 
       {/* ========================================================================= */}
-      {/* BOOK TRANSPORT DISPATCH MODAL (PHASE 5) */}
+      {/* BOOK TRANSPORT DISPATCH MODAL */}
       {/* ========================================================================= */}
       {isBookingModalOpen && selectedOptionForBooking && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto animate-fadeIn">
-          <div className="relative w-full max-w-lg bg-white rounded-[8px] shadow-2xl border border-[#D8D2C4] overflow-hidden my-8">
-            <div className="px-6 py-5 bg-gradient-to-r from-purple-800 to-purple-900 text-white flex items-center justify-between">
+          <div className="relative w-full max-w-lg bg-white rounded-lg shadow-xl border border-[#D8D2C4] overflow-hidden my-8">
+            <div className="px-6 py-5 bg-[#1B4332] text-[#FDFBF7] flex items-center justify-between">
               <div>
                 <div className="flex items-center gap-2">
-                  <Badge variant="purple" className="text-[10px] uppercase font-bold">
+                  <span className="text-[10px] uppercase font-bold tracking-wider bg-white/10 px-2 py-0.5 rounded border border-white/20">
                     TRANSPORT DISPATCH
-                  </Badge>
-                  <span className="text-xs font-mono text-purple-200">{lot.lotCode}</span>
+                  </span>
+                  <span className="text-xs font-mono text-[#E8E4D9]">{lot.lotCode}</span>
                 </div>
-                <h2 className="text-xl font-bold mt-1">{t.transport.bookingModalTitle}</h2>
-                <p className="text-xs text-purple-100">{t.transport.bookingModalSubtitle}</p>
+                <h2 className="text-xl font-bold mt-1 font-heading">{t.transport.bookingModalTitle}</h2>
+                <p className="text-xs text-[#E8E4D9]">{t.transport.bookingModalSubtitle}</p>
               </div>
               <button
                 onClick={() => setIsBookingModalOpen(false)}
-                className="p-1.5 rounded-full hover:bg-white/10 text-white/80 hover:text-white transition-colors"
+                className="p-1.5 rounded-lg hover:bg-white/10 text-[#FDFBF7]/80 hover:text-white transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -3372,39 +3367,39 @@ function LotDetailPageContent() {
 
             <form onSubmit={handleBookingSubmit} className="p-6 space-y-4">
               {/* Selected Carrier & Vehicle Summary */}
-              <div className="p-4 rounded-[8px] bg-purple-50 border border-purple-200 text-xs space-y-2">
+              <div className="p-4 rounded-lg bg-[#F4F1EA] border border-[#D8D2C4] text-xs space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-[#262320] text-sm">
+                  <span className="font-bold text-[#262320] text-sm font-heading">
                     {selectedOptionForBooking.transporterName}
                   </span>
-                  <Badge variant="purple">
+                  <Badge variant="gray" className="border border-[#D8D2C4]">
                     {selectedOptionForBooking.vehicleName}
                   </Badge>
                 </div>
-                <div className="grid grid-cols-2 gap-2 text-gray-600 text-[11px] pt-1 border-t border-purple-200/60">
+                <div className="grid grid-cols-2 gap-2 text-[#5A5243] text-[11px] pt-1 border-t border-[#D8D2C4]/60">
                   <div>
-                    <span className="text-gray-400 block">Registration:</span>
-                    <span className="font-mono font-bold text-gray-800">{selectedOptionForBooking.registrationNumber}</span>
+                    <span className="text-[#8C827A] block">Registration:</span>
+                    <span className="font-mono font-bold text-[#262320]">{selectedOptionForBooking.registrationNumber}</span>
                   </div>
                   <div>
-                    <span className="text-gray-400 block">Corridor:</span>
-                    <span className="font-bold text-gray-800">{selectedOptionForBooking.pickupLocation} → {selectedOptionForBooking.dropLocation}</span>
+                    <span className="text-[#8C827A] block">Corridor:</span>
+                    <span className="font-bold text-[#262320]">{selectedOptionForBooking.pickupLocation} → {selectedOptionForBooking.dropLocation}</span>
                   </div>
                   <div>
-                    <span className="text-gray-400 block">Trips & Distance:</span>
-                    <span className="font-bold text-gray-800">{selectedOptionForBooking.tripsRequired} trip(s) • {selectedOptionForBooking.distanceKm} km</span>
+                    <span className="text-[#8C827A] block">Trips & Distance:</span>
+                    <span className="font-bold text-[#262320]">{selectedOptionForBooking.tripsRequired} trip(s) • {selectedOptionForBooking.distanceKm} km</span>
                   </div>
                   <div>
-                    <span className="text-gray-400 block">Estimated Freight:</span>
-                    <span className="font-black text-purple-900 text-sm">₹{selectedOptionForBooking.estimatedCost.toLocaleString('en-IN')}</span>
+                    <span className="text-[#8C827A] block">Estimated Freight:</span>
+                    <span className="font-black text-[#1B4332] text-sm font-heading">{formatINR(selectedOptionForBooking.estimatedCost)}</span>
                   </div>
                 </div>
               </div>
 
               {/* Scheduled Pickup Date */}
               <div className="space-y-1.5">
-                <label className="text-sm font-bold text-[#262320] flex items-center gap-1.5">
-                  <Calendar className="w-4 h-4 text-purple-700" />
+                <label className="text-sm font-bold text-[#262320] flex items-center gap-1.5 font-heading">
+                  <Calendar className="w-4 h-4 text-[#1B4332]" />
                   <span>{t.transport.scheduledDateLabel}</span>
                 </label>
                 <input
@@ -3412,14 +3407,14 @@ function LotDetailPageContent() {
                   required
                   value={bookingScheduledDate}
                   onChange={(e) => setBookingScheduledDate(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-[#D8D2C4] text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-2.5 rounded-lg border border-[#D8D2C4] text-sm focus:outline-none focus:ring-2 focus:ring-[#1B4332] bg-white text-[#262320]"
                 />
               </div>
 
               {/* Special Handling / Landmark Notes */}
               <div className="space-y-1.5">
-                <label className="text-sm font-bold text-[#262320] flex items-center gap-1.5">
-                  <FileText className="w-4 h-4 text-purple-700" />
+                <label className="text-sm font-bold text-[#262320] flex items-center gap-1.5 font-heading">
+                  <FileText className="w-4 h-4 text-[#1B4332]" />
                   <span>{t.transport.transportNotesLabel}</span>
                 </label>
                 <textarea
@@ -3427,18 +3422,18 @@ function LotDetailPageContent() {
                   value={bookingNotes}
                   onChange={(e) => setBookingNotes(e.target.value)}
                   placeholder={t.transport.transportNotesPlaceholder}
-                  className="w-full px-4 py-2.5 rounded-xl border border-[#D8D2C4] text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-2.5 rounded-lg border border-[#D8D2C4] text-sm focus:outline-none focus:ring-2 focus:ring-[#1B4332] bg-white text-[#262320]"
                 />
               </div>
 
               {/* Demo Notice */}
-              <p className="text-[11px] text-gray-500 bg-gray-50 p-2.5 rounded-xl border border-[#D8D2C4]">
+              <p className="text-[11px] text-[#5A5243] bg-[#FDFBF7] p-2.5 rounded-lg border border-[#D8D2C4]">
                 {t.transport.demoNotice}
               </p>
 
               {/* Error Alert */}
               {bookingErrorMsg && (
-                <div className="p-3 bg-red-50 border border-red-200 text-red-800 rounded-xl text-xs flex items-center gap-2">
+                <div className="p-3 bg-red-50 border border-red-200 text-red-800 rounded-lg text-xs flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
                   <span>{bookingErrorMsg}</span>
                 </div>
@@ -3451,6 +3446,7 @@ function LotDetailPageContent() {
                   variant="ghost"
                   onClick={() => setIsBookingModalOpen(false)}
                   disabled={bookingSubmitting}
+                  className="min-h-[44px]"
                 >
                   {t.lots.cancelBtn}
                 </Button>
@@ -3459,7 +3455,7 @@ function LotDetailPageContent() {
                   type="submit"
                   variant="primary"
                   disabled={bookingSubmitting}
-                  className="gap-2 bg-purple-700 hover:bg-purple-800 text-white"
+                  className="gap-2 bg-[#1B4332] hover:bg-[#1B4332]/90 text-white min-h-[44px]"
                 >
                   {bookingSubmitting ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
