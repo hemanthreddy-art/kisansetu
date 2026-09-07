@@ -591,7 +591,7 @@ function BuyerPortalContent() {
         description={t.buyerMatching.hubSubtitle}
         badge={
           <div className="flex items-center gap-2">
-            <Badge variant="amber">Buyer Marketplace</Badge>
+            <Badge variant="amber">{t.buyerMatching.buyerMarketplace}</Badge>
             {loading && <Loader2 className="w-3.5 h-3.5 animate-spin text-[#1B4332]" />}
           </div>
         }
@@ -696,7 +696,7 @@ function BuyerPortalContent() {
                   <Store className="w-4 h-4 text-[#B45309]" />
                   <span>{t.buyerMatching.reputationMetrics}</span>
                 </span>
-                <span className="text-[10px] text-[#5A554E] font-mono">TRADE AUDIT</span>
+                <span className="text-[10px] text-[#5A554E] font-mono">{t.buyerMatching.tradeAudit}</span>
               </div>
               <div className="pt-1">
                 <ReputationCluster
@@ -855,7 +855,7 @@ function BuyerPortalContent() {
                 onChange={(e) => setDemandCropFilter(e.target.value)}
                 className="text-xs min-w-[140px]"
               >
-                <option value="ALL">All Commodities</option>
+                <option value="ALL">{t.common.allCommodities}</option>
                 {KEY_CROPS.map((c) => (
                   <option key={c.id} value={c.nameEn}>
                     {c.icon} {c.nameEn}
@@ -868,7 +868,7 @@ function BuyerPortalContent() {
                 onChange={(e) => setDemandDistrictFilter(e.target.value)}
                 className="text-xs min-w-[140px]"
               >
-                <option value="ALL">All Districts</option>
+                <option value="ALL">{t.common.allDistricts}</option>
                 <optgroup label="Maharashtra">
                   {MAHARASHTRA_DISTRICTS.map((d) => (
                     <option key={d} value={d}>
@@ -1035,7 +1035,7 @@ function BuyerPortalContent() {
                         className="gap-1 text-xs border-[#D8D2C4] text-[#1B4332] hover:bg-white"
                       >
                         <Scale className="w-3.5 h-3.5 text-[#1B4332]" />
-                        <span>Check Net Realisation</span>
+                        <span>{t.markets.calculateNetRealisation}</span>
                       </Button>
                     </Link>
 
@@ -1066,7 +1066,7 @@ function BuyerPortalContent() {
         <Card className="max-w-3xl mx-auto shadow-none border border-[#D8D2C4]">
           <CardHeader className="border-b border-[#D8D2C4] pb-4 bg-[#FAFAF8]">
             <div className="flex items-center gap-2">
-              <Badge variant="amber">Post Procurement Demand</Badge>
+              <Badge variant="amber">{t.buyerMatching.postProcurementDemand}</Badge>
               <span className="text-xs text-[#5A554E] font-mono">BUYER: {activeBuyer.companyName}</span>
             </div>
             <CardTitle className="text-xl font-heading font-black text-[#262320] mt-1">

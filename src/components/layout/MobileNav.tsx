@@ -44,16 +44,16 @@ export function MobileNav({ onOpenVoice }: MobileNavProps) {
   ];
 
   const secondaryLinks = [
-    { href: '/farmer', label: t.nav.farmer, icon: Users, desc: 'Farmer Produce & Price Discovery' },
-    { href: '/buyer', label: t.nav.buyer, icon: Users, desc: 'Demand Matching & Direct Sourcing' },
-    { href: '/transporter', label: t.nav.transporter, icon: Truck, desc: 'Corridor Logistics & Fleet' },
-    { href: '/calculator', label: t.nav.calculator, icon: Scale, desc: 'Net Realisation Engine' },
+    { href: '/farmer', label: t.nav.farmer, icon: Users, desc: t.nav.descFarmer },
+    { href: '/buyer', label: t.nav.buyer, icon: Users, desc: t.nav.descBuyer },
+    { href: '/transporter', label: t.nav.transporter, icon: Truck, desc: t.nav.descTransporter },
+    { href: '/calculator', label: t.nav.calculator, icon: Scale, desc: t.nav.descCalculator },
   ];
 
   const governanceLinks = [
-    { href: '/inspector', label: t.nav.inspector, icon: ShieldCheck, desc: 'Assayer Verification' },
-    { href: '/disputes', label: t.nav.disputes, icon: Scale, desc: 'Grievance Redressal' },
-    { href: '/admin', label: t.nav.admin, icon: Users, desc: 'State APMC Administration' },
+    { href: '/inspector', label: t.nav.inspector, icon: ShieldCheck, desc: t.nav.descInspector },
+    { href: '/disputes', label: t.nav.disputes, icon: Scale, desc: t.nav.descDisputes },
+    { href: '/admin', label: t.nav.admin, icon: Users, desc: t.nav.descAdmin },
   ];
 
   const isActive = (href: string) => {
@@ -168,7 +168,7 @@ export function MobileNav({ onOpenVoice }: MobileNavProps) {
             {/* Secondary Ecosystem Links */}
             <div className="space-y-1">
               <span className="text-[11px] font-bold text-[#635E59] uppercase tracking-wider block px-1 mb-1">
-                Ecosystem Portals
+                {t.nav.ecosystemPortals}
               </span>
               <div className="grid grid-cols-1 gap-1">
                 {secondaryLinks.map((item) => {
@@ -196,7 +196,7 @@ export function MobileNav({ onOpenVoice }: MobileNavProps) {
             {/* Governance Links */}
             <div className="space-y-1 pt-2 border-t border-[#D8D2C4]">
               <span className="text-[11px] font-bold text-[#635E59] uppercase tracking-wider block px-1 mb-1">
-                Governance & Verification
+                {t.nav.governanceVerification}
               </span>
               <div className="grid grid-cols-1 gap-1">
                 {governanceLinks.map((item) => {
@@ -225,7 +225,7 @@ export function MobileNav({ onOpenVoice }: MobileNavProps) {
             <div className="pt-2 border-t border-[#D8D2C4] space-y-2">
               <div className="flex items-center gap-1.5 text-xs font-semibold text-[#635E59]">
                 <Globe className="w-4 h-4" />
-                <span>Select Language</span>
+                <span>{t.nav.selectLanguage}</span>
               </div>
               <div className="grid grid-cols-4 gap-1.5">
                 {languages.map((lang) => (

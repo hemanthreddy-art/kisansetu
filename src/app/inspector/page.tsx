@@ -292,7 +292,7 @@ function InspectorDeskContent() {
             className="gap-2 text-xs border-[#D8D2C4] text-[#1B4332] hover:bg-[#F4F1EA]"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-            <span>Refresh Queue</span>
+            <span>{t.quality.refreshQueue}</span>
           </Button>
         }
       />
@@ -323,7 +323,7 @@ function InspectorDeskContent() {
         </div>
 
         <div className="p-3 bg-[#FDFBF7] rounded-lg border border-[#D8D2C4] text-xs text-[#5A5243] max-w-xs sm:text-right">
-          <span className="font-bold text-[#1B4332] block font-heading">Independent Assaying</span>
+          <span className="font-bold text-[#1B4332] block font-heading">{t.quality.independentAssaying}</span>
           <span className="text-[11px] leading-tight block text-[#8C827A]">
             Performs in-person physical assaying without commercial or financial bias.
           </span>
@@ -365,7 +365,7 @@ function InspectorDeskContent() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <Card className="border-[#D8D2C4] shadow-none rounded-lg bg-white">
           <CardContent className="p-4 space-y-1">
-            <span className="text-xs text-[#5A5243] font-medium">All Produce Lots</span>
+            <span className="text-xs text-[#5A5243] font-medium">{t.quality.allProduceLots}</span>
             <div className="text-2xl sm:text-3xl font-black text-[#262320] font-heading">{metrics.totalLots}</div>
             <span className="text-[11px] text-[#8C827A] block">Active in jurisdiction</span>
           </CardContent>
@@ -378,7 +378,7 @@ function InspectorDeskContent() {
               <Clock className="w-3.5 h-3.5 text-[#B45309]" />
             </div>
             <div className="text-2xl sm:text-3xl font-black text-[#92400E] font-heading">{metrics.pendingInspections}</div>
-            <span className="text-[11px] text-[#B45309] block">Awaiting physical assaying</span>
+            <span className="text-[11px] text-[#B45309] block">{t.quality.awaitingAssaying}</span>
           </CardContent>
         </Card>
 
@@ -389,7 +389,7 @@ function InspectorDeskContent() {
               <Award className="w-3.5 h-3.5 text-[#1B4332]" />
             </div>
             <div className="text-2xl sm:text-3xl font-black text-[#1B4332] font-heading">{metrics.completedVerifications}</div>
-            <span className="text-[11px] text-[#2D6A4F] block">Certificates issued</span>
+            <span className="text-[11px] text-[#2D6A4F] block">{t.quality.certificatesIssued}</span>
           </CardContent>
         </Card>
 
@@ -400,7 +400,7 @@ function InspectorDeskContent() {
               <RefreshCw className="w-3.5 h-3.5 text-[#5A5243]" />
             </div>
             <div className="text-2xl sm:text-3xl font-black text-[#262320] font-heading">{metrics.reinspectionRequired}</div>
-            <span className="text-[11px] text-[#8C827A] block">Re-sampling needed</span>
+            <span className="text-[11px] text-[#8C827A] block">{t.quality.resamplingNeeded}</span>
           </CardContent>
         </Card>
       </div>
@@ -476,7 +476,7 @@ function InspectorDeskContent() {
       {loading ? (
         <div className="py-16 text-center space-y-3">
           <Loader2 className="w-8 h-8 text-[#1B4332] animate-spin mx-auto" />
-          <p className="text-sm text-[#5A5243]">Loading produce lots queue...</p>
+          <p className="text-sm text-[#5A5243]">{t.quality.loadingQueue}</p>
         </div>
       ) : error ? (
         <div className="p-6 rounded-lg bg-red-50 border border-red-200 text-center space-y-3">
@@ -489,7 +489,7 @@ function InspectorDeskContent() {
       ) : filteredLots.length === 0 ? (
         <div className="py-16 text-center space-y-3 border-2 border-dashed border-[#D8D2C4] rounded-lg bg-[#FDFBF7]">
           <FileText className="w-10 h-10 text-[#8C827A] mx-auto" />
-          <p className="text-base font-bold text-[#262320] font-heading">No produce lots found</p>
+          <p className="text-base font-bold text-[#262320] font-heading">{t.quality.noLotsFound}</p>
           <p className="text-xs text-[#5A5243] max-w-sm mx-auto">
             {searchQuery
               ? 'No lots matched your search criteria. Try a different query.'

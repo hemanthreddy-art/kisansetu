@@ -5,6 +5,122 @@
 export type Locale = 'en' | 'mr' | 'te' | 'hi';
 
 export interface TranslationDictionary {
+  commonStatuses: {
+    available: string;
+    draft: string;
+    reserved: string;
+    sold: string;
+    cancelled: string;
+    active: string;
+    completed: string;
+    pending: string;
+    accepted: string;
+    rejected: string;
+    inTransit: string;
+    delivered: string;
+    disputed: string;
+    qualityAssayed: string;
+    vehicleAssigned: string;
+    transportBooked: string;
+    offerAccepted: string;
+    physicallyVerified: string;
+    requiresReinspection: string;
+    aiScreeningNotVerified: string;
+    underReview: string;
+    paymentInitiated: string;
+    paymentReceived: string;
+    resolved: string;
+    closed: string;
+  };
+  common: {
+    loading: string;
+    notFound: string;
+    refresh: string;
+    back: string;
+    viewDetails: string;
+    status: string;
+    commodity: string;
+    variety: string;
+    quantity: string;
+    price: string;
+    targetPrice: string;
+    location: string;
+    grade: string;
+    lotId: string;
+    buyer: string;
+    farmer: string;
+    transporter: string;
+    quintals: string;
+    perQuintal: string;
+    save: string;
+    cancel: string;
+    close: string;
+    submit: string;
+    all: string;
+    resetFilters: string;
+    filterByCrop: string;
+    allCommodities: string;
+    allDistricts: string;
+    roadFreightTariff: string;
+    preferVoice: string;
+    voiceReady: string;
+    commercialLedger: string;
+    officialMediationDesk: string;
+    institutionalDesk: string;
+    prototypeDemo: string;
+    humanSupervised: string;
+    adminDesk: string;
+    publicPortal: string;
+    openGrievances: string;
+    underReview: string;
+    resolved: string;
+    closedCases: string;
+    loadingGrievances: string;
+    summaryDiscrepancy: string;
+    adjudicationNotes: string;
+    noGrievancesFound: string;
+    monitoredActiveTrades: string;
+  };
+  home: {
+    transparentProcess: string;
+    howItWorksTitle: string;
+    howItWorksSubtitle: string;
+    step1Title: string;
+    step1Desc: string;
+    step2Title: string;
+    step2Desc: string;
+    step3Title: string;
+    step3Desc: string;
+    step4Title: string;
+    step4Desc: string;
+    step5Title: string;
+    step5Desc: string;
+    step6Title: string;
+    step6Desc: string;
+    farmerToolsTitle: string;
+    quickMandiPrices: string;
+    quickMandiPricesDesc: string;
+    quickCreateLot: string;
+    quickCreateLotDesc: string;
+    quickNetRealisation: string;
+    quickNetRealisationDesc: string;
+    quickFindBuyers: string;
+    quickFindBuyersDesc: string;
+    quickLogistics: string;
+    quickLogisticsDesc: string;
+    quickTransactions: string;
+    quickTransactionsDesc: string;
+    realMarketDecisionBadge: string;
+    realMarketDecisionTitle: string;
+    realMarketDecisionSubtitle: string;
+    optionADistantMandi: string;
+    optionBLocalBuyer: string;
+    nominalPrice: string;
+    roadHaulFromNashik: string;
+    sameNetRealisation: string;
+    moreNetRealisation: string;
+  };
+
   brand: {
     name: string;
     tagline: string;
@@ -12,6 +128,17 @@ export interface TranslationDictionary {
     sihBadge: string;
   };
   nav: {
+    governance: string;
+    ecosystemPortals: string;
+    governanceVerification: string;
+    selectLanguage: string;
+    descFarmer: string;
+    descBuyer: string;
+    descTransporter: string;
+    descCalculator: string;
+    descInspector: string;
+    descDisputes: string;
+    descAdmin: string;
     home: string;
     farmer: string;
     buyer: string;
@@ -98,6 +225,34 @@ export interface TranslationDictionary {
     phaseNotice: string;
   };
   farmer: {
+    portalBadge: string;
+    demoProfile: string;
+    fpoMember: string;
+    createLotBtn: string;
+    qualityScreening: string;
+    aiScreeningNotVerified: string;
+    viewFullLot: string;
+    compareMandis: string;
+    viewBuyerOffers: string;
+    findLogistics: string;
+    coreDecision: string;
+    netRealisationEst: string;
+    takeHomeCalc: string;
+    sellNow: string;
+    sellNowDesc: string;
+    whySellNowTitle: string;
+    whySellNowDesc: string;
+    activeBuyerOffer: string;
+    acceptedStatus: string;
+    assignedStatus: string;
+    commercialLicense: string;
+    vehicleLabel: string;
+    corridorRoute: string;
+    freightCost: string;
+    commercialTransaction: string;
+    viewTxnDetails: string;
+    dataTransparencyTitle: string;
+    dataTransparencyNotice: string;
     badge: string;
     title: string;
     subtitle: string;
@@ -189,6 +344,16 @@ export interface TranslationDictionary {
     futureNetDesc: string;
     futureEscrowTitle: string;
     futureEscrowDesc: string;
+    totalRegisteredLots: string;
+    openForBuyerDiscovery: string;
+    unpublishedDrafts: string;
+    totalVolume: string;
+    digitalApmcYard: string;
+    registeredLotsTitle: string;
+    activeLotsSub: string;
+    notGraded: string;
+    offersCount: string;
+
   };
   quality: {
     sectionTitle: string;
@@ -250,6 +415,15 @@ export interface TranslationDictionary {
     cameraInputLabel: string;
     assessQualityBtn: string;
     ruleBasedNotice: string;
+    refreshQueue: string;
+    independentAssaying: string;
+    allProduceLots: string;
+    awaitingAssaying: string;
+    certificatesIssued: string;
+    resamplingNeeded: string;
+    loadingQueue: string;
+    noLotsFound: string;
+
   };
   buyerMatching: {
     matchedBuyersTitle: string;
@@ -359,6 +533,10 @@ export interface TranslationDictionary {
     trustNoticeTitle: string;
     trustNoticeDesc: string;
     demoNotice: string;
+    buyerMarketplace: string;
+    tradeAudit: string;
+    postProcurementDemand: string;
+
   };
   transport: {
     hubTitle: string;
@@ -438,8 +616,24 @@ export interface TranslationDictionary {
     activeBookingsTitle: string;
     noBookingsYet: string;
     demoNotice: string;
+    refreshNetwork: string;
+    rtoPermit: string;
+    corridorMilestoneTracking: string;
+    transitCompleted: string;
+
   };
   netRealisation: {
+    ledgerTitle: string;
+    settlementBreakdown: string;
+    trueNetRealisation: string;
+    grossMandiSale: string;
+    transportFreightLabel: string;
+    mandiFeeCess: string;
+    storageHandling: string;
+    farmerNetRealisation: string;
+    retentionRate: string;
+    totalDeductionsLabel: string;
+    afterDeductions: string;
     hubTitle: string;
     hubSubtitle: string;
     netRealisation: string;
@@ -529,6 +723,12 @@ export interface TranslationDictionary {
     buyerLabel: string;
     farmerLabel: string;
     transporterLabel: string;
+    activeContracts: string;
+    loadingRecords: string;
+    backToTransactions: string;
+    agreedQuantity: string;
+    physicalVerification: string;
+
   };
   disputes: {
     hubTitle: string;
@@ -609,6 +809,14 @@ export interface TranslationDictionary {
     calculateNetRealisation: string;
     archTitle: string;
     archDesc: string;
+    colTrend: string;
+    colDistance: string;
+    trendRising: string;
+    trendSoftening: string;
+    trendSteady: string;
+    filterTitle: string;
+    noMandisMatch: string;
+
   };
   voice: {
     buttonLabel: string;
@@ -637,6 +845,121 @@ export interface TranslationDictionary {
 
 export const translations: Record<Locale, TranslationDictionary> = {
   en: {
+    commonStatuses: {
+      "available": "Available",
+      "draft": "Draft",
+      "reserved": "Reserved",
+      "sold": "Sold",
+      "cancelled": "Cancelled",
+      "active": "Active",
+      "completed": "Completed",
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "inTransit": "In Transit",
+      "delivered": "Delivered",
+      "disputed": "Disputed",
+      "qualityAssayed": "Quality Assayed",
+      "vehicleAssigned": "Vehicle Assigned",
+      "transportBooked": "Transport Booked",
+      "offerAccepted": "Offer Accepted",
+      "physicallyVerified": "Physically Verified",
+      "requiresReinspection": "Requires Reinspection",
+      "aiScreeningNotVerified": "AI Screening — Not Verified",
+      "underReview": "Under Review",
+      "paymentInitiated": "Payment Initiated",
+      "paymentReceived": "Payment Received",
+      "resolved": "Resolved",
+      "closed": "Closed"
+    },
+    common: {
+      "loading": "Loading...",
+      "notFound": "Not Found",
+      "refresh": "Refresh",
+      "back": "Back",
+      "viewDetails": "View Details",
+      "status": "Status",
+      "commodity": "Commodity",
+      "variety": "Variety",
+      "quantity": "Quantity",
+      "price": "Price",
+      "targetPrice": "Target Price",
+      "location": "Location",
+      "grade": "Grade",
+      "lotId": "Lot ID",
+      "buyer": "Buyer",
+      "farmer": "Farmer",
+      "transporter": "Transporter",
+      "quintals": "Quintals",
+      "perQuintal": "/ Qtl",
+      "save": "Save",
+      "cancel": "Cancel",
+      "close": "Close",
+      "submit": "Submit",
+      "all": "All",
+      "resetFilters": "Reset Filters",
+      "filterByCrop": "Filter by Crop",
+      "allCommodities": "All Commodities",
+      "allDistricts": "All Districts",
+      "roadFreightTariff": "Road Freight Tariff Rate:",
+      "preferVoice": "Prefer Voice Calculation?",
+      "voiceReady": "Voice Ready",
+      "commercialLedger": "Commercial Ledger",
+      "officialMediationDesk": "Official Mediation Desk",
+      "institutionalDesk": "Institutional Desk",
+      "prototypeDemo": "[Prototype Demo]",
+      "humanSupervised": "Human Supervised Redressal",
+      "adminDesk": "Admin Desk",
+      "publicPortal": "Public Portal",
+      "openGrievances": "Open Grievances",
+      "underReview": "Under Review",
+      "resolved": "Resolved",
+      "closedCases": "Closed Cases",
+      "loadingGrievances": "Loading trade grievance records...",
+      "summaryDiscrepancy": "Summary of Discrepancy:",
+      "adjudicationNotes": "Adjudication Determination & Officer Notes",
+      "noGrievancesFound": "No grievances matching current filter.",
+      "monitoredActiveTrades": "Monitored Active Trades"
+    },
+    home: {
+      "transparentProcess": "Transparent Process",
+      "howItWorksTitle": "How It Works",
+      "howItWorksSubtitle": "From produce registration to bank settlement in 6 straightforward steps.",
+      "step1Title": "Add Produce",
+      "step1Desc": "List commodity, quantity, and expected quality grade.",
+      "step2Title": "Check Markets",
+      "step2Desc": "Inspect modal prices and arrivals across nearby APMCs.",
+      "step3Title": "Compare Net Realisation",
+      "step3Desc": "Deduct road freight and cess to see true take-home pay.",
+      "step4Title": "Match With Buyers",
+      "step4Desc": "Receive binding digital offers from verified buyers.",
+      "step5Title": "Arrange Transport",
+      "step5Desc": "Book verified corridor carriers with fixed freight rates.",
+      "step6Title": "Complete Transaction",
+      "step6Desc": "Milestone escrow releases and empirical trade ratings.",
+      "farmerToolsTitle": "Farmer Tools",
+      "quickMandiPrices": "Today's Mandi Prices",
+      "quickMandiPricesDesc": "APMC modal prices & trends",
+      "quickCreateLot": "Create Produce Lot",
+      "quickCreateLotDesc": "List harvest for buyers",
+      "quickNetRealisation": "Net Realisation Engine",
+      "quickNetRealisationDesc": "Compare actual earnings",
+      "quickFindBuyers": "Find Verified Buyers",
+      "quickFindBuyersDesc": "Browse direct procurement demands",
+      "quickLogistics": "Book Corridor Logistics",
+      "quickLogisticsDesc": "Capacity matching & freight quotes",
+      "quickTransactions": "Commercial Transactions",
+      "quickTransactionsDesc": "Escrow & milestone tracking",
+      "realMarketDecisionBadge": "Real Market Decision",
+      "realMarketDecisionTitle": "Highest price is not always highest earnings.",
+      "realMarketDecisionSubtitle": "Compare two real selling options for 100 Quintals of Onion (Niphad, Nashik) with all road freight, warehouse rent, and APMC cess accounted for.",
+      "optionADistantMandi": "Option A • Distant Mandi",
+      "optionBLocalBuyer": "Option B • Local Direct Buyer",
+      "nominalPrice": "Nominal Price",
+      "roadHaulFromNashik": "road haul from Nashik",
+      "sameNetRealisation": "Same net realisation",
+      "moreNetRealisation": "more net realisation"
+    },
     brand: {
       name: 'KisanSetu',
       tagline: 'Right Market. Right Buyer. Right Price.',
@@ -644,6 +967,17 @@ export const translations: Record<Locale, TranslationDictionary> = {
       sihBadge: 'Government of Maharashtra • Agriculture Initiative',
     },
     nav: {
+      governance: "Governance",
+      ecosystemPortals: "Ecosystem Portals",
+      governanceVerification: "Governance & Verification",
+      selectLanguage: "Select Language",
+      descFarmer: "Farmer Produce & Price Discovery",
+      descBuyer: "Demand Matching & Direct Sourcing",
+      descTransporter: "Corridor Logistics & Fleet",
+      descCalculator: "Net Realisation Engine",
+      descInspector: "Assayer Verification",
+      descDisputes: "Grievance Redressal",
+      descAdmin: "State APMC Administration",
       home: 'Home',
       farmer: 'Farmer / FPO',
       buyer: 'Buyers',
@@ -741,6 +1075,34 @@ export const translations: Record<Locale, TranslationDictionary> = {
       phaseNotice: 'Phase 1 Foundation: Modular Monolith Architecture',
     },
     farmer: {
+      portalBadge: "Farmer / FPO Portal",
+      demoProfile: "Demo Profile • Ramesh Patil (Niphad, Nashik)",
+      fpoMember: "Nashik Agro FPO Member • Aggregated Volume: 420 Tonnes",
+      createLotBtn: "+ Create Produce Lot",
+      qualityScreening: "Quality Screening",
+      aiScreeningNotVerified: "AI Screening — Not Physically Verified",
+      viewFullLot: "View Full Lot",
+      compareMandis: "Compare Mandis",
+      viewBuyerOffers: "View Buyer Offers",
+      findLogistics: "Find Logistics",
+      coreDecision: "Core Agricultural Decision",
+      netRealisationEst: "Estimated Net Realisation",
+      takeHomeCalc: "Take-home earnings calculated for 80 Quintals after logistics and handling deductions.",
+      sellNow: "SELL NOW",
+      sellNowDesc: "Direct Buyer provides highest take-home",
+      whySellNowTitle: "Why Sell Now to ABC Foods?",
+      whySellNowDesc: "Direct procurement buyer ABC Foods offers ₹2,420/Qtl with local Niphad hub pickup (30 km). Transport freight is only ₹1,200 with zero APMC mandi cess, locking in ₹1,91,200 (₹2,390/Qtl net) compared to ₹1,78,000 at distant mandis after long-haul deductions.",
+      activeBuyerOffer: "Active Buyer Offer",
+      acceptedStatus: "ACCEPTED",
+      assignedStatus: "ASSIGNED",
+      commercialLicense: "Commercial License",
+      vehicleLabel: "Vehicle:",
+      corridorRoute: "Corridor Route:",
+      freightCost: "Freight Cost:",
+      commercialTransaction: "Commercial Transaction",
+      viewTxnDetails: "View Transaction Details",
+      dataTransparencyTitle: "Agricultural Data Transparency",
+      dataTransparencyNotice: "Demonstration scenario modeled for Maharashtra APMC market linkages. All calculations follow actual distance-weighted freight formulas and physical assayer standards.",
       badge: 'ROLE: FARMER / FPO',
       title: 'Farmer & FPO Management Hub',
       subtitle:
@@ -767,6 +1129,15 @@ export const translations: Record<Locale, TranslationDictionary> = {
         'This route maps to FarmerProfile, FPO, ProduceLot, and Offer models in SQLite via Prisma Client with live persistence.',
     },
     lots: {
+      "totalRegisteredLots": "Total registered lots",
+      "openForBuyerDiscovery": "Open for buyer discovery",
+      "unpublishedDrafts": "Unpublished drafts",
+      "totalVolume": "Total Volume",
+      "digitalApmcYard": "Digital APMC Yard",
+      "registeredLotsTitle": "Registered Produce Lots",
+      "activeLotsSub": "Active lots published for buyer matching and transport dispatch",
+      "notGraded": "Not Graded",
+      "offersCount": "offers",
       badge: 'DIGITAL PRODUCE LOTS',
       title: 'Digital Produce Lots',
       subtitle:
@@ -839,6 +1210,14 @@ export const translations: Record<Locale, TranslationDictionary> = {
       futureEscrowDesc: 'Bank-grade transaction escrow ensuring farmers receive payment immediately upon buyer delivery confirmation.',
     },
     quality: {
+      "refreshQueue": "Refresh Queue",
+      "independentAssaying": "Independent Assaying",
+      "allProduceLots": "All Produce Lots",
+      "awaitingAssaying": "Awaiting physical assaying",
+      "certificatesIssued": "Certificates issued",
+      "resamplingNeeded": "Re-sampling needed",
+      "loadingQueue": "Loading produce lots queue...",
+      "noLotsFound": "No produce lots found",
       sectionTitle: 'Two-Tier Quality Verification',
       sectionSubtitle: 'Transparent produce grading separating AI visual estimates from certified physical inspection.',
       tier1Title: 'Tier 1: AI Visual Screening',
@@ -900,6 +1279,9 @@ export const translations: Record<Locale, TranslationDictionary> = {
       ruleBasedNotice: 'Preliminary visual screening checks surface color and uniformity. Physical assaying is required for official certification.',
     },
     buyerMatching: {
+      "buyerMarketplace": "Buyer Marketplace",
+      "tradeAudit": "TRADE AUDIT",
+      "postProcurementDemand": "Post Procurement Demand",
       matchedBuyersTitle: 'Matched Commercial Buyers',
       matchedBuyersSubtitle: 'Commercial buyers and processors actively seeking produce matching your crop, quantity, and grade.',
       noMatchesFound: 'No commercial buyers currently match this lot criteria.',
@@ -1009,6 +1391,10 @@ export const translations: Record<Locale, TranslationDictionary> = {
       demoNotice: 'DEMO NOTICE: Buyer profiles and offers are simulated demonstrations for agricultural market linkages.',
     },
     transport: {
+      "refreshNetwork": "Refresh Network",
+      "rtoPermit": "RTO Permit",
+      "corridorMilestoneTracking": "Corridor Milestone Tracking",
+      "transitCompleted": "Transit Completed",
       hubTitle: 'Transporter Logistics & Dispatch Hub',
       hubSubtitle: 'Manage commercial transport fleet, review farm-gate dispatch requests, and update transit delivery milestones across Maharashtra.',
       roleBadge: 'ROLE: TRANSPORTER LOGISTICS',
@@ -1088,6 +1474,17 @@ export const translations: Record<Locale, TranslationDictionary> = {
       demoNotice: 'DEMO NOTICE: Logistics simulation for agricultural corridors. Does not initiate real vehicular dispatch or payment processing.',
     },
     netRealisation: {
+      ledgerTitle: "Net Realisation Ledger",
+      settlementBreakdown: "Settlement Breakdown",
+      trueNetRealisation: "True Net Realisation",
+      grossMandiSale: "Gross Mandi Sale Value",
+      transportFreightLabel: "Transport Freight",
+      mandiFeeCess: "APMC Mandi Fee & Cess",
+      storageHandling: "Warehouse Storage & Handling",
+      farmerNetRealisation: "Farmer Net Realisation",
+      retentionRate: "Gross Retention Rate",
+      totalDeductionsLabel: "Total deductions:",
+      afterDeductions: "After all mandi & freight deductions",
       hubTitle: 'Net Realisation & Smart Selling Recommendation',
       hubSubtitle: 'Calculate true farm take-home cash after transparent transport, storage, and handling deductions.',
       netRealisation: 'Net Realisation',
@@ -1135,6 +1532,11 @@ export const translations: Record<Locale, TranslationDictionary> = {
       storageProjectionLabel: 'Warehouse Storage Projection',
     },
     transactions: {
+      "activeContracts": "Active Contracts",
+      "loadingRecords": "Loading commercial transaction records...",
+      "backToTransactions": "Back to Transactions Ledger",
+      "agreedQuantity": "Agreed Quantity",
+      "physicalVerification": "Physical Verification",
       hubTitle: 'Transactions, Escrow & Trade Fulfillment',
       hubSubtitle: 'Milestone-tracked digital trade execution, demo payment status, and verified 3-way ratings.',
       myTransactionsTitle: 'My Commercial Transactions',
@@ -1238,6 +1640,13 @@ export const translations: Record<Locale, TranslationDictionary> = {
       resetDefaults: 'Reset Defaults',
     },
     markets: {
+      "colTrend": "Trend",
+      "colDistance": "Distance",
+      "trendRising": "Rising",
+      "trendSoftening": "Softening",
+      "trendSteady": "Steady",
+      "filterTitle": "Filter Mandis & Commodities",
+      "noMandisMatch": "No mandis match your active filters.",
       title: 'Mandi Prices & Arrival Volumes',
       subtitle: 'Daily commodity modal prices, price bands, and arrival tracking across Maharashtra & Andhra Pradesh (Vizag Region) APMC mandis.',
       badge: 'APMC MARKET INTELLIGENCE',
@@ -1283,6 +1692,121 @@ export const translations: Record<Locale, TranslationDictionary> = {
   },
 
   mr: {
+    commonStatuses: {
+      "available": "उपलब्ध",
+      "draft": "मसुदा",
+      "reserved": "राखीव",
+      "sold": "विक्री झाले",
+      "cancelled": "रद्द केले",
+      "active": "सक्रिय",
+      "completed": "पूर्ण झाले",
+      "pending": "प्रलंबित",
+      "accepted": "स्वीकृत",
+      "rejected": "नाकारले",
+      "inTransit": "वाहतुकीत आहे",
+      "delivered": "पोहोचवले",
+      "disputed": "वादग्रस्त",
+      "qualityAssayed": "गुणवत्ता तपासणी झाली",
+      "vehicleAssigned": "वाहन नियुक्त",
+      "transportBooked": "वाहतूक बुक झाली",
+      "offerAccepted": "ऑफर स्वीकृत",
+      "physicallyVerified": "प्रत्यक्ष प्रमाणित",
+      "requiresReinspection": "पुन्हा तपासणी आवश्यक",
+      "aiScreeningNotVerified": "एआय तपासणी — अप्रमाणित",
+      "underReview": "पुनरावलोकनाधीन",
+      "paymentInitiated": "पेमेंट सुरू केले",
+      "paymentReceived": "पेमेंट प्राप्त झाले",
+      "resolved": "निवारण झाले",
+      "closed": "बंद"
+    },
+    common: {
+      "loading": "लोड होत आहे...",
+      "notFound": "आढळले नाही",
+      "refresh": "रिफ्रेश",
+      "back": "मागे",
+      "viewDetails": "तपशील पहा",
+      "status": "स्थिती",
+      "commodity": "कृषी जिंस",
+      "variety": "वाण",
+      "quantity": "परिमाण / वजन",
+      "price": "भाव / किंमत",
+      "targetPrice": "अपेक्षित भाव",
+      "location": "स्थान / जिल्हा",
+      "grade": "प्रत / श्रेणी",
+      "lotId": "लॉट आयडी",
+      "buyer": "खरेदीदार",
+      "farmer": "शेतकरी",
+      "transporter": "वाहतूकदार",
+      "quintals": "क्विंटल",
+      "perQuintal": "/ क्विंटल",
+      "save": "जतन करा",
+      "cancel": "रद्द करा",
+      "close": "बंद करा",
+      "submit": "सादर करा",
+      "all": "सर्व",
+      "resetFilters": "फिल्टर रीसेट करा",
+      "filterByCrop": "पिकानुसार फिल्टर करा",
+      "allCommodities": "सर्व पिके",
+      "allDistricts": "सर्व जिल्हे",
+      "roadFreightTariff": "रस्ते वाहतूक भाडे दर:",
+      "preferVoice": "आवाजाद्वारे गणना पसंत आहे?",
+      "voiceReady": "आवाज सज्ज",
+      "commercialLedger": "व्यावसायिक खातेवही",
+      "officialMediationDesk": "अधिकृत मध्यस्थी कक्ष",
+      "institutionalDesk": "संस्थात्मक कक्ष",
+      "prototypeDemo": "[प्रोटोटाइप डेमो]",
+      "humanSupervised": "मानवी देखरेखीखाली निवारण",
+      "adminDesk": "प्रशासन कक्ष",
+      "publicPortal": "सार्वजनिक पोर्टल",
+      "openGrievances": "सक्रिय तक्रारी",
+      "underReview": "तपासणी सुरू",
+      "resolved": "निवारण झाले",
+      "closedCases": "बंद प्रकरणे",
+      "loadingGrievances": "तक्रार नोंदी लोड होत आहेत...",
+      "summaryDiscrepancy": "तफावतीचा सारांश:",
+      "adjudicationNotes": "अधिकारी निर्णय व पडताळणी नोंदी",
+      "noGrievancesFound": "सध्याच्या फिल्टरनुसार कोणतीही तक्रार आढळली नाही.",
+      "monitoredActiveTrades": "निरीक्षणाखालील सक्रिय सौदे"
+    },
+    home: {
+      "transparentProcess": "पारदर्शक प्रक्रिया",
+      "howItWorksTitle": "हे कसे कार्य करते",
+      "howItWorksSubtitle": "शेतमाल नोंदणीपासून बँक खात्यातील जमा रकमेपर्यंत ६ सोप्या पायऱ्या.",
+      "step1Title": "शेतमाल नोंदवा",
+      "step1Desc": "जिंस, परिमाण आणि अपेक्षित गुणवत्ता श्रेणी प्रविष्ट करा.",
+      "step2Title": "बाजार भाव तपासा",
+      "step2Desc": "जवळपासच्या एपीएमसी मंड्यांमधील मॉडेल भाव आणि आवक तपासा.",
+      "step3Title": "शुद्ध प्राप्ती तुलना करा",
+      "step3Desc": "प्रत्यक्ष हाती येणारा नफा जाणून घेण्यासाठी वाहतूक व उपकर वजा करा.",
+      "step4Title": "खरेदीदारांशी जोडा",
+      "step4Desc": "सत्यापित खरेदीदारांकडून थेट डिजिटल ऑफर्स प्राप्त करा.",
+      "step5Title": "वाहतूक निश्चित करा",
+      "step5Desc": "निश्चित भाडे दराने सत्यापित कॉरिडॉर वाहने बुक करा.",
+      "step6Title": "व्यवहार पूर्ण करा",
+      "step6Desc": "टप्प्याटप्प्याने एस्क्रो वितरण आणि अनुभव-आधारित रेटिंग्ज.",
+      "farmerToolsTitle": "शेतकरी साधने",
+      "quickMandiPrices": "आजचे मंडी भाव",
+      "quickMandiPricesDesc": "एपीएमसी मॉडेल भाव व कल",
+      "quickCreateLot": "शेतमाल लॉट तयार करा",
+      "quickCreateLotDesc": "खरेदीदारांसाठी शेतमाल नोंदवा",
+      "quickNetRealisation": "शुद्ध प्राप्ती कॅल्क्युलेटर",
+      "quickNetRealisationDesc": "प्रत्यक्ष हाती येणारा नफा तपासा",
+      "quickFindBuyers": "सत्यापित खरेदीदार शोधा",
+      "quickFindBuyersDesc": "थेट खरेदी मागण्या पहा",
+      "quickLogistics": "कॉरिडॉर वाहतूक बुक करा",
+      "quickLogisticsDesc": "वाहन क्षमता व भाडे दर",
+      "quickTransactions": "व्यावसायिक व्यवहार",
+      "quickTransactionsDesc": "एस्क्रो व टप्पा ट्रॅकिंग",
+      "realMarketDecisionBadge": "प्रत्यक्ष बाजार निर्णय",
+      "realMarketDecisionTitle": "सर्वाधिक भाव म्हणजे नेहमी सर्वाधिक नफा नव्हे.",
+      "realMarketDecisionSubtitle": "१०० क्विंटल कांद्यासाठी (निफाड, नाशिक) रस्ते वाहतूक, गोदाम भाडे आणि एपीएमसी उपकराचा विचार करून दोन प्रत्यक्ष विक्री पर्यायांची तुलना करा.",
+      "optionADistantMandi": "पर्याय अ • दूरची मंडी",
+      "optionBLocalBuyer": "पर्याय ब • स्थानिक थेट खरेदीदार",
+      "nominalPrice": "प्रचलित भाव",
+      "roadHaulFromNashik": "नाशिकपासून अंतर",
+      "sameNetRealisation": "समान शुद्ध प्राप्ती",
+      "moreNetRealisation": "अधिक शुद्ध प्राप्ती"
+    },
     brand: {
       name: 'किसानसेतू',
       tagline: 'योग्य बाजार. योग्य खरेदीदार. योग्य भाव.',
@@ -1290,6 +1814,17 @@ export const translations: Record<Locale, TranslationDictionary> = {
       sihBadge: 'महाराष्ट्र शासन • कृषी पणन उपक्रम',
     },
     nav: {
+      governance: "प्रशासन व पडताळणी",
+      ecosystemPortals: "इकोसिस्टम पोर्टल्स",
+      governanceVerification: "प्रशासन व पडताळणी",
+      selectLanguage: "भाषा निवडा",
+      descFarmer: "शेतकरी उत्पादन व बाजार भाव",
+      descBuyer: "मागणी जुळणी व थेट खरेदी",
+      descTransporter: "कॉरिडॉर लॉजिस्टिक्स व वाहने",
+      descCalculator: "शुद्ध प्राप्ती कॅल्क्युलेटर",
+      descInspector: "गुणवत्ता तपासणी व प्रमाणीकरण",
+      descDisputes: "तक्रार निवारण व मध्यस्थी",
+      descAdmin: "राज्य एपीएमसी प्रशासन",
       home: 'मुख्यपृष्ठ',
       farmer: 'शेतकरी / FPO',
       buyer: 'खरेदीदार',
@@ -1387,6 +1922,34 @@ export const translations: Record<Locale, TranslationDictionary> = {
       phaseNotice: 'टप्पा १ पायाभूत रचना: मॉड्युलर मोनोलिथ आर्किटेक्चर',
     },
     farmer: {
+      portalBadge: "शेतकरी / एफपीओ पोर्टल",
+      demoProfile: "डेमो प्रोफाइल • रमेश पाटील (निफाड, नाशिक)",
+      fpoMember: "नाशिक अ‍ॅग्रो एफपीओ सदस्य • एकत्रित आकारमान: ४२० टन",
+      createLotBtn: "+ शेतमाल लॉट तयार करा",
+      qualityScreening: "गुणवत्ता तपासणी",
+      aiScreeningNotVerified: "एआय तपासणी — प्रत्यक्ष अप्रमाणित",
+      viewFullLot: "संपूर्ण लॉट पहा",
+      compareMandis: "मंड्यांची तुलना करा",
+      viewBuyerOffers: "खरेदीदार ऑफर्स पहा",
+      findLogistics: "वाहतूक शोधा",
+      coreDecision: "प्रमुख कृषी निर्णय",
+      netRealisationEst: "अंदाजित शुद्ध प्राप्ती",
+      takeHomeCalc: "वाहतूक आणि हमाली कपातीनंतर ८० क्विंटलसाठी हाती येणारा नफा.",
+      sellNow: "आता विका",
+      sellNowDesc: "थेट खरेदीदार सर्वाधिक नफा देतो",
+      whySellNowTitle: "एबीसी फूड्सला आता का विकावे?",
+      whySellNowDesc: "थेट खरेदीदार एबीसी फूड्स स्थानिक निफाड हबमधून (३० किमी) ₹२,४२०/क्विंटल भाव देत आहे. वाहतूक खर्च फक्त ₹१,२०० असून कोणतीही एपीएमसी उपकर नाही, ज्यामुळे दूरच्या मंड्यांच्या ₹१,७८,००० तुलनेत ₹१,९१,२०० (₹२,३९०/क्विंटल शुद्ध) नफा मिळतो.",
+      activeBuyerOffer: "सक्रिय खरेदीदार ऑफर",
+      acceptedStatus: "स्वीकृत",
+      assignedStatus: "नियुक्त",
+      commercialLicense: "व्यावसायिक परवाना",
+      vehicleLabel: "वाहन:",
+      corridorRoute: "कॉरिडॉर मार्ग:",
+      freightCost: "वाहतूक भाडे:",
+      commercialTransaction: "व्यावसायिक व्यवहार",
+      viewTxnDetails: "व्यवहार तपशील पहा",
+      dataTransparencyTitle: "कृषी डेटा पारदर्शकता",
+      dataTransparencyNotice: "महाराष्ट्र एपीएमसी बाजार जोडणीसाठी डिझाइन केलेले डेमो दृश्य. सर्व गणिते प्रत्यक्ष अंतर-आधारित भाडे सूत्रे आणि प्रत्यक्ष तपासणी मानकांचे पालन करतात.",
       badge: 'भूमिका: शेतकरी / FPO',
       title: 'शेतकरी आणि FPO व्यवस्थापन केंद्र',
       subtitle:
@@ -1413,6 +1976,15 @@ export const translations: Record<Locale, TranslationDictionary> = {
         'हा मार्ग थेट SQLite डेटाबेस मधील FarmerProfile, FPO, ProduceLot आणि Offer मॉडेल्सशी जोडलेला आहे.',
     },
     lots: {
+      "totalRegisteredLots": "एकूण नोंदणीकृत लॉट्स",
+      "openForBuyerDiscovery": "खरेदीदारांसाठी खुले लॉट्स",
+      "unpublishedDrafts": "अप्रकाशित मसुदे",
+      "totalVolume": "एकूण परिमाण",
+      "digitalApmcYard": "डिजिटल बाजार यार्ड",
+      "registeredLotsTitle": "नोंदणीकृत शेतमाल लॉट्स",
+      "activeLotsSub": "खरेदीदार जुळवणी आणि वाहतुकीसाठी सक्रिय लॉट्स",
+      "notGraded": "प्रतवारी बाकी",
+      "offersCount": "ऑफर",
       badge: 'डिजिटल शेतमाल लॉट्स',
       title: 'डिजिटल शेतमाल लॉट्स',
       subtitle:
@@ -1485,6 +2057,14 @@ export const translations: Record<Locale, TranslationDictionary> = {
       futureEscrowDesc: 'बँक-स्तरीय एस्क्रॉ द्वारे खरेदीदाराने माल मिळाल्याची पुष्टी केल्यावर शेतकऱ्याला त्वरित पेमेंट खात्री.',
     },
     quality: {
+      "refreshQueue": "रांग रिफ्रेश करा",
+      "independentAssaying": "स्वतंत्र गुणवत्ता तपासणी",
+      "allProduceLots": "सर्व शेतमाल लॉट्स",
+      "awaitingAssaying": "प्रत्यक्ष तपासणीची प्रतीक्षा",
+      "certificatesIssued": "प्रमाणपत्रे जारी केली",
+      "resamplingNeeded": "पुनर्तपासणी आवश्यक",
+      "loadingQueue": "शेतमाल रांग लोड होत आहे...",
+      "noLotsFound": "कोणतेही शेतमाल लॉट्स आढळले नाहीत",
       sectionTitle: 'द्वि-स्तरीय गुणवत्ता पडताळणी',
       sectionSubtitle: 'एआय व्हिज्युअल अंदाज आणि अधिकृत प्रत्यक्ष तपासणी यामधील पारदर्शक वर्गीकरण.',
       tier1Title: 'टप्पा १: एआय प्राथमिक व्हिज्युअल तपासणी',
@@ -1546,6 +2126,9 @@ export const translations: Record<Locale, TranslationDictionary> = {
       ruleBasedNotice: 'प्राथमिक व्हिज्युअल तपासणी पृष्ठभागाचा रंग आणि एकसारखेपणा तपासते. अधिकृत प्रमाणपत्रासाठी प्रत्यक्ष तपासणी अनिवार्य आहे.',
     },
     buyerMatching: {
+      "buyerMarketplace": "खरेदीदार बाजारपेठ",
+      "tradeAudit": "व्यापार ऑडिट",
+      "postProcurementDemand": "खरेदी मागणी नोंदवा",
       matchedBuyersTitle: 'जुळणारे व्यावसायिक खरेदीदार',
       matchedBuyersSubtitle: 'तुमच्या पिकाशी, प्रमाण आणि गुणवत्तेशी जुळणारे सक्रिय व्यावसायिक खरेदीदार व प्रक्रिया उद्योग.',
       noMatchesFound: 'या पिकासाठी सध्या थेट जुळणारे खरेदीदार उपलब्ध नाहीत.',
@@ -1655,6 +2238,10 @@ export const translations: Record<Locale, TranslationDictionary> = {
       demoNotice: 'डेमो मोड: हे केवळ प्रात्यक्षिकासाठी तयार केलेले सिम्युलेशन आहे. येथे कोणतेही प्रत्यक्ष आर्थिक व्यवहार किंवा करार होत नाहीत.',
     },
     transport: {
+      "refreshNetwork": "नेटवर्क रिफ्रेश करा",
+      "rtoPermit": "आरटीओ परवाना",
+      "corridorMilestoneTracking": "कॉरिडोअर टप्पा ट्रॅकिंग",
+      "transitCompleted": "वाहतूक पूर्ण",
       hubTitle: 'वाहतूकदार लॉजिस्टिक्स आणि डिस्पॅच हब',
       hubSubtitle: 'व्यावसायिक वाहने व्यवस्थापित करा, शेतमालाच्या वाहतूक विनंत्या तपासा आणि पारगमन वितरण अद्यतनित करा.',
       roleBadge: 'भूमिका: वाहतूकदार लॉजिस्टिक्स',
@@ -1734,6 +2321,17 @@ export const translations: Record<Locale, TranslationDictionary> = {
       demoNotice: 'डेमो सूचना: कृषी कॉरिडॉरसाठी लॉजिस्टिक्स सिम्युलेशन. प्रत्यक्षात कोणतेही वाहन पाठवले जात नाही.',
     },
     netRealisation: {
+      ledgerTitle: "शुद्ध प्राप्ती खातेवही",
+      settlementBreakdown: "हिशेब तपशील",
+      trueNetRealisation: "प्रत्यक्ष शुद्ध प्राप्ती",
+      grossMandiSale: "एकूण मंडी विक्री मूल्य",
+      transportFreightLabel: "वाहतूक भाडे",
+      mandiFeeCess: "एपीएमसी मंडी उपकर व हमाली",
+      storageHandling: "गोदाम साठवणूक व हताळणी",
+      farmerNetRealisation: "शेतकऱ्याची निव्वळ प्राप्ती",
+      retentionRate: "एकूण नफा प्रमाण",
+      totalDeductionsLabel: "एकूण कपाती:",
+      afterDeductions: "सर्व मंडी व वाहतूक कपातीनंतर",
       hubTitle: 'निव्वळ परतावा (Net Realisation) आणि हुशार विक्री सल्ला',
       hubSubtitle: 'वाहतूक, साठवणूक आणि बाजार सेस कपातीनंतर प्रत्यक्ष हातात येणारा निव्वळ परतावा मोजा.',
       netRealisation: 'निव्वळ परतावा (Net Realisation)',
@@ -1781,6 +2379,11 @@ export const translations: Record<Locale, TranslationDictionary> = {
       storageProjectionLabel: 'गोदाम साठवणूक अंदाज',
     },
     transactions: {
+      "activeContracts": "सक्रिय सौदे",
+      "loadingRecords": "व्यावसायिक व्यवहार नोंदी लोड होत आहेत...",
+      "backToTransactions": "व्यवहार लेजरकडे परत",
+      "agreedQuantity": "मान्य केलेले प्रमाण",
+      "physicalVerification": "प्रत्यक्ष पडताळणी",
       hubTitle: 'व्यवहार, एस्क्रो आणि व्यापार पूर्तता',
       hubSubtitle: 'टप्प्याटप्प्याने डिजिटल व्यापार अंमलबजावणी, नमुना पेमेंट स्थिती आणि पडताळलेले ३-मार्गी रेटिंग.',
       myTransactionsTitle: 'माझे व्यावसायिक व्यवहार',
@@ -1884,6 +2487,13 @@ export const translations: Record<Locale, TranslationDictionary> = {
       resetDefaults: 'डीफॉल्ट रीसेट करा',
     },
     markets: {
+      "colTrend": "कल",
+      "colDistance": "अंतर",
+      "trendRising": "तेजीत",
+      "trendSoftening": "घसरणीत",
+      "trendSteady": "स्थिर",
+      "filterTitle": "बाजार आणि शेतमाल फिल्टर करा",
+      "noMandisMatch": "निवडलेल्या फिल्टरनुसार कोणतेही बाजार आढळले नाहीत.",
       title: 'मंडी दर आणि आवक प्रमाण',
       subtitle: 'महाराष्ट्र आणि आंध्र प्रदेश (विझाग प्रदेश) मधील एपीएमसी बाजार समित्यांचे दैनंदिन मॉडेल दर आणि आवक ट्रॅकिंग.',
       badge: 'एपीएमसी बाजार गुप्तवार्ता',
@@ -1929,6 +2539,121 @@ export const translations: Record<Locale, TranslationDictionary> = {
   },
 
   te: {
+    commonStatuses: {
+      "available": "అందుబాటులో ఉంది",
+      "draft": "చిత్తుప్రతి",
+      "reserved": "రిజర్వ్ చేయబడింది",
+      "sold": "విక్రయించబడింది",
+      "cancelled": "రద్దు చేయబడింది",
+      "active": "యాక్టివ్",
+      "completed": "పూర్తయింది",
+      "pending": "పెండింగ్",
+      "accepted": "ఆమోదించబడింది",
+      "rejected": "తిరస్కరించబడింది",
+      "inTransit": "రవాణాలో ఉంది",
+      "delivered": "డెలివరీ చేయబడింది",
+      "disputed": "వివాదాస్పదం",
+      "qualityAssayed": "నాణ్యత తనిఖీ పూర్తయింది",
+      "vehicleAssigned": "వాహనం కేటాయించబడింది",
+      "transportBooked": "రవాణా బుక్ అయింది",
+      "offerAccepted": "ఆఫర్ ఆమోదించబడింది",
+      "physicallyVerified": "భౌతికంగా ధృవీకరించబడింది",
+      "requiresReinspection": "పునః తనిఖీ అవసరం",
+      "aiScreeningNotVerified": "ఏఐ స్క్రీనింగ్ — ధృవీకరించబడలేదు",
+      "underReview": "సమీక్షలో ఉంది",
+      "paymentInitiated": "చెల్లింపు ప్రారంభించబడింది",
+      "paymentReceived": "చెల్లింపు అందింది",
+      "resolved": "పరిష్కరించబడింది",
+      "closed": "ముగిసింది"
+    },
+    common: {
+      "loading": "లోడ్ అవుతోంది...",
+      "notFound": "కనుగొనబడలేదు",
+      "refresh": "రిఫ్రెష్",
+      "back": "వెనుకకు",
+      "viewDetails": "వివరాలు చూడండి",
+      "status": "స్థితి",
+      "commodity": "పంట / సరుకు",
+      "variety": "రకం",
+      "quantity": "పరిమాణం",
+      "price": "ధర",
+      "targetPrice": "ఆశించిన ధర",
+      "location": "ప్రాంతం / జిల్లా",
+      "grade": "గ్రేడ్",
+      "lotId": "లాట్ ఐడీ",
+      "buyer": "కొనుగోలుదారు",
+      "farmer": "రైతు",
+      "transporter": "రవాణాదారు",
+      "quintals": "క్వింటాళ్లు",
+      "perQuintal": "/ క్విం.",
+      "save": "సేవ్ చేయండి",
+      "cancel": "రద్దు చేయండి",
+      "close": "మూసివేయండి",
+      "submit": "సమర్పించండి",
+      "all": "అన్నీ",
+      "resetFilters": "ఫిల్టర్లను రీసెట్ చేయండి",
+      "filterByCrop": "పంట ఆధారంగా ఫిల్టర్ చేయండి",
+      "allCommodities": "అన్ని పంటలు",
+      "allDistricts": "అన్ని జిల్లాలు",
+      "roadFreightTariff": "రోడ్డు రవాణా టారిఫ్ రేటు:",
+      "preferVoice": "వాయిస్ లెక్కింపు కావాలా?",
+      "voiceReady": "వాయిస్ సిద్ధం",
+      "commercialLedger": "వాణిజ్య లెడ్జర్",
+      "officialMediationDesk": "అధికారిక మధ్యవర్తిత్వ డెస్క్",
+      "institutionalDesk": "సంస్థాగత డెస్క్",
+      "prototypeDemo": "[ప్రోటోటైప్ డెమో]",
+      "humanSupervised": "మానవ పర్యవేక్షణ పరిష్కారం",
+      "adminDesk": "అడ్మిన్ డెస్క్",
+      "publicPortal": "పబ్లిక్ పోర్టల్",
+      "openGrievances": "పరిష్కారం కాని ఫిర్యాదులు",
+      "underReview": "పరిశీలనలో ఉంది",
+      "resolved": "పరిష్కరించబడింది",
+      "closedCases": "ముగిసిన కేసులు",
+      "loadingGrievances": "ఫిర్యాదుల రికార్డులు లోడ్ అవుతున్నాయి...",
+      "summaryDiscrepancy": "వ్యత్యాసం సారాంశం:",
+      "adjudicationNotes": "అధికారి నిర్ణయం మరియు గమనికలు",
+      "noGrievancesFound": "ఎంచుకున్న ఫిల్టర్‌కు సరిపోలే ఫిర్యాదులు లేవు.",
+      "monitoredActiveTrades": "పర్యవేక్షించబడుతున్న వాణిజ్యాలు"
+    },
+    home: {
+      "transparentProcess": "పారదర్శక విధానం",
+      "howItWorksTitle": "ఇది ఎలా పనిచేస్తుంది",
+      "howItWorksSubtitle": "ఉత్పత్తి నమోదు నుండి బ్యాంక్ జమ వరకు 6 సరళమైన దశలు.",
+      "step1Title": "పంటను జోడించండి",
+      "step1Desc": "సరుకు, పరిమాణం మరియు ఆశించిన నాణ్యతా గ్రేడ్‌ను నమోదు చేయండి.",
+      "step2Title": "మార్కెట్లను తనిఖీ చేయండి",
+      "step2Desc": "సమీప మార్కెట్లలో ధరలు మరియు రాకలను తనిఖీ చేయండి.",
+      "step3Title": "నికర రాబడిని పోల్చండి",
+      "step3Desc": "నిజమైన ఆదాయాన్ని తెలుసుకోవడానికి రవాణా మరియు సెస్‌ను తీసివేయండి.",
+      "step4Title": "కొనుగోలుదారులతో కలవండి",
+      "step4Desc": "ధృవీకరించబడిన కొనుగోలుదారుల నుండి ప్రత్యక్ష డిజిటల్ ఆఫర్లను పొందండి.",
+      "step5Title": "రవాణాను ఏర్పాటు చేయండి",
+      "step5Desc": "స్థిర రవాణా రేట్లతో ధృవీకరించబడిన వాహనాలను బుక్ చేయండి.",
+      "step6Title": "లావాదేవీని పూర్తి చేయండి",
+      "step6Desc": "దశలవారీగా ఎస్క్రో విడుదలలు మరియు ట్రేడ్ రేటింగ్‌లు.",
+      "farmerToolsTitle": "రైతు సాధనాలు",
+      "quickMandiPrices": "నేటి మార్కెట్ ధరలు",
+      "quickMandiPricesDesc": "మార్కెట్ మోడల్ ధరలు & పోకడలు",
+      "quickCreateLot": "ఉత్పత్తి లాట్ సృష్టించండి",
+      "quickCreateLotDesc": "కొనుగోలుదారుల కోసం పంటను నమోదు చేయండి",
+      "quickNetRealisation": "నికర రాబడి ఇంజిన్",
+      "quickNetRealisationDesc": "వాస్తవ నికర ఆదాయాన్ని పోల్చండి",
+      "quickFindBuyers": "ధృవీకరించబడిన కొనుగోలుదారులు",
+      "quickFindBuyersDesc": "ప్రత్యక్ష సేకరణ డిమాండ్లను బ్రౌజ్ చేయండి",
+      "quickLogistics": "రవాణా లాజిస్టిక్స్ బుక్ చేయండి",
+      "quickLogisticsDesc": "వాహన సామర్థ్యం & రవాణా రేట్లు",
+      "quickTransactions": "వాణిజ్య లావాదేవీలు",
+      "quickTransactionsDesc": "ఎస్క్రో & దశల ట్రాకింగ్",
+      "realMarketDecisionBadge": "వాస్తవ మార్కెట్ నిర్ణయం",
+      "realMarketDecisionTitle": "గరిష్ట ధర అంటే ఎల్లప్పుడూ అత్యధిక రాబడి కాదు.",
+      "realMarketDecisionSubtitle": "100 క్వింటాళ్ల ఉల్లిపాయల కోసం రవాణా, గిడ్డంగి అద్దె మరియు మార్కెట్ సెస్‌ను లెక్కించి రెండు నిజమైన అమ్మకపు ఎంపికలను పోల్చండి.",
+      "optionADistantMandi": "ఎంపిక ఎ • దూరపు మార్కెట్",
+      "optionBLocalBuyer": "ఎంపిక బి • స్థానిక ప్రత్యక్ష కొనుగోలుదారు",
+      "nominalPrice": "సాధారణ ధర",
+      "roadHaulFromNashik": "నాసిక్ నుండి దూరం",
+      "sameNetRealisation": "సమాన నికర రాబడి",
+      "moreNetRealisation": "అధిక నికర రాబడి"
+    },
     brand: {
       name: 'కిసాన్ సేతు',
       tagline: 'సరైన మార్కెట్. సరైన కొనుగోలుదారు. సరైన ధర.',
@@ -1936,6 +2661,17 @@ export const translations: Record<Locale, TranslationDictionary> = {
       sihBadge: 'మహారాష్ట్ర ప్రభుత్వం • వ్యవసాయ మార్కెటింగ్ చొరవ',
     },
     nav: {
+      governance: "పరిపాలన & తనిఖీ",
+      ecosystemPortals: "వ్యవస్థ పోర్టల్స్",
+      governanceVerification: "పరిపాలన & తనిఖీ",
+      selectLanguage: "భాషను ఎంచుకోండి",
+      descFarmer: "రైతు ఉత్పత్తులు & ధరల పరిశీలన",
+      descBuyer: "కొనుగోలుదారు డిమాండ్ & కొనుగోలు",
+      descTransporter: "రవాణా లాజిస్టిక్స్ & వాహనాలు",
+      descCalculator: "నికర రాబడి ఇంజిన్",
+      descInspector: "నాణ్యత తనిఖీ అధికారి",
+      descDisputes: "ఫిర్యాదుల పరిష్కార విభాగం",
+      descAdmin: "రాష్ట్ర ఏపీఎంసీ పరిపాలన",
       home: 'హోమ్',
       farmer: 'రైతు / FPO',
       buyer: 'కొనుగోలుదారులు',
@@ -2033,6 +2769,34 @@ export const translations: Record<Locale, TranslationDictionary> = {
       phaseNotice: 'దశ 1 పునాది: మాడ్యులర్ మోనోలిత్ ఆర్కిటెక్చర్',
     },
     farmer: {
+      portalBadge: "రైతు / ఎఫ్‌పీఓ పోర్టల్",
+      demoProfile: "డెమో ప్రొఫైల్ • రమేష్ పాటిల్ (నిఫాడ్, నాసిక్)",
+      fpoMember: "నాసిక్ ఆగ్రో ఎఫ్‌పీఓ సభ్యుడు • మొత్తం పరిమాణం: 420 టన్నులు",
+      createLotBtn: "+ ఉత్పత్తి లాట్ సృష్టించండి",
+      qualityScreening: "నాణ్యత పరిశీలన",
+      aiScreeningNotVerified: "ఏఐ స్క్రీనింగ్ — ధృవీకరించబడలేదు",
+      viewFullLot: "పూర్తి లాట్ చూడండి",
+      compareMandis: "మార్కెట్లను పోల్చండి",
+      viewBuyerOffers: "ఆఫర్లను చూడండి",
+      findLogistics: "రవాణాను కనుగొనండి",
+      coreDecision: "కీలక వ్యవసాయ నిర్ణయం",
+      netRealisationEst: "అంచనా నికర రాబడి",
+      takeHomeCalc: "రవాణా మరియు హమాలీ ఖర్చుల తీసివేత తర్వాత 80 క్వింటాళ్లకు లభించే నికర ఆదాయం.",
+      sellNow: "ఇప్పుడే అమ్మండి",
+      sellNowDesc: "ప్రత్యక్ష కొనుగోలుదారు గరిష్ట నికర ఆదాయం ఇస్తారు",
+      whySellNowTitle: "ఏబీసీ ఫుడ్స్‌కు ఇప్పుడే ఎందుకు అమ్మాలి?",
+      whySellNowDesc: "ప్రత్యక్ష కొనుగోలుదారు ఏబీసీ ఫుడ్స్ స్థానిక నిఫాడ్ హబ్ (30 కి.మీ) నుండి క్వింటాల్‌కు ₹2,420 ధరను అందిస్తోంది. రవాణా ఖర్చు కేవలం ₹1,200 మరియు మార్కెట్ సెస్సు లేదు, దీని వలన దూరపు మార్కెట్ల కంటే ₹1,91,200 (క్వింటాల్‌కు ₹2,390 నికర) లభిస్తుంది.",
+      activeBuyerOffer: "యాక్టివ్ కొనుగోలుదారు ఆఫర్",
+      acceptedStatus: "ఆమోదించబడింది",
+      assignedStatus: "కేటాయించబడింది",
+      commercialLicense: "వాణిజ్య లైసెన్స్",
+      vehicleLabel: "వాహనం:",
+      corridorRoute: "రవాణా మార్గం:",
+      freightCost: "రవాణా ఖర్చు:",
+      commercialTransaction: "వాణిజ్య లావాదేవీ",
+      viewTxnDetails: "లావాదేవీ వివరాలు చూడండి",
+      dataTransparencyTitle: "వ్యవసాయ డేటా పారదర్శకత",
+      dataTransparencyNotice: "మార్కెట్ అనుసంధానాల కోసం రూపొందించిన డెమో దృశ్యం. అన్ని లెక్కలు వాస్తవ రవాణా సూత్రాలు మరియు నాణ్యతా ప్రమాణాలను అనుసరిస్తాయి.",
       badge: 'పాత్ర: రైతు / FPO',
       title: 'రైతు & FPO నిర్వహణ కేంద్రం',
       subtitle:
@@ -2059,6 +2823,15 @@ export const translations: Record<Locale, TranslationDictionary> = {
         'ఈ రూట్ FarmerProfile, FPO, ProduceLot మరియు Offer మోడల్‌లతో Prisma Client ద్వారా SQLite డేటాబేస్‌కు అనుసంధానించబడింది.',
     },
     lots: {
+      "totalRegisteredLots": "మొత్తం నమోదిత లాట్లు",
+      "openForBuyerDiscovery": "కొనుగోలుదారుల కోసం అందుబాటులో ఉంది",
+      "unpublishedDrafts": "ముసాయిదాలు",
+      "totalVolume": "మొత్తం వాల్యూమ్",
+      "digitalApmcYard": "డిజిటల్ మార్కెట్ యార్డ్",
+      "registeredLotsTitle": "నమోదిత ఉత్పత్తి లాట్లు",
+      "activeLotsSub": "కొనుగోలుదారు మరియు రవాణా కోసం క్రియాశీల లాట్లు",
+      "notGraded": "గ్రేడింగ్ చేయలేదు",
+      "offersCount": "ఆఫర్లు",
       badge: 'డిజిటల్ పంట లాట్లు',
       title: 'డిజిటల్ పంట లాట్లు',
       subtitle:
@@ -2131,6 +2904,14 @@ export const translations: Record<Locale, TranslationDictionary> = {
       futureEscrowDesc: 'డెలివరీ నిర్ధారణ తర్వాత రైతులకు తక్షణమే చెల్లింపు అందేలా బ్యాంక్ ఎస్క్రో రక్షణ.',
     },
     quality: {
+      "refreshQueue": "క్యూ రీఫ్రెష్ చేయండి",
+      "independentAssaying": "స్వతంత్ర నాణ్యత పరీక్ష",
+      "allProduceLots": "అన్ని ఉత్పత్తి లాట్లు",
+      "awaitingAssaying": "భౌతిక పరీక్ష కోసం వేచి ఉంది",
+      "certificatesIssued": "ధృవపత్రాలు జారీ చేయబడ్డాయి",
+      "resamplingNeeded": "మళ్లీ నమూనా అవసరం",
+      "loadingQueue": "ఉత్పత్తి లాట్ల క్యూ లోడ్ అవుతోంది...",
+      "noLotsFound": "ఉత్పత్తి లాట్లు కనుగొనబడలేదు",
       sectionTitle: 'రెండు అంచెల నాణ్యతా ధృవీకరణ',
       sectionSubtitle: 'AI విజువల్ అంచనాలు మరియు అధికారిక భౌతిక తనిఖీ మధ్య పారదర్శక విభజన.',
       tier1Title: 'టైర్ 1: AI ప్రాథమిక విజువల్ స్క్రీనింగ్',
@@ -2192,6 +2973,9 @@ export const translations: Record<Locale, TranslationDictionary> = {
       ruleBasedNotice: 'ప్రాథమిక విజువల్ స్క్రీనింగ్ రంగు మరియు ఏకరూపతను అంచనా వేస్తుంది. అధికారిక ధృవీకరణ కోసం భౌతిక తనిఖీ తప్పనిసరి.',
     },
     buyerMatching: {
+      "buyerMarketplace": "కొనుగోలుదారు మార్కెట్‌ప్లేస్",
+      "tradeAudit": "వాణిజ్య ఆడిట్",
+      "postProcurementDemand": "కొనుగోలు డిమాండ్‌ను నమోదు చేయండి",
       matchedBuyersTitle: 'సరిపోలే వాణిజ్య కొనుగోలుదారులు',
       matchedBuyersSubtitle: 'మీ పంట, పరిమాణం మరియు నాణ్యతకు సరిపోయే క్రియాశీల వ్యాపారులు మరియు ప్రాసెసర్లు.',
       noMatchesFound: 'ఈ పంట లాట్‌కు ప్రస్తుతానికి ప్రత్యక్ష కొనుగోలుదారులు అందుబాటులో లేరు.',
@@ -2301,6 +3085,10 @@ export const translations: Record<Locale, TranslationDictionary> = {
       demoNotice: 'డెమో మోడ్: ఇది ప్రోటోటైప్ ప్రదర్శన కోసం మాత్రమే. ఎటువంటి వాస్తవ ఆర్థిక లావాదేవీలు లేదా ఒప్పందాలు జరగవు.',
     },
     transport: {
+      "refreshNetwork": "నెట్‌వర్క్ రీఫ్రెష్ చేయండి",
+      "rtoPermit": "RTO పర్మిట్",
+      "corridorMilestoneTracking": "కారిడార్ మైలురాయి ట్రాకింగ్",
+      "transitCompleted": "రవాణా పూర్తయింది",
       hubTitle: 'రవాణాదారు లాజిస్టిక్స్ & డిస్పాచ్ హబ్',
       hubSubtitle: 'వాణిజ్య రవాణా వాహనాలను నిర్వహించండి, వ్యవసాయ ఉత్పత్తుల రవాణా అభ్యర్థనలను సమీక్షించండి మరియు పంపిణీ వివరాలను అప్‌డేట్ చేయండి.',
       roleBadge: 'పాత్ర: రవాణాదారు లాజిస్టిక్స్',
@@ -2380,6 +3168,17 @@ export const translations: Record<Locale, TranslationDictionary> = {
       demoNotice: 'డెమో నోటీసు: వ్యవసాయ కారిడార్ కోసం లాజిస్టిక్స్ అనుకరణ. నిజమైన వాహన రవాణా ప్రారంభించబడదు.',
     },
     netRealisation: {
+      ledgerTitle: "నికర రాబడి లెడ్జర్",
+      settlementBreakdown: "చెల్లింపు వివరాలు",
+      trueNetRealisation: "వాస్తవ నికర రాబడి",
+      grossMandiSale: "స్థూల మార్కెట్ అమ్మకపు విలువ",
+      transportFreightLabel: "రవాణా ఖర్చు",
+      mandiFeeCess: "ఏపీఎంసీ మార్కెట్ ఫీజు & సెస్",
+      storageHandling: "గిడ్డంగి నిల్వ & హమాలీ ఖర్చులు",
+      farmerNetRealisation: "రైతు నికర రాబడి",
+      retentionRate: "స్థూల నిలుపుదల రేటు",
+      totalDeductionsLabel: "మొత్తం తగ్గింపులు:",
+      afterDeductions: "అన్ని మార్కెట్ & రవాణా తగ్గింపుల తర్వాత",
       hubTitle: 'నికర రాబడి (Net Realisation) & స్మార్ట్ విక్రయ సిఫార్సు',
       hubSubtitle: 'రవాణా, నిల్వ మరియు మార్కెట్ సెస్ మినహాయింపుల తర్వాత చేతికి అందే నిజమైన నికర రాబడిని లెక్కించండి.',
       netRealisation: 'నికర రాబడి (Net Realisation)',
@@ -2427,6 +3226,11 @@ export const translations: Record<Locale, TranslationDictionary> = {
       storageProjectionLabel: 'గోదాము నిల్వ అంచనా',
     },
     transactions: {
+      "activeContracts": "క్రియాశీల ఒప్పందాలు",
+      "loadingRecords": "వాణిజ్య లావాదేవీల రికార్డులు లోడ్ అవుతున్నాయి...",
+      "backToTransactions": "లావాదేవీల లెడ్జర్‌కి తిరిగి వెళ్లండి",
+      "agreedQuantity": "అంగీకరించిన పరిమాణం",
+      "physicalVerification": "భౌతిక ధృవీకరణ",
       hubTitle: 'లావాదేవీలు, ఎస్క్రో & వాణిజ్య నెరవేర్పు',
       hubSubtitle: 'దశలవారీ డిజిటల్ వాణిజ్య అమలు, ప్రోటోటైప్ చెల్లింపు స్థితి మరియు ధృవీకరించబడిన 3-వైపుల రేటింగ్‌లు.',
       myTransactionsTitle: 'నా వాణిజ్య లావాదేవీలు',
@@ -2530,6 +3334,13 @@ export const translations: Record<Locale, TranslationDictionary> = {
       resetDefaults: 'డిఫాల్ట్‌లను రీసెట్ చేయండి',
     },
     markets: {
+      "colTrend": "ధోరణి",
+      "colDistance": "దూరం",
+      "trendRising": "పెరుగుతోంది",
+      "trendSoftening": "తగ్గుతోంది",
+      "trendSteady": "స్థిరంగా ఉంది",
+      "filterTitle": "మార్కెట్లు & పంటలను ఫిల్టర్ చేయండి",
+      "noMandisMatch": "ఎంచుకున్న ఫిల్టర్‌లకు సరిపోలే మార్కెట్లు లేవు.",
       title: 'మార్కెట్ ధరలు & రాక పరిమాణాలు',
       subtitle: 'మహారాష్ట్ర & ఆంధ్రప్రదేశ్ (విశాఖపట్నం ప్రాంతం) మార్కెట్ కమిటీల రోజువారీ సగటు ధరలు మరియు రాకల ట్రాకింగ్.',
       badge: 'ఏపీఎంసీ మార్కెట్ సమాచారం',
@@ -2574,6 +3385,121 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
   },
   hi: {
+    commonStatuses: {
+      "available": "उपलब्ध",
+      "draft": "प्रारूप",
+      "reserved": "आरक्षित",
+      "sold": "बिक गया",
+      "cancelled": "रद्द",
+      "active": "सक्रिय",
+      "completed": "पूर्ण",
+      "pending": "लंबित",
+      "accepted": "स्वीकृत",
+      "rejected": "अस्वीकृत",
+      "inTransit": "पारगमन में",
+      "delivered": "वितरित",
+      "disputed": "विवादित",
+      "qualityAssayed": "गुणवत्ता परखी गई",
+      "vehicleAssigned": "वाहन सौंपा गया",
+      "transportBooked": "परिवहन बुक हुआ",
+      "offerAccepted": "ऑफर स्वीकृत",
+      "physicallyVerified": "भौतिक रूप से सत्यापित",
+      "requiresReinspection": "पुनः निरीक्षण आवश्यक",
+      "aiScreeningNotVerified": "एआई स्क्रीनिंग — असत्यापित",
+      "underReview": "समीक्षाधीन",
+      "paymentInitiated": "भुगतान शुरू",
+      "paymentReceived": "भुगतान प्राप्त",
+      "resolved": "हल किया गया",
+      "closed": "बंद"
+    },
+    common: {
+      "loading": "लोड हो रहा है...",
+      "notFound": "नहीं मिला",
+      "refresh": "रिफ्रेश",
+      "back": "वापस",
+      "viewDetails": "विवरण देखें",
+      "status": "स्थिति",
+      "commodity": "जिंस / फसल",
+      "variety": "किस्म",
+      "quantity": "मात्रा",
+      "price": "भाव / मूल्य",
+      "targetPrice": "लक्षित भाव",
+      "location": "स्थान / जिला",
+      "grade": "ग्रेड / श्रेणी",
+      "lotId": "लॉट आईडी",
+      "buyer": "खरीदार",
+      "farmer": "किसान",
+      "transporter": "ट्रांसपोर्टर",
+      "quintals": "क्विंटल",
+      "perQuintal": "/ क्विंटल",
+      "save": "सहेजें",
+      "cancel": "रद्द करें",
+      "close": "बंद करें",
+      "submit": "जमा करें",
+      "all": "सभी",
+      "resetFilters": "फ़िल्टर रीसेट करें",
+      "filterByCrop": "फसल अनुसार फ़िल्टर करें",
+      "allCommodities": "सभी फसलें",
+      "allDistricts": "सभी जिले",
+      "roadFreightTariff": "सड़क परिवहन भाड़ा दर:",
+      "preferVoice": "आवाज़ द्वारा गणना पसंद है?",
+      "voiceReady": "वॉयस तैयार",
+      "commercialLedger": "वाणिज्यिक बहीखाता",
+      "officialMediationDesk": "आधिकारिक मध्यस्थता पटल",
+      "institutionalDesk": "संस्थागत पटल",
+      "prototypeDemo": "[प्रोटोटाइप डेमो]",
+      "humanSupervised": "मानव पर्यवेक्षित निवारण",
+      "adminDesk": "प्रशासन पटल",
+      "publicPortal": "सार्वजनिक पोर्टल",
+      "openGrievances": "खुली शिकायतें",
+      "underReview": "जांच जारी",
+      "resolved": "हल किया गया",
+      "closedCases": "बंद मामले",
+      "loadingGrievances": "शिकायत रिकॉर्ड लोड हो रहे हैं...",
+      "summaryDiscrepancy": "विसंगति का सारांश:",
+      "adjudicationNotes": "अधिकारी निर्णय एवं टिप्पणी",
+      "noGrievancesFound": "वर्तमान फ़िल्टर अनुसार कोई शिकायत नहीं मिली।",
+      "monitoredActiveTrades": "निगरानी अधीन सक्रिय सौदे"
+    },
+    home: {
+      "transparentProcess": "पारदर्शी प्रक्रिया",
+      "howItWorksTitle": "यह कैसे कार्य करता है",
+      "howItWorksSubtitle": "उपज पंजीकरण से बैंक खाते में भुगतान तक ६ सरल चरण।",
+      "step1Title": "फसल जोड़ें",
+      "step1Desc": "जिंस, मात्रा और अपेक्षित गुणवत्ता श्रेणी दर्ज करें।",
+      "step2Title": "मंडी भाव देखें",
+      "step2Desc": "आस-पास की एपीएमसी मंडियों में मॉडल भाव और आवक देखें।",
+      "step3Title": "शुद्ध प्राप्ति तुलना करें",
+      "step3Desc": "सच्ची हाथ आने वाली आय जानने के लिए सड़क भाड़ा और उपकर घटाएं।",
+      "step4Title": "खरीदारों से जुड़ें",
+      "step4Desc": "सत्यापित खरीदारों से सीधे डिजिटल ऑफर प्राप्त करें।",
+      "step5Title": "परिवहन बुक करें",
+      "step5Desc": "निश्चित भाड़ा दरों पर सत्यापित कॉरिडोर वाहक बुक करें।",
+      "step6Title": "सौदा पूरा करें",
+      "step6Desc": "चरणबद्ध एस्क्रो भुगतान और व्यावहारिक व्यापार रेटिंग।",
+      "farmerToolsTitle": "किसान उपकरण",
+      "quickMandiPrices": "आज के मंडी भाव",
+      "quickMandiPricesDesc": "एपीएमसी मॉडल भाव व रुझान",
+      "quickCreateLot": "उपज लॉट बनाएं",
+      "quickCreateLotDesc": "खरीदारों के लिए फसल पंजीकृत करें",
+      "quickNetRealisation": "शुद्ध प्राप्ति कैलकुलेटर",
+      "quickNetRealisationDesc": "वास्तविक हाथ आने वाले लाभ की तुलना करें",
+      "quickFindBuyers": "सत्यापित खरीदार खोजें",
+      "quickFindBuyersDesc": "सीधी खरीद मांगें देखें",
+      "quickLogistics": "कॉरिडोर परिवहन बुक करें",
+      "quickLogisticsDesc": "वाहन क्षमता व भाड़ा दर",
+      "quickTransactions": "वाणिज्यिक सौदे",
+      "quickTransactionsDesc": "एस्क्रो व चरणबद्ध ट्रैकिंग",
+      "realMarketDecisionBadge": "वास्तविक बाजार निर्णय",
+      "realMarketDecisionTitle": "अधिकतम भाव का अर्थ हमेशा अधिकतम कमाई नहीं होता।",
+      "realMarketDecisionSubtitle": "१०० क्विंटल प्याज के लिए सड़क भाड़ा, गोदाम किराया और मंडी उपकर जोड़कर दो वास्तविक बिक्री विकल्पों की तुलना करें।",
+      "optionADistantMandi": "विकल्प अ • दूर की मंडी",
+      "optionBLocalBuyer": "विकल्प ब • स्थानीय सीधा खरीदार",
+      "nominalPrice": "प्रचलित भाव",
+      "roadHaulFromNashik": "नासिक से सड़क दूरी",
+      "sameNetRealisation": "समान शुद्ध प्राप्ति",
+      "moreNetRealisation": "अधिक शुद्ध प्राप्ति"
+    },
     "brand": {
       "name": "किसानसेतु",
       "tagline": "सही मंडी. सही खरीदार. सही दाम.",
@@ -2581,6 +3507,17 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "sihBadge": "महाराष्ट्र शासन • कृषि विपणन पहल"
     },
     "nav": {
+      governance: "प्रशासन एवं सत्यापन",
+      ecosystemPortals: "इकोसिस्टम पोर्टल्स",
+      governanceVerification: "प्रशासन एवं सत्यापन",
+      selectLanguage: "भाषा चुनें",
+      descFarmer: "किसान उपज एवं मंडी भाव",
+      descBuyer: "खरीदार मांग एवं प्रत्यक्ष खरीद",
+      descTransporter: "कॉरिडोर लॉजिस्टिक्स एवं वाहन",
+      descCalculator: "शुद्ध प्राप्ति कैलकुलेटर",
+      descInspector: "गुणवत्ता परख एवं सत्यापन",
+      descDisputes: "शिकायत निवारण एवं मध्यस्थता",
+      descAdmin: "राज्य एपीएमसी प्रशासन",
       "home": "मुख्यपृष्ठ",
       "farmer": "किसान / FPO",
       "buyer": "खरीदार",
@@ -2667,6 +3604,34 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "phaseNotice": "फेज 8 पूर्ण: एंड-टू-एंड एकीकृत डिजिटल कृषि मंच"
     },
     "farmer": {
+      portalBadge: "किसान / एफपीओ पोर्टल",
+      demoProfile: "डेमो प्रोफाइल • रमेश पाटिल (निफाड, नासिक)",
+      fpoMember: "नासिक एग्रो एफपीओ सदस्य • कुल मात्रा: ४२० टन",
+      createLotBtn: "+ उपज लॉट बनाएं",
+      qualityScreening: "गुणवत्ता जांच",
+      aiScreeningNotVerified: "एआई स्क्रीनिंग — भौतिक रूप से असत्यापित",
+      viewFullLot: "पूरा लॉट देखें",
+      compareMandis: "मंडियों की तुलना करें",
+      viewBuyerOffers: "खरीदार ऑफर देखें",
+      findLogistics: "परिवहन खोजें",
+      coreDecision: "प्रमुख कृषि निर्णय",
+      netRealisationEst: "अनुमानित शुद्ध प्राप्ति",
+      takeHomeCalc: "परिवहन और हमाली कटौती के बाद ८० क्विंटल के लिए हाथ आने वाली आय।",
+      sellNow: "अभी बेचें",
+      sellNowDesc: "प्रत्यक्ष खरीदार सर्वाधिक शुद्ध आय देता है",
+      whySellNowTitle: "एबीसी फूड्स को अभी क्यों बेचें?",
+      whySellNowDesc: "सीधी खरीद करने वाला एबीसी फूड्स स्थानीय निफाड हब (३० किमी) से ₹२,४२०/क्विंटल भाव दे रहा है। परिवहन भाड़ा केवल ₹१,२०० है और कोई मंडी उपकर नहीं है, जिससे दूर की मंडियों की तुलना में ₹१,९१,२०० (₹२,३९०/क्विंटल शुद्ध) मिलते हैं।",
+      activeBuyerOffer: "सक्रिय खरीदार ऑफर",
+      acceptedStatus: "स्वीकृत",
+      assignedStatus: "नियुक्त",
+      commercialLicense: "वाणिज्यिक लाइसेंस",
+      vehicleLabel: "वाहन:",
+      corridorRoute: "परिवहन मार्ग:",
+      freightCost: "परिवहन भाड़ा:",
+      commercialTransaction: "वाणिज्यिक सौदा",
+      viewTxnDetails: "सौदा विवरण देखें",
+      dataTransparencyTitle: "कृषि डेटा पारदर्शिता",
+      dataTransparencyNotice: "महाराष्ट्र एपीएमसी बाजार जुड़ाव के लिए तैयार किया गया डेमो परिदृश्य। सभी गणनाएं वास्तविक दूरी-आधारित भाड़ा सूत्रों और परख मानकों पर आधारित हैं।",
       "badge": "भूमिका: किसान / FPO",
       "title": "किसान एवं FPO प्रबंधन हब",
       "subtitle": "फसल लॉट प्रबंधित करें, खरीद प्रस्ताव देखें और सबसे लाभकारी मंडी चुनें।",
@@ -2689,6 +3654,15 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "noticeDesc": "यह रूट SQLite में FarmerProfile, FPO, ProduceLot और Offer मॉडल्स से सीधे जुड़ा हुआ है।"
     },
     "lots": {
+      "totalRegisteredLots": "कुल पंजीकृत लॉट",
+      "openForBuyerDiscovery": "खरीदारों के लिए उपलब्ध",
+      "unpublishedDrafts": "अप्रकाशित ड्राफ्ट",
+      "totalVolume": "कुल मात्रा",
+      "digitalApmcYard": "डिजिटल मंडी यार्ड",
+      "registeredLotsTitle": "पंजीकृत उत्पाद लॉट",
+      "activeLotsSub": "खरीदार मिलान और परिवहन प्रेषण के लिए सक्रिय लॉट",
+      "notGraded": "ग्रेड नहीं किया गया",
+      "offersCount": "प्रस्ताव",
       "badge": "डिजिटल फसल लॉट्स",
       "title": "डिजिटल फसल लॉट्स",
       "subtitle": "किसानों और FPO द्वारा वजन, अपेक्षित मूल्य और गुणवत्ता विवरण के साथ तैयार किए गए मानकीकृत डिजिटल लॉट।",
@@ -2760,6 +3734,14 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "futureEscrowDesc": "बैंक-स्तरीय एस्क्रो जो डिलीवरी पुष्टि होते ही किसान को तत्काल भुगतान सुनिश्चित करता है।"
     },
     "quality": {
+      "refreshQueue": "कतार रिफ्रेश करें",
+      "independentAssaying": "स्वतंत्र गुणवत्ता जांच",
+      "allProduceLots": "सभी उत्पाद लॉट",
+      "awaitingAssaying": "भौतिक जांच प्रतीक्षित",
+      "certificatesIssued": "प्रमाणपत्र जारी किए गए",
+      "resamplingNeeded": "पुनः नमूनाकरण आवश्यक",
+      "loadingQueue": "उत्पाद कतार लोड हो रही है...",
+      "noLotsFound": "कोई उत्पाद लॉट नहीं मिला",
       "sectionTitle": "द्वि-स्तरीय गुणवत्ता सत्यापन",
       "sectionSubtitle": "AI विजुअल अनुमानों को आधिकारिक भौतिक जांच से अलग रखने वाली पारदर्शी ग्रेडिंग प्रणाली।",
       "tier1Title": "स्तर 1: AI दृश्य स्क्रीनिंग",
@@ -2821,6 +3803,9 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "ruleBasedNotice": "प्रारंभिक दृश्य स्क्रीनिंग सतह के रंग और एकरूपता की जांच करती है। आधिकारिक प्रमाणीकरण के लिए भौतिक निरीक्षण अनिवार्य है।"
     },
     "buyerMatching": {
+      "buyerMarketplace": "खरीदार बाज़ार",
+      "tradeAudit": "व्यापार ऑडिट",
+      "postProcurementDemand": "खरीद मांग पोस्ट करें",
       "matchedBuyersTitle": "इस लॉट हेतु उपयुक्त खरीदार",
       "matchedBuyersSubtitle": "मांग, दूरी, गुणवत्ता और मूल्य के आधार पर अनुकूल मिलान।",
       "noMatchesFound": "वर्तमान में कोई खरीदार इस लॉट के मापदंडों से मेल नहीं खाता।",
@@ -2930,6 +3915,10 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "demoNotice": "प्रोटोटाइप वातावरण: सभी ऑफर वास्तविक अनुबंध नियम व शर्तों का अनुकरण करते हैं।"
     },
     "transport": {
+      "refreshNetwork": "नेटवर्क रिफ्रेश करें",
+      "rtoPermit": "आरटीओ परमिट",
+      "corridorMilestoneTracking": "कॉरिडोर मील का पत्थर ट्रैकिंग",
+      "transitCompleted": "परिवहन पूर्ण",
       "hubTitle": "परिवहन एवं लॉजिस्टिक्स नेटवर्क",
       "hubSubtitle": "खेत से मंडी/गोदाम तक पारदर्शी भाड़ा दरें, वाहन क्षमता मिलान और लाइव ट्रैकिंग।",
       "roleBadge": "भूमिका: ट्रांसपोर्टर / मालवाहतूक",
@@ -3009,6 +3998,17 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "demoNotice": "प्रोटोटाइप वातावरण: लाइव जीपीएस ट्रैकिंग का अनुकरण किया गया है।"
     },
     "netRealisation": {
+      ledgerTitle: "शुद्ध प्राप्ति बहीखाता",
+      settlementBreakdown: "निपटान विवरण",
+      trueNetRealisation: "वास्तविक शुद्ध प्राप्ति",
+      grossMandiSale: "सकल मंडी विक्रय मूल्य",
+      transportFreightLabel: "परिवहन भाड़ा",
+      mandiFeeCess: "एपीएमसी मंडी उपकर एवं हमाली",
+      storageHandling: "गोदाम भंडारण एवं संभाल खर्च",
+      farmerNetRealisation: "किसान की शुद्ध प्राप्ति",
+      retentionRate: "सकल प्रतिधारण दर",
+      totalDeductionsLabel: "कुल कटौतियाँ:",
+      afterDeductions: "सभी मंडी व परिवहन कटौतियों के बाद",
       "hubTitle": "शुद्ध लाभ (Net Realisation) इंजन",
       "hubSubtitle": "परिवहन, भंडारण, हमाली और मंडी टैक्स घटाकर किसान का वास्तविक लाभ प्रकट करता है।",
       "netRealisation": "शुद्ध प्राप्त लाभ (Net Realisation)",
@@ -3056,6 +4056,11 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "storageProjectionLabel": "गोदाम साठवणूक अंदाज"
     },
     "transactions": {
+      "activeContracts": "सक्रिय अनुबंध",
+      "loadingRecords": "व्यावसायिक लेनदेन रिकॉर्ड लोड हो रहे हैं...",
+      "backToTransactions": "लेनदेन लेज़र पर वापस जाएं",
+      "agreedQuantity": "स्वीकृत मात्रा",
+      "physicalVerification": "भौतिक सत्यापन",
       "hubTitle": "वाणिज्यिक व्यापार अनुबंध एवं भुगतान ट्रैकिंग",
       "hubSubtitle": "ऑफर स्वीकृति से लेकर डिलीवरी, भुगतान और प्रतिष्ठा रेटिंग तक का संपूर्ण रिकॉर्ड।",
       "myTransactionsTitle": "माझे व्यावसायिक व्यवहार",
@@ -3159,6 +4164,13 @@ export const translations: Record<Locale, TranslationDictionary> = {
       resetDefaults: 'डिफ़ॉल्ट रीसेट करें',
     },
     markets: {
+      "colTrend": "रुझान",
+      "colDistance": "दूरी",
+      "trendRising": "बढ़त",
+      "trendSoftening": "गिरावट",
+      "trendSteady": "स्थिर",
+      "filterTitle": "मंडियां और फसलें फ़िल्टर करें",
+      "noMandisMatch": "चयनित फ़िल्टर से कोई मंडी नहीं मिली।",
       title: 'मंडी भाव एवं दैनिक आवक',
       subtitle: 'महाराष्ट्र एवं आंध्र प्रदेश (विशाखापट्टनम क्षेत्र) की प्रमुख एपीएमसी मंडियों के दैनिक मॉडल भाव और आवक ट्रैकिंग।',
       badge: 'एपीएमसी बाजार अभिसूचना',

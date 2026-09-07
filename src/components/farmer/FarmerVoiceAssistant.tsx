@@ -93,14 +93,14 @@ export function parseFarmerIntent(text: string, locale: string): VoiceResult {
 
     return {
       intent: 'MARKET_PRICE',
-      title: 'Mandi Market Price Check',
+      title: locale === 'mr' ? 'मंडी बाजार भाव तपासणी' : locale === 'te' ? 'మార్కెట్ ధరల తనిఖీ' : locale === 'hi' ? 'मंडी बाजार भाव जांच' : 'Mandi Market Price Check',
       responseText,
-      actionLabel: 'View All Mandi Prices',
+      actionLabel: locale === 'mr' ? 'सर्व मंडी भाव पहा' : locale === 'te' ? 'అన్ని మార్కెట్ ధరలను చూడండి' : locale === 'hi' ? 'सभी मंडी भाव देखें' : 'View All Mandi Prices',
       actionUrl: '/markets',
       details: [
-        { label: 'Commodity', value: commodity },
-        { label: 'Modal Price', value: modalPrice },
-        { label: 'Key APMC Mandi', value: market },
+        { label: locale === 'mr' ? 'जिंस' : locale === 'te' ? 'పంట' : locale === 'hi' ? 'जिंस' : 'Commodity', value: commodity },
+        { label: locale === 'mr' ? 'मॉडेल भाव' : locale === 'te' ? 'మోడల్ ధర' : locale === 'hi' ? 'मॉडल भाव' : 'Modal Price', value: modalPrice },
+        { label: locale === 'mr' ? 'प्रमुख एपीएमसी' : locale === 'te' ? 'ప్రధాన మార్కెట్' : locale === 'hi' ? 'प्रमुख एपीएमसी' : 'Key APMC Mandi', value: market },
       ],
     };
   }
@@ -128,14 +128,14 @@ export function parseFarmerIntent(text: string, locale: string): VoiceResult {
 
     return {
       intent: 'FIND_BUYER',
-      title: 'Matching Buyers Discovery',
+      title: locale === 'mr' ? 'थेट खरेदीदार मागणी' : locale === 'te' ? 'ప్రత్యక్ష కొనుగోలుదారు డిమాండ్' : locale === 'hi' ? 'सीधी खरीदार मांग' : 'Matching Buyers Discovery',
       responseText,
-      actionLabel: 'Explore Matching Buyers',
+      actionLabel: locale === 'mr' ? 'खरेदीदार मागण्या पहा' : locale === 'te' ? 'కొనుగోలుదారు డిమాండ్లను చూడండి' : locale === 'hi' ? 'खरीदार मांगें देखें' : 'Explore Matching Buyers',
       actionUrl: '/buyer',
       details: [
-        { label: 'Top Buyer', value: 'ABC Foods Ltd (Verified FSSAI)' },
-        { label: 'Active Demand', value: '100 Quintals (Nashik / Niphad)' },
-        { label: 'Offered Price', value: '₹2,420 / Qtl' },
+        { label: locale === 'mr' ? 'प्रमुख खरेदीदार' : locale === 'te' ? 'ప్రధాన కొనుగోలుదారు' : locale === 'hi' ? 'प्रमुख खरीदार' : 'Top Buyer', value: 'ABC Foods Ltd (Verified FSSAI)' },
+        { label: locale === 'mr' ? 'सक्रिय मागणी' : locale === 'te' ? 'యాక్టివ్ డిమాండ్' : locale === 'hi' ? 'सक्रिय मांग' : 'Active Demand', value: '100 Quintals (Nashik / Niphad)' },
+        { label: locale === 'mr' ? 'ऑफर भाव' : locale === 'te' ? 'ఆఫర్ చేసిన ధర' : locale === 'hi' ? 'ऑफर भाव' : 'Offered Price', value: '₹2,420 / Qtl' },
       ],
     };
   }
@@ -167,14 +167,14 @@ export function parseFarmerIntent(text: string, locale: string): VoiceResult {
 
     return {
       intent: 'NET_REALISATION',
-      title: 'Net Realisation Comparison',
+      title: locale === 'mr' ? 'निव्वळ नफा तुलना' : locale === 'te' ? 'నికర రాబడి పోలిక' : locale === 'hi' ? 'शुद्ध लाभ तुलना' : 'Net Realisation Comparison',
       responseText,
-      actionLabel: 'Open Net Realisation Engine',
+      actionLabel: locale === 'mr' ? 'शुद्ध प्राप्ती कॅल्क्युलेटर' : locale === 'te' ? 'నికర రాబడిని లెక్కించండి' : locale === 'hi' ? 'शुद्ध लाभ की गणना करें' : 'Open Net Realisation Engine',
       actionUrl: '/calculator',
       details: [
-        { label: 'Best Selling Option', value: 'ABC Foods Direct Trade' },
-        { label: 'Gross Quoted Price', value: '₹2,420 / Quintal' },
-        { label: 'Locked Net Realisation', value: '₹1,91,200 (₹2,390/Qtl Take-Home)' },
+        { label: locale === 'mr' ? 'सर्वोत्तम पर्याय' : locale === 'te' ? 'ఉత్తమ విక్రయ ఎంపిక' : locale === 'hi' ? 'सर्वोत्तम विकल्प' : 'Best Selling Option', value: 'ABC Foods Direct Trade' },
+        { label: locale === 'mr' ? 'एकूण भाव' : locale === 'te' ? 'స్థూల ధర' : locale === 'hi' ? 'सकल भाव' : 'Gross Quoted Price', value: '₹2,420 / Quintal' },
+        { label: locale === 'mr' ? 'निश्चित शुद्ध नफा' : locale === 'te' ? 'నికర రాబడి' : locale === 'hi' ? 'निश्चित शुद्ध लाभ' : 'Locked Net Realisation', value: '₹1,91,200 (₹2,390/Qtl Take-Home)' },
       ],
     };
   }
@@ -203,14 +203,14 @@ export function parseFarmerIntent(text: string, locale: string): VoiceResult {
 
     return {
       intent: 'FIND_TRANSPORT',
-      title: 'Transport Logistics Matching',
+      title: locale === 'mr' ? 'वाहतूक व लॉजिस्टिक्स' : locale === 'te' ? 'రవాణా లాజిస్టిక్స్' : locale === 'hi' ? 'परिवहन लॉजिस्टिक्स' : 'Transport Logistics Matching',
       responseText,
-      actionLabel: 'Book Transport Logistics',
+      actionLabel: locale === 'mr' ? 'वाहतूक बुक करा' : locale === 'te' ? 'రవాణాను బుక్ చేయండి' : locale === 'hi' ? 'परिवहन बुक करें' : 'Book Transport Logistics',
       actionUrl: '/transporter',
       details: [
-        { label: 'Top Transporter', value: 'Sahyadri Logistics (MH-15-EG-4421)' },
-        { label: 'Estimated Freight', value: '₹1,350 (30 km local corridor)' },
-        { label: 'Vehicle Type', value: 'Eicher 6 Ton Open Body' },
+        { label: locale === 'mr' ? 'प्रमुख वाहतूकदार' : locale === 'te' ? 'ప్రధాన రవాణాదారు' : locale === 'hi' ? 'प्रमुख ट्रांसपोर्टर' : 'Top Transporter', value: 'Sahyadri Logistics (MH-15-EG-4421)' },
+        { label: locale === 'mr' ? 'अंदाजित भाडे' : locale === 'te' ? 'అంచనా రవాణా ఖర్చు' : locale === 'hi' ? 'अनुमानित भाड़ा' : 'Estimated Freight', value: '₹1,350 (30 km local corridor)' },
+        { label: locale === 'mr' ? 'वाहन प्रकार' : locale === 'te' ? 'వాహనం రకం' : locale === 'hi' ? 'वाहन प्रकार' : 'Vehicle Type', value: 'Eicher 6 Ton Open Body' },
       ],
     };
   }
@@ -237,14 +237,14 @@ export function parseFarmerIntent(text: string, locale: string): VoiceResult {
 
     return {
       intent: 'VIEW_OFFERS',
-      title: 'Incoming Buyer Offers',
+      title: locale === 'mr' ? 'खरेदीदार ऑफर्स' : locale === 'te' ? 'కొనుగోలుదారు ఆఫర్లు' : locale === 'hi' ? 'खरीदार ऑफर' : 'Incoming Buyer Offers',
       responseText,
-      actionLabel: 'Review Incoming Offers',
+      actionLabel: locale === 'mr' ? 'ऑफर्स तपासा' : locale === 'te' ? 'ఆఫర్లను సమీక్షించండి' : locale === 'hi' ? 'ऑफर की समीक्षा करें' : 'Review Incoming Offers',
       actionUrl: '/lots',
       details: [
-        { label: 'Buyer', value: 'ABC Foods Ltd' },
-        { label: 'Offered Price', value: '₹2,420 / Qtl' },
-        { label: 'Status', value: 'Pending Farmer Action' },
+        { label: locale === 'mr' ? 'खरेदीदार' : locale === 'te' ? 'కొనుగోలుదారు' : locale === 'hi' ? 'खरीदार' : 'Buyer', value: 'ABC Foods Ltd' },
+        { label: locale === 'mr' ? 'ऑफर भाव' : locale === 'te' ? 'ఆఫర్ ధర' : locale === 'hi' ? 'ऑफर भाव' : 'Offered Price', value: '₹2,420 / Qtl' },
+        { label: locale === 'mr' ? 'स्थिती' : locale === 'te' ? 'స్థితి' : locale === 'hi' ? 'स्थिति' : 'Status', value: 'Pending Farmer Action' },
       ],
     };
   }
@@ -274,14 +274,14 @@ export function parseFarmerIntent(text: string, locale: string): VoiceResult {
 
     return {
       intent: 'VIEW_TRANSACTIONS',
-      title: 'Transaction & Payment Tracking',
+      title: locale === 'mr' ? 'व्यवहार व पेमेंट ट्रॅकिंग' : locale === 'te' ? 'లావాదేవీ & చెల్లింపు ట్రాకింగ్' : locale === 'hi' ? 'सौदा व भुगतान ट्रैकिंग' : 'Transaction & Payment Tracking',
       responseText,
-      actionLabel: 'View All Transactions',
+      actionLabel: locale === 'mr' ? 'सर्व व्यवहार पहा' : locale === 'te' ? 'అన్ని లావాదేవీలను చూడండి' : locale === 'hi' ? 'सभी सौदे देखें' : 'View All Transactions',
       actionUrl: '/transactions',
       details: [
-        { label: 'Active Transaction', value: 'TXN-2026-0001 (ABC Foods)' },
-        { label: 'Delivery Status', value: 'In-Transit / Delivered' },
-        { label: 'Payment Milestone', value: 'Demo Escrow Verified' },
+        { label: locale === 'mr' ? 'सक्रिय व्यवहार' : locale === 'te' ? 'యాక్టివ్ లావాదేవీ' : locale === 'hi' ? 'सक्रिय सौदा' : 'Active Transaction', value: 'TXN-2026-0001 (ABC Foods)' },
+        { label: locale === 'mr' ? 'डिलिव्हरी स्थिती' : locale === 'te' ? 'డెలివరీ స్థితి' : locale === 'hi' ? 'डिलीवरी स्थिति' : 'Delivery Status', value: 'In-Transit / Delivered' },
+        { label: locale === 'mr' ? 'पेमेंट टप्पा' : locale === 'te' ? 'చెల్లింపు మైలురాయి' : locale === 'hi' ? 'भुगतान चरण' : 'Payment Milestone', value: 'Demo Escrow Verified' },
       ],
     };
   }

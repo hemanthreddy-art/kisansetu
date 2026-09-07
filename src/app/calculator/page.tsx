@@ -148,8 +148,8 @@ function CalculatorInner() {
   // Safe difference string without negative profit
   const formattedDifference =
     netDifference === 0
-      ? 'Same net realisation'
-      : `+${formatINR(netDifference)} more net realisation`;
+      ? t.home.sameNetRealisation
+      : `+${formatINR(netDifference)} ${t.home.moreNetRealisation}`;
 
   // Rule-based decision recommendation
   const recommendation = useMemo(() => {
@@ -422,7 +422,7 @@ function CalculatorInner() {
 
               {/* Freight Rate Customizer */}
               <div className="pt-2 border-t border-[#EBE7DF] flex items-center justify-between text-xs text-[#5A554E]">
-                <span>Road Freight Tariff Rate:</span>
+                <span>{t.common.roadFreightTariff}</span>
                 <span className="font-semibold text-[#262320]">₹{ratePerKmTon.toFixed(1)} / km / Tonne</span>
               </div>
             </CardContent>
@@ -435,12 +435,12 @@ function CalculatorInner() {
                 <Mic className="w-4 h-4" />
               </div>
               <div className="text-xs">
-                <span className="font-bold text-[#262320] block">Prefer Voice Calculation?</span>
+                <span className="font-bold text-[#262320] block">{t.common.preferVoice}</span>
                 <span className="text-[#5A554E]">Ask: &ldquo;What is today&apos;s onion price?&rdquo; or &ldquo;Which market gives me more?&rdquo;</span>
               </div>
             </div>
             <Badge variant="emerald" className="text-[10px]">
-              Voice Ready
+              {t.common.voiceReady}
             </Badge>
           </div>
         </div>
@@ -461,23 +461,23 @@ function CalculatorInner() {
           {/* 2. Effective Take-Home Retention Card */}
           <div className="grid grid-cols-2 gap-3">
             <div className="p-3.5 bg-white border border-[#D8D2C4] rounded-[8px]">
-              <span className="text-xs text-[#5A554E] block">Net Realisation / Qtl</span>
+              <span className="text-xs text-[#5A554E] block">{t.netRealisation.netPerQuintal}</span>
               <span className="font-heading text-lg sm:text-xl font-bold text-[#1B4332]">
                 ₹{calc.netRealisationPerQuintal.toLocaleString('en-IN')}{' '}
-                <span className="text-xs font-normal text-[#5A554E]">/ Qtl</span>
+                <span className="text-xs font-normal text-[#5A554E]">{t.common.perQuintal}</span>
               </span>
               <span className="text-[11px] text-[#2D6A4F] block mt-0.5">
-                After all mandi & freight deductions
+                {t.netRealisation.afterDeductions}
               </span>
             </div>
 
             <div className="p-3.5 bg-white border border-[#D8D2C4] rounded-[8px]">
-              <span className="text-xs text-[#5A554E] block">Gross Retention Rate</span>
+              <span className="text-xs text-[#5A554E] block">{t.netRealisation.retentionRate}</span>
               <span className="font-heading text-lg sm:text-xl font-bold text-[#262320]">
                 {calc.grossSaleValue > 0 ? Math.round((calc.netRealisation / calc.grossSaleValue) * 100) : 0}%
               </span>
               <span className="text-[11px] text-[#5A554E] block mt-0.5">
-                Total deductions: {formatINR(calc.totalDeductions)}
+                {t.netRealisation.totalDeductionsLabel}: {formatINR(calc.totalDeductions)}
               </span>
             </div>
           </div>
@@ -489,7 +489,7 @@ function CalculatorInner() {
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-[#1B4332]" />
                   <span className="text-xs font-bold uppercase tracking-wider text-[#1B4332]">
-                    Selling Recommendation
+                    {t.netRealisation.bestSellingOption}
                   </span>
                 </div>
                 <Badge variant={recommendation.badgeVariant} className="text-xs font-bold">
@@ -519,7 +519,7 @@ function CalculatorInner() {
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="text-base font-heading font-bold text-[#262320]">
-                    What You Actually Earn: Mandi Comparison
+                    {t.netRealisation.compareSellingOptions}
                   </CardTitle>
                   <CardDescription className="text-xs text-[#5A554E]">
                     Proof that higher gross prices do not guarantee higher farmer earnings
@@ -555,15 +555,15 @@ function CalculatorInner() {
                   </div>
                   <div className="grid grid-cols-3 gap-2 text-[11px] pt-1 border-t border-[#EBE7DF]">
                     <div>
-                      <span className="text-[#5A554E] block">Gross Price:</span>
+                      <span className="text-[#5A554E] block">{t.netRealisation.tableGross}:</span>
                       <strong className="text-[#262320]">₹{compOptionA.price}/Qtl</strong>
                     </div>
                     <div>
-                      <span className="text-[#5A554E] block">Transport Freight:</span>
+                      <span className="text-[#5A554E] block">{t.netRealisation.tableTransport}:</span>
                       <strong className="text-[#B45309]">−{formatINR(compOptionA.calc.transportCost)}</strong>
                     </div>
                     <div className="text-right">
-                      <span className="text-[#5A554E] block">Net Realisation:</span>
+                      <span className="text-[#5A554E] block">{t.netRealisation.tableNet}:</span>
                       <strong className="text-[#1B4332] text-xs sm:text-sm font-heading">
                         {formatINR(compOptionA.calc.netRealisation)}
                       </strong>
@@ -579,15 +579,15 @@ function CalculatorInner() {
                   </div>
                   <div className="grid grid-cols-3 gap-2 text-[11px] pt-1 border-t border-[#EBE7DF]">
                     <div>
-                      <span className="text-[#5A554E] block">Gross Price:</span>
+                      <span className="text-[#5A554E] block">{t.netRealisation.tableGross}:</span>
                       <strong className="text-[#262320]">₹{compOptionB.price}/Qtl</strong>
                     </div>
                     <div>
-                      <span className="text-[#5A554E] block">Transport Freight:</span>
+                      <span className="text-[#5A554E] block">{t.netRealisation.tableTransport}:</span>
                       <strong className="text-[#B45309]">−{formatINR(compOptionB.calc.transportCost)}</strong>
                     </div>
                     <div className="text-right">
-                      <span className="text-[#5A554E] block">Net Realisation:</span>
+                      <span className="text-[#5A554E] block">{t.netRealisation.tableNet}:</span>
                       <strong className="text-[#1B4332] text-xs sm:text-sm font-heading">
                         {formatINR(compOptionB.calc.netRealisation)}
                       </strong>

@@ -122,7 +122,7 @@ export function Navbar() {
                   onClick={() => setIsGovernanceOpen(!isGovernanceOpen)}
                   className="px-2.5 py-1.5 rounded-[4px] text-xs font-semibold text-[#635E59] hover:text-[#262320] hover:bg-[#ECE7DE] flex items-center gap-1 transition-colors"
                 >
-                  <span>Governance</span>
+                  <span>{t.nav.governance}</span>
                   <ChevronDown className="w-3 h-3" />
                 </button>
 

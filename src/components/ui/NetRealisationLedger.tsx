@@ -1,5 +1,8 @@
+'use client';
+
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { useLanguage } from '@/i18n/LanguageContext';
+import { cn, formatINR } from '@/lib/utils';
 
 export interface NetRealisationLedgerProps extends React.HTMLAttributes<HTMLDivElement> {
   grossSaleValue: number;
@@ -27,7 +30,7 @@ export function NetRealisationLedger({
   className,
   ...props
 }: NetRealisationLedgerProps) {
-  const formatInr = (n: number) => '₹' + Math.round(n).toLocaleString('en-IN');
+  const { t } = useLanguage();
   const netPerQtl = lotQuantityQuintals && lotQuantityQuintals > 0
     ? Math.round(netRealisation / lotQuantityQuintals)
     : null;
@@ -43,48 +46,48 @@ export function NetRealisationLedger({
       <div className="flex items-center justify-between border-b border-[#D8D2C4] pb-3">
         <div>
           <span className="text-xs font-bold uppercase tracking-wider text-[#5A554E] block">
-            Net Realisation Ledger
+            {t.netRealisation.ledgerTitle}
           </span>
           <h4 className="font-heading text-base sm:text-lg font-bold text-[#262320]">
-            {cropName ? `${cropName} Settlement Breakdown` : 'True Net Realisation'}
+            {cropName ? `${cropName} • ${t.netRealisation.settlementBreakdown}` : t.netRealisation.trueNetRealisation}
           </h4>
         </div>
         {lotQuantityQuintals && (
           <span className="text-xs font-semibold bg-[#ECE7DE] text-[#262320] px-2.5 py-1 rounded-[4px] border border-[#D8D2C4]">
-            {lotQuantityQuintals} Qtl
+            {lotQuantityQuintals} {t.common.quintals}
           </span>
         )}
       </div>
 
       <div className="space-y-2 text-sm text-[#262320]">
         <div className="flex justify-between items-center py-1">
-          <span className="text-[#5A554E]">Gross Mandi Sale Value</span>
-          <span className="font-heading font-bold text-[#262320]">{formatInr(grossSaleValue)}</span>
+          <span className="text-[#5A554E]">{t.netRealisation.grossMandiSale}</span>
+          <span className="font-heading font-bold text-[#262320]">{formatINR(grossSaleValue)}</span>
         </div>
 
         <div className="flex justify-between items-center py-1 text-[#B45309]">
           <span className="flex items-center gap-1.5">
             <span className="font-mono text-xs">−</span>
-            <span>Transport Freight</span>
+            <span>{t.netRealisation.transportFreightLabel}</span>
           </span>
-          <span className="font-heading font-semibold">−{formatInr(transportFreight)}</span>
+          <span className="font-heading font-semibold">−{formatINR(transportFreight)}</span>
         </div>
 
         <div className="flex justify-between items-center py-1 text-[#B45309]">
           <span className="flex items-center gap-1.5">
             <span className="font-mono text-xs">−</span>
-            <span>APMC Mandi Fee & Cess</span>
+            <span>{t.netRealisation.mandiFeeCess}</span>
           </span>
-          <span className="font-heading font-semibold">−{formatInr(mandiFee)}</span>
+          <span className="font-heading font-semibold">−{formatINR(mandiFee)}</span>
         </div>
 
         {storageOrOtherCosts > 0 && (
           <div className="flex justify-between items-center py-1 text-[#B45309]">
             <span className="flex items-center gap-1.5">
               <span className="font-mono text-xs">−</span>
-              <span>Warehouse Storage & Handling</span>
+              <span>{t.netRealisation.storageHandling}</span>
             </span>
-            <span className="font-heading font-semibold">−{formatInr(storageOrOtherCosts)}</span>
+            <span className="font-heading font-semibold">−{formatINR(storageOrOtherCosts)}</span>
           </div>
         )}
       </div>
@@ -92,16 +95,16 @@ export function NetRealisationLedger({
       <div className="border-t-2 border-[#1B4332] pt-3 flex items-baseline justify-between bg-[#EAF2ED] p-3 rounded-[4px] border border-[#B7D5C4]">
         <div>
           <span className="text-xs font-bold uppercase tracking-wider text-[#1B4332] block">
-            = Farmer Net Realisation
+            = {t.netRealisation.farmerNetRealisation}
           </span>
           {netPerQtl && (
             <span className="text-xs font-semibold text-[#2D6A4F]">
-              ({formatInr(netPerQtl)} / Quintal)
+              ({formatINR(netPerQtl)} {t.common.perQuintal})
             </span>
           )}
         </div>
         <span className="font-heading text-xl sm:text-2xl font-black text-[#1B4332]">
-          {formatInr(netRealisation)}
+          {formatINR(netRealisation)}
         </span>
       </div>
     </div>

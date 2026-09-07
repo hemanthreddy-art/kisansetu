@@ -110,8 +110,8 @@ export default function MarketIntelligencePage() {
     <PageContainer maxWidth="7xl" className="space-y-6 sm:space-y-8">
       {/* Header */}
       <PageHeader
-        title="Market Prices"
-        description="Compare prices, arrivals and selling options across markets."
+        title={t.markets.title}
+        description={t.markets.subtitle}
         badge={
           <Badge variant="emerald">
             {t.markets.badge}
@@ -150,21 +150,21 @@ export default function MarketIntelligencePage() {
             <div className="space-y-1.5 max-w-2xl">
               <div className="flex items-center gap-2">
                 <Badge variant="emerald" className="text-xs font-bold">
-                  Market Decision Insight
+                  {t.home.realMarketDecisionBadge}
                 </Badge>
                 <span className="text-xs text-[#5A554E]">Gross Price ≠ Net Realisation</span>
               </div>
               <h3 className="font-heading text-lg sm:text-xl font-bold text-[#262320]">
-                Which market gives you more after transport and mandi costs?
+                {t.home.realMarketDecisionTitle}
               </h3>
               <p className="text-xs sm:text-sm text-[#5A554E]">
-                A distant mandi quoting ₹250/Qtl higher price might leave you with less cash after paying long-distance road freight.
+                {t.home.realMarketDecisionSubtitle}
               </p>
             </div>
 
             <Link href="/calculator?market=Pune+Market+Yard&price=2400&crop=onion&distance=220&quantity=100">
               <Button variant="outline" className="border-[#1B4332] text-[#1B4332] hover:bg-[#EAF2ED] gap-2 w-full sm:w-auto">
-                <span>Compare Net Realisation</span>
+                <span>{t.markets.calculateNetRealisation}</span>
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
@@ -173,7 +173,7 @@ export default function MarketIntelligencePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-[#D8D2C4]">
             <div className="p-3 bg-white border border-[#D8D2C4] rounded-[6px] flex items-center justify-between">
               <div>
-                <span className="text-xs font-semibold text-[#5A554E] block">Nearby Mandi (Lasalgaon APMC)</span>
+                <span className="text-xs font-semibold text-[#5A554E] block">{t.home.optionBLocalBuyer} (Lasalgaon APMC)</span>
                 <span className="font-heading font-bold text-[#262320] text-sm sm:text-base">
                   ₹2,150 / Qtl <span className="text-xs font-normal text-[#5A554E]">• 35 km</span>
                 </span>
@@ -185,7 +185,7 @@ export default function MarketIntelligencePage() {
 
             <div className="p-3 bg-white border border-[#D8D2C4] rounded-[6px] flex items-center justify-between">
               <div>
-                <span className="text-xs font-semibold text-[#5A554E] block">Distant Mandi (Pune Market Yard)</span>
+                <span className="text-xs font-semibold text-[#5A554E] block">{t.home.optionADistantMandi} (Pune Market Yard)</span>
                 <span className="font-heading font-bold text-[#262320] text-sm sm:text-base">
                   ₹2,400 / Qtl <span className="text-xs font-normal text-[#5A554E]">• 220 km</span>
                 </span>
@@ -204,7 +204,7 @@ export default function MarketIntelligencePage() {
           <div className="flex items-center justify-between flex-wrap gap-2">
             <span className="text-xs font-bold uppercase tracking-wider text-[#5A554E] flex items-center gap-1.5">
               <Layers className="w-3.5 h-3.5" />
-              <span>Filter Mandis & Commodities</span>
+              <span>{t.markets.filterTitle}</span>
             </span>
             {hasActiveFilters && (
               <Button
@@ -214,7 +214,7 @@ export default function MarketIntelligencePage() {
                 className="text-xs text-[#5A554E] hover:text-[#262320] gap-1 h-7 px-2"
               >
                 <RotateCcw className="w-3 h-3" />
-                <span>Reset Filters</span>
+                <span>{t.common.resetFilters}</span>
               </Button>
             )}
           </div>
@@ -222,11 +222,11 @@ export default function MarketIntelligencePage() {
           <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
             <div className="sm:col-span-4">
               <Select
-                label="Filter by Crop"
+                label={t.common.filterByCrop}
                 value={selectedCrop}
                 onChange={(e) => setSelectedCrop(e.target.value)}
               >
-                <option value="all">All Commodities ({availableCrops.length})</option>
+                <option value="all">{t.common.allCommodities} ({availableCrops.length})</option>
                 <option value="onion">Onion (कांदा)</option>
                 <option value="tomato">Tomato (टोमॅटो)</option>
                 <option value="soybean">Soybean (सोयाबीन)</option>
@@ -241,11 +241,11 @@ export default function MarketIntelligencePage() {
 
             <div className="sm:col-span-4">
               <Select
-                label="Filter by District"
+                label={t.common.allDistricts}
                 value={selectedDistrict}
                 onChange={(e) => setSelectedDistrict(e.target.value)}
               >
-                <option value="all">All Districts ({availableDistricts.length})</option>
+                <option value="all">{t.common.allDistricts} ({availableDistricts.length})</option>
                 {availableDistricts.map((d) => (
                   <option key={d} value={d}>
                     {d}
@@ -256,7 +256,7 @@ export default function MarketIntelligencePage() {
 
             <div className="sm:col-span-4">
               <Input
-                label="Search Market or Mandi"
+                label={t.markets.colMarket}
                 placeholder="e.g. Lasalgaon, Pune, Anakapalle..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -275,7 +275,7 @@ export default function MarketIntelligencePage() {
                 {t.markets.tableTitle}
               </CardTitle>
               <CardDescription className="text-xs sm:text-sm text-[#5A554E]">
-                {t.markets.tableSub} (Showing {filteredPrices.length} mandis)
+                {t.markets.tableSub} ({filteredPrices.length})
               </CardDescription>
             </div>
             <span className="text-xs font-semibold text-[#5A554E] bg-[#F4F1EA] px-2.5 py-1 rounded-[4px] border border-[#D8D2C4] self-start sm:self-auto">
@@ -288,9 +288,9 @@ export default function MarketIntelligencePage() {
           {filteredPrices.length === 0 ? (
             <div className="p-12 text-center space-y-3">
               <Search className="w-8 h-8 text-[#7C766D] mx-auto" />
-              <p className="text-sm font-semibold text-[#262320]">No mandis match your active filters.</p>
+              <p className="text-sm font-semibold text-[#262320]">{t.markets.noMandisMatch}</p>
               <Button variant="outline" size="sm" onClick={handleResetFilters} className="text-xs">
-                Clear Filters
+                {t.common.resetFilters}
               </Button>
             </div>
           ) : (
@@ -305,8 +305,8 @@ export default function MarketIntelligencePage() {
                       <th className="py-3 px-4">{t.markets.colPriceRange}</th>
                       <th className="py-3 px-4">{t.markets.colModalPrice}</th>
                       <th className="py-3 px-4">{t.markets.colArrivals}</th>
-                      <th className="py-3 px-4">Trend</th>
-                      <th className="py-3 px-4">Distance</th>
+                      <th className="py-3 px-4">{t.markets.colTrend}</th>
+                      <th className="py-3 px-4">{t.markets.colDistance}</th>
                       <th className="py-3 px-4 text-right">{t.markets.colAction}</th>
                     </tr>
                   </thead>
@@ -341,27 +341,27 @@ export default function MarketIntelligencePage() {
                           </td>
                           <td className="py-3.5 px-4 font-heading font-bold text-[#1B4332] text-base whitespace-nowrap">
                             ₹{row.modalPrice.toLocaleString('en-IN')}{' '}
-                            <span className="text-xs font-normal text-[#5A554E]">/ Qtl</span>
+                            <span className="text-xs font-normal text-[#5A554E]">{t.common.perQuintal}</span>
                           </td>
                           <td className="py-3.5 px-4 text-[#262320] text-xs">
                             <span className="font-semibold">{row.arrivalTonnes.toLocaleString('en-IN')} {t.markets.tonnes}</span>
-                            <span className="text-[#5A554E] block">({(row.arrivalTonnes * 10).toLocaleString('en-IN')} Qtl)</span>
+                            <span className="text-[#5A554E] block">({(row.arrivalTonnes * 10).toLocaleString('en-IN')} {t.common.quintals})</span>
                           </td>
                           <td className="py-3.5 px-4">
                             {row.trend === 'up' ? (
                               <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#2D6A4F] bg-[#EAF2ED] px-2 py-0.5 rounded-[4px]">
                                 <ArrowUpRight className="w-3 h-3" />
-                                <span>Rising</span>
+                                <span>{t.markets.trendRising}</span>
                               </span>
                             ) : row.trend === 'down' ? (
                               <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#B45309] bg-[#FFFBEB] px-2 py-0.5 rounded-[4px]">
                                 <ArrowDownRight className="w-3 h-3" />
-                                <span>Softening</span>
+                                <span>{t.markets.trendSoftening}</span>
                               </span>
                             ) : (
                               <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#5A554E] bg-[#ECE7DE] px-2 py-0.5 rounded-[4px]">
                                 <Minus className="w-3 h-3" />
-                                <span>Steady</span>
+                                <span>{t.markets.trendSteady}</span>
                               </span>
                             )}
                           </td>
@@ -410,42 +410,42 @@ export default function MarketIntelligencePage() {
                         {row.trend === 'up' ? (
                           <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#2D6A4F] bg-[#EAF2ED] px-2 py-0.5 rounded-[4px] shrink-0">
                             <ArrowUpRight className="w-3 h-3" />
-                            <span>Rising</span>
+                            <span>{t.markets.trendRising}</span>
                           </span>
                         ) : row.trend === 'down' ? (
                           <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#B45309] bg-[#FFFBEB] px-2 py-0.5 rounded-[4px] shrink-0">
                             <ArrowDownRight className="w-3 h-3" />
-                            <span>Softening</span>
+                            <span>{t.markets.trendSoftening}</span>
                           </span>
                         ) : (
                           <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#5A554E] bg-[#ECE7DE] px-2 py-0.5 rounded-[4px] shrink-0">
                             <Minus className="w-3 h-3" />
-                            <span>Steady</span>
+                            <span>{t.markets.trendSteady}</span>
                           </span>
                         )}
                       </div>
 
                       <div className="flex items-center justify-between bg-[#F4F1EA] p-2.5 rounded-[6px]">
                         <div>
-                          <span className="text-[11px] text-[#5A554E] block">Commodity</span>
+                          <span className="text-[11px] text-[#5A554E] block">{t.common.commodity}</span>
                           <span className="text-xs font-bold text-[#262320]">{row.commodity}</span>
                         </div>
                         <div className="text-right">
-                          <span className="text-[11px] text-[#5A554E] block">Modal Price</span>
+                          <span className="text-[11px] text-[#5A554E] block">{t.markets.colModalPrice}</span>
                           <span className="font-heading font-black text-base text-[#1B4332]">
                             ₹{row.modalPrice.toLocaleString('en-IN')}{' '}
-                            <span className="text-[10px] font-normal text-[#5A554E]">/ Qtl</span>
+                            <span className="text-[10px] font-normal text-[#5A554E]">{t.common.perQuintal}</span>
                           </span>
                         </div>
                       </div>
 
                       <div className="grid grid-cols-2 gap-2 text-xs text-[#5A554E]">
                         <div>
-                          <span>Price Range: </span>
+                          <span>{t.markets.colPriceRange}: </span>
                           <strong className="text-[#262320]">₹{row.minPrice} - ₹{row.maxPrice}</strong>
                         </div>
                         <div className="text-right">
-                          <span>Arrivals: </span>
+                          <span>{t.markets.colArrivals}: </span>
                           <strong className="text-[#262320]">{row.arrivalTonnes} T</strong>
                         </div>
                       </div>

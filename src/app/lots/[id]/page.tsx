@@ -790,7 +790,7 @@ function LotDetailPageContent() {
       case 'SOLD':
         return <Badge variant="purple">{t.lots.filterSold}</Badge>;
       case 'CANCELLED':
-        return <Badge variant="red">Cancelled</Badge>;
+        return <Badge variant="red">{t.commonStatuses.cancelled}</Badge>;
       default:
         return <Badge variant="gray">{status}</Badge>;
     }
@@ -812,7 +812,7 @@ function LotDetailPageContent() {
           <AlertCircle className="w-8 h-8" />
         </div>
         <div className="space-y-2">
-          <h2 className="text-2xl font-bold text-[#262320]">Lot Not Found</h2>
+          <h2 className="text-2xl font-bold text-[#262320]">{t.common.notFound}</h2>
           <p className="text-gray-600 text-sm">
             {error || 'The requested produce lot could not be found or you do not have permission to view it.'}
           </p>
@@ -884,7 +884,7 @@ function LotDetailPageContent() {
             )}
             <span className="text-xs text-[#1B4332] font-semibold bg-emerald-50 px-3 py-1 rounded-full border border-[#B7D5C4] flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-              <span>{lot.expectedGrade || 'Not Graded Yet'}</span>
+              <span>{lot.expectedGrade || t.lots.notGraded}</span>
             </span>
           </div>
         </div>
@@ -901,7 +901,7 @@ function LotDetailPageContent() {
           <p className="text-sm text-gray-500 mt-1 flex items-center gap-2">
             <span>Created on {new Date(lot.createdAt).toLocaleDateString()}</span>
             <span>•</span>
-            <span className="font-mono text-xs">Standard Produce Lot</span>
+            <span className="font-mono text-xs">{t.lots.registeredLotsTitle}</span>
           </p>
         </div>
 
@@ -914,7 +914,7 @@ function LotDetailPageContent() {
             </div>
             {lot.unit !== 'Quintal' && (
               <span className="text-xs text-gray-500 font-mono">
-                {lot.quantityQuintals} Quintals
+                {lot.quantityQuintals} {t.common.quintals}
               </span>
             )}
           </div>
@@ -923,7 +923,7 @@ function LotDetailPageContent() {
             <span className="text-xs text-emerald-700 font-medium block">{t.lots.targetPrice}</span>
             <div className="text-lg font-bold text-[#1B4332] mt-0.5">
               ₹{lot.expectedPricePerQuintal || lot.expectedPrice}
-              <span className="text-xs font-normal text-emerald-700">/Qtl</span>
+              <span className="text-xs font-normal text-emerald-700">{t.common.perQuintal}</span>
             </div>
             <span className="text-xs text-emerald-600">
               Total: ₹{((lot.quantityQuintals || lot.quantity) * (lot.expectedPricePerQuintal || lot.expectedPrice)).toLocaleString('en-IN')}
@@ -958,7 +958,7 @@ function LotDetailPageContent() {
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <Badge variant="purple">Module B & O</Badge>
-              <span className="text-xs font-mono text-gray-500 font-bold">TWO-TIER QUALITY ASSURANCE</span>
+              <span className="text-xs font-mono text-gray-500 font-bold">{t.farmer.qualityTitle}</span>
             </div>
             <h2 className="text-2xl font-heading font-black text-[#262320] tracking-tight flex items-center gap-2.5">
               <ShieldCheck className="w-7 h-7 text-emerald-700" />
@@ -1232,7 +1232,7 @@ function LotDetailPageContent() {
               <Link href="/inspector">
                 <Button variant="outline" size="sm" fullWidth className="gap-2 text-xs">
                   <FileText className="w-3.5 h-3.5" />
-                  <span>Open on Inspector Desk</span>
+                  <span>{t.quality.openInspection}</span>
                 </Button>
               </Link>
             </div>
@@ -1246,10 +1246,10 @@ function LotDetailPageContent() {
               <Sparkles className="w-5 h-5 text-[#1B4332]" />
               <div>
                 <CardTitle className="text-base text-[#1B4332] font-bold">
-                  Quality Impact on Selling
+                  {t.quality.trustPrincipleTitle}
                 </CardTitle>
                 <CardDescription className="text-xs text-[#262320]/80">
-                  How verified quality directly unlocks commercial discovery, pricing premiums, and buyer trust
+                  {t.quality.trustPrincipleDesc}
                 </CardDescription>
               </div>
             </div>
@@ -1262,7 +1262,7 @@ function LotDetailPageContent() {
                   <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center text-xs font-bold text-emerald-800">
                     1
                   </div>
-                  <span className="text-xs font-bold text-[#1B4332]">Buyer Matching</span>
+                  <span className="text-xs font-bold text-[#1B4332]">{t.ecosystem.stepMatching}</span>
                 </div>
                 <p className="text-[11px] text-stone-600 leading-relaxed">
                   Verified lots receive algorithmic priority in buyer procurement search and institutional demand matching.
@@ -1275,7 +1275,7 @@ function LotDetailPageContent() {
                   <div className="w-6 h-6 rounded-full bg-amber-100 flex items-center justify-center text-xs font-bold text-amber-800">
                     2
                   </div>
-                  <span className="text-xs font-bold text-amber-900">Offer Eligibility</span>
+                  <span className="text-xs font-bold text-amber-900">{t.buyerMatching.incomingOffersTitle}</span>
                 </div>
                 <p className="text-[11px] text-stone-600 leading-relaxed">
                   Unlocks Grade A institutional premiums (+5% to +15% over mandi reference) and binding digital counter-offers.
@@ -1288,7 +1288,7 @@ function LotDetailPageContent() {
                   <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center text-xs font-bold text-emerald-800">
                     3
                   </div>
-                  <span className="text-xs font-bold text-[#1B4332]">Dispute Protection</span>
+                  <span className="text-xs font-bold text-[#1B4332]">{t.transactions.disputeGrievance}</span>
                 </div>
                 <p className="text-[11px] text-stone-600 leading-relaxed">
                   Physical assay certificate protects farmers against subjective deductions or rejections upon delivery.
@@ -1301,7 +1301,7 @@ function LotDetailPageContent() {
                   <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-xs font-bold text-blue-800">
                     4
                   </div>
-                  <span className="text-xs font-bold text-blue-900">Logistics Efficiency</span>
+                  <span className="text-xs font-bold text-blue-900">{t.ecosystem.stepTransport}</span>
                 </div>
                 <p className="text-[11px] text-stone-600 leading-relaxed">
                   Accurate packaging and moisture grading prevent transit spoilage and enable optimal vehicle allocation.

@@ -209,12 +209,12 @@ export default function AdminPortalPage() {
               className="gap-1.5 text-xs border-[#D8D2C4] bg-white hover:bg-stone-50"
             >
               <RefreshCw className="w-3.5 h-3.5 text-[#1B4332]" />
-              <span>Refresh Desk</span>
+              <span>{t.common.refresh}</span>
             </Button>
             <Link href="/disputes">
               <Button variant="outline" size="sm" className="gap-1.5 text-xs border-[#D8D2C4] bg-white">
                 <Scale className="w-3.5 h-3.5 text-rose-700" />
-                <span>Public Portal</span>
+                <span>{t.common.publicPortal}</span>
               </Button>
             </Link>
           </div>
@@ -227,7 +227,7 @@ export default function AdminPortalPage() {
           <CardHeader className="p-4 pb-2">
             <span className="text-[11px] font-bold text-[#635E59] uppercase tracking-wider flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5 text-amber-700" />
-              <span>Open Grievances</span>
+              <span>{t.common.openGrievances}</span>
             </span>
             <div className="text-2xl font-black font-heading text-amber-800 mt-1">
               {openCount}
@@ -242,7 +242,7 @@ export default function AdminPortalPage() {
           <CardHeader className="p-4 pb-2">
             <span className="text-[11px] font-bold text-[#635E59] uppercase tracking-wider flex items-center gap-1.5">
               <Scale className="w-3.5 h-3.5 text-blue-700" />
-              <span>Under Review</span>
+              <span>{t.common.underReview}</span>
             </span>
             <div className="text-2xl font-black font-heading text-blue-900 mt-1">
               {reviewCount}
@@ -257,7 +257,7 @@ export default function AdminPortalPage() {
           <CardHeader className="p-4 pb-2">
             <span className="text-[11px] font-bold text-[#635E59] uppercase tracking-wider flex items-center gap-1.5">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
-              <span>Resolved & Closed</span>
+              <span>{t.common.resolved}</span>
             </span>
             <div className="text-2xl font-black font-heading text-[#1B4332] mt-1">
               {resolvedCount}
@@ -272,7 +272,7 @@ export default function AdminPortalPage() {
           <CardHeader className="p-4 pb-2">
             <span className="text-[11px] font-bold text-[#635E59] uppercase tracking-wider flex items-center gap-1.5">
               <FileText className="w-3.5 h-3.5 text-[#1B4332]" />
-              <span>Monitored Active Trades</span>
+              <span>{t.common.monitoredActiveTrades}</span>
             </span>
             <div className="text-2xl font-black font-heading text-[#262320] mt-1">
               {activeTxnCount}
@@ -385,12 +385,12 @@ export default function AdminPortalPage() {
           {loading ? (
             <div className="p-12 text-center space-y-2">
               <Loader2 className="w-6 h-6 animate-spin mx-auto text-[#1B4332]" />
-              <p className="text-xs text-[#635E59]">Loading administrative queue...</p>
+              <p className="text-xs text-[#635E59]">{t.common.loadingGrievances}</p>
             </div>
           ) : filteredDisputes.length === 0 ? (
             <div className="p-12 text-center space-y-2 bg-[#FAFAF8] rounded-[6px] border border-dashed border-[#D8D2C4]">
               <ShieldCheck className="w-8 h-8 mx-auto text-emerald-700 opacity-60" />
-              <p className="text-xs font-bold text-[#262320]">No grievances matching current filter.</p>
+              <p className="text-xs font-bold text-[#262320]">{t.common.noGrievancesFound}</p>
               <p className="text-xs text-[#635E59]">All recorded transactions are progressing smoothly.</p>
             </div>
           ) : (

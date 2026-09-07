@@ -359,7 +359,7 @@ export default function TransactionDetailPage() {
     return (
       <PageContainer className="py-20 text-center space-y-3">
         <Loader2 className="w-10 h-10 animate-spin mx-auto text-[#1B4332]" />
-        <p className="text-[#635E59] text-sm">Loading commercial transaction records...</p>
+        <p className="text-[#635E59] text-sm">{t.transactions.loadingRecords}</p>
       </PageContainer>
     );
   }
@@ -367,10 +367,10 @@ export default function TransactionDetailPage() {
   if (!transaction) {
     return (
       <PageContainer className="py-20 text-center space-y-4 max-w-md mx-auto">
-        <h2 className="text-xl font-bold font-heading text-[#262320]">Transaction Not Found</h2>
+        <h2 className="text-xl font-bold font-heading text-[#262320]">{t.common.notFound}</h2>
         <p className="text-[#635E59] text-sm">The requested transaction could not be located in the database.</p>
         <Link href="/transactions">
-          <Button variant="primary" className="bg-[#1B4332] text-white">Back to Transactions</Button>
+          <Button variant="primary" className="bg-[#1B4332] text-white">{t.transactions.backToTransactions}</Button>
         </Link>
       </PageContainer>
     );
@@ -395,7 +395,7 @@ export default function TransactionDetailPage() {
             className="text-xs font-bold text-[#1B4332] hover:text-[#2D6A4F] flex items-center gap-1.5"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Back to Transactions Ledger</span>
+            <span>{t.transactions.backToTransactions}</span>
           </Link>
           <div className="flex items-center gap-2 flex-wrap mt-2">
             <h1 className="text-2xl sm:text-3xl font-black font-heading text-[#262320] tracking-tight flex items-center gap-2">
@@ -577,8 +577,8 @@ export default function TransactionDetailPage() {
                 </span>
               </div>
               <div className="flex justify-between py-1 border-b border-[#D8D2C4]">
-                <span className="text-[#635E59]">Agreed Quantity:</span>
-                <span className="font-bold text-[#262320]">{transaction.quantityQuintals} Quintals</span>
+                <span className="text-[#635E59]">{t.transactions.agreedQuantity}:</span>
+                <span className="font-bold text-[#262320]">{transaction.quantityQuintals} {t.common.quintals}</span>
               </div>
               <div className="flex justify-between py-1 border-b border-[#D8D2C4]">
                 <span className="text-[#635E59]">{t.transactions.agreedPricePerQtl}:</span>
@@ -610,7 +610,7 @@ export default function TransactionDetailPage() {
               <div className="flex items-center justify-between">
                 <span className="font-bold text-[#1B4332] flex items-center gap-1.5">
                   <FileCheck2 className="w-4 h-4 text-[#1B4332]" />
-                  <span>Tier 2: Physical Verification</span>
+                  <span>{t.quality.tier2Title}: {t.transactions.physicalVerification}</span>
                 </span>
                 <Badge variant={physicalCert ? 'emerald' : 'gray'}>
                   {physicalCert ? 'PHYSICALLY_VERIFIED' : 'PENDING'}

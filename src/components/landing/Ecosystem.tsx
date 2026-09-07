@@ -2,36 +2,43 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useLanguage } from '@/i18n/LanguageContext';
 import { Users, Store, Truck, ShieldCheck, ArrowRight } from 'lucide-react';
 
 export function Ecosystem() {
+  const { t } = useLanguage();
+
   const participants = [
     {
-      title: 'Farmers & FPOs',
-      role: 'PRODUCERS',
-      description: 'Create produce lots, compare APMC net realisation, and review direct buyer offers.',
+      title: t.ecosystem.farmerTitle,
+      role: t.nav.farmer,
+      description: t.ecosystem.farmerDesc,
       href: '/farmer',
+      action: t.ecosystem.farmerAction,
       icon: Users,
     },
     {
-      title: 'Commercial Buyers',
-      role: 'PROCUREMENT',
-      description: 'Browse verified produce lots, assess quality reports, and issue binding digital offers.',
+      title: t.ecosystem.buyerTitle,
+      role: t.nav.buyer,
+      description: t.ecosystem.buyerDesc,
       href: '/buyer',
+      action: t.ecosystem.buyerAction,
       icon: Store,
     },
     {
-      title: 'Transporters',
-      role: 'LOGISTICS',
-      description: 'Provide corridor truck capacity, calculate trip freight, and secure delivery payouts.',
+      title: t.ecosystem.transporterTitle,
+      role: t.nav.transporter,
+      description: t.ecosystem.transporterDesc,
       href: '/transporter',
+      action: t.ecosystem.transporterAction,
       icon: Truck,
     },
     {
-      title: 'Inspectors & Governance',
-      role: 'VERIFICATION',
-      description: 'Perform physical assayer grading, resolve trade grievances, and supervise APMC standards.',
+      title: t.nav.governanceVerification,
+      role: t.nav.inspector,
+      description: t.nav.descInspector,
       href: '/inspector',
+      action: t.common.viewDetails,
       icon: ShieldCheck,
     },
   ];
@@ -41,13 +48,13 @@ export function Ecosystem() {
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto text-center space-y-2 mb-8">
           <span className="text-xs font-bold text-[#1B4332] uppercase tracking-wider block">
-            Ecosystem Integration
+            {t.nav.ecosystemPortals}
           </span>
           <h2 className="text-2xl sm:text-3xl font-bold font-heading text-[#262320] tracking-tight">
-            Who Uses KisanSetu
+            {t.ecosystem.title}
           </h2>
           <p className="text-sm sm:text-base font-body text-[#635E59]">
-            A unified market-linkage network connecting all participants in the agricultural supply chain.
+            {t.ecosystem.subtitle}
           </p>
         </div>
 
@@ -80,7 +87,7 @@ export function Ecosystem() {
                   href={item.href}
                   className="inline-flex items-center gap-1 text-xs font-bold text-[#1B4332] hover:text-[#2D6A4F] pt-2"
                 >
-                  <span>Open Portal</span>
+                  <span>{item.action}</span>
                   <ArrowRight className="w-3 h-3" />
                 </Link>
               </div>

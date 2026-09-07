@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useLanguage } from '@/i18n/LanguageContext';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -37,6 +38,7 @@ interface FarmerTransactionItem {
 }
 
 export default function FarmerHubPage() {
+  const { t } = useLanguage();
   const [lots, setLots] = useState<ProduceLot[]>([]);
   const [transactions, setTransactions] = useState<FarmerTransactionItem[]>([]);
 
@@ -89,16 +91,16 @@ export default function FarmerHubPage() {
       <div className="pb-6 mb-6 border-b border-[#D8D2C4] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <Badge variant="emerald">Farmer / FPO Portal</Badge>
+            <Badge variant="emerald">{t.farmer.portalBadge}</Badge>
             <span className="text-[11px] font-semibold text-[#635E59] bg-[#ECE7DE] px-2 py-0.5 rounded-[2px] border border-[#D8D2C4]">
-              Demo Profile • Ramesh Patil (Niphad, Nashik)
+              {t.farmer.demoProfile}
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold font-heading text-[#262320] tracking-tight">
-            Farmer Dashboard
+            {t.farmer.title}
           </h1>
           <p className="text-xs sm:text-sm font-body text-[#635E59]">
-            Nashik Agro FPO Member • Aggregated Volume: 420 Tonnes
+            {t.farmer.fpoMember}
           </p>
         </div>
 
@@ -106,7 +108,7 @@ export default function FarmerHubPage() {
           <Link href="/lots?action=create">
             <Button variant="primary" className="bg-[#1B4332] hover:bg-[#2D6A4F] text-white gap-1.5">
               <PlusCircle className="w-4 h-4" />
-              <span>+ Create Produce Lot</span>
+              <span>{t.farmer.createLotBtn}</span>
             </Button>
           </Link>
         </div>
@@ -129,7 +131,7 @@ export default function FarmerHubPage() {
                   <span className="font-mono text-xs font-bold text-[#1B4332] bg-[#EAF2ED] px-2 py-0.5 rounded border border-[#B7D5C4]">
                     {activeLot.lotCode}
                   </span>
-                  <StatusIndicator status="active" label={activeLot.status} />
+                  <StatusIndicator status="active" label={t.commonStatuses.available} />
                 </div>
                 <h2 className="text-xl font-bold font-heading text-[#262320] mt-1">
                   {activeLot.commodity} {activeLot.variety && <span className="font-normal text-[#635E59]">• {activeLot.variety}</span>}
@@ -140,16 +142,16 @@ export default function FarmerHubPage() {
                     <span>{activeLot.location || activeLot.locationDistrict}</span>
                   </span>
                   <span>•</span>
-                  <span><strong>{activeLot.quantity} {activeLot.unit}</strong></span>
+                  <span><strong>{activeLot.quantity} {t.common.quintals}</strong></span>
                   <span>•</span>
-                  <span>Target: ₹{activeLot.expectedPricePerQuintal || activeLot.expectedPrice}/Qtl</span>
+                  <span>{t.common.targetPrice}: ₹{activeLot.expectedPricePerQuintal || activeLot.expectedPrice}{t.common.perQuintal}</span>
                 </div>
               </div>
 
               <div className="text-left sm:text-right">
-                <span className="text-[11px] font-bold text-[#635E59] uppercase block">Quality Screening</span>
+                <span className="text-[11px] font-bold text-[#635E59] uppercase block">{t.farmer.qualityScreening}</span>
                 <span className="inline-block px-2 py-0.5 rounded-[4px] text-xs font-semibold bg-[#FEF3C7] text-[#92400E] border border-[#FDE68A]">
-                  AI Screening — Not Physically Verified
+                  {t.farmer.aiScreeningNotVerified}
                 </span>
               </div>
             </div>
@@ -158,25 +160,25 @@ export default function FarmerHubPage() {
             <div className="flex flex-wrap items-center gap-2 pt-1">
               <Link href={`/lots/${activeLot.lotCode || activeLot.id}`}>
                 <Button size="sm" variant="outline" className="text-xs border-[#D8D2C4] text-[#262320]">
-                  View Full Lot
+                  {t.farmer.viewFullLot}
                 </Button>
               </Link>
               <Link href="/markets">
                 <Button size="sm" variant="outline" className="text-xs border-[#D8D2C4] text-[#262320] gap-1">
                   <TrendingUp className="w-3.5 h-3.5 text-[#1B4332]" />
-                  <span>Compare Mandis</span>
+                  <span>{t.farmer.compareMandis}</span>
                 </Button>
               </Link>
               <Link href="/buyer">
                 <Button size="sm" variant="outline" className="text-xs border-[#D8D2C4] text-[#262320] gap-1">
                   <Users className="w-3.5 h-3.5 text-[#B45309]" />
-                  <span>View Buyer Offers</span>
+                  <span>{t.farmer.viewBuyerOffers}</span>
                 </Button>
               </Link>
               <Link href="/transporter">
                 <Button size="sm" variant="outline" className="text-xs border-[#D8D2C4] text-[#262320] gap-1">
                   <Truck className="w-3.5 h-3.5 text-[#1B4332]" />
-                  <span>Find Logistics</span>
+                  <span>{t.farmer.findLogistics}</span>
                 </Button>
               </Link>
             </div>
@@ -187,13 +189,13 @@ export default function FarmerHubPage() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#D8D2C4]">
               <div>
                 <span className="text-xs font-bold text-[#1B4332] uppercase tracking-wider block">
-                  Core Agricultural Decision
+                  {t.farmer.coreDecision}
                 </span>
                 <h3 className="font-heading font-bold text-lg text-[#262320]">
-                  Estimated Net Realisation
+                  {t.farmer.netRealisationEst}
                 </h3>
                 <p className="text-xs text-[#635E59]">
-                  Take-home earnings calculated for 80 Quintals after logistics and handling deductions.
+                  {t.farmer.takeHomeCalc}
                 </p>
               </div>
 
@@ -201,10 +203,10 @@ export default function FarmerHubPage() {
               <div className="p-2.5 bg-[#EAF2ED] border border-[#B7D5C4] rounded-[4px] text-right">
                 <div className="flex items-center gap-1.5 justify-end text-xs font-bold text-[#1B4332]">
                   <CheckCircle2 className="w-4 h-4" />
-                  <span>SELL NOW</span>
+                  <span>{t.farmer.sellNow}</span>
                 </div>
                 <span className="text-[11px] text-[#2D6A4F] block mt-0.5">
-                  Direct Buyer provides highest take-home
+                  {t.farmer.sellNowDesc}
                 </span>
               </div>
             </div>
@@ -222,9 +224,9 @@ export default function FarmerHubPage() {
 
             {/* Recommendation "Why?" Explanation */}
             <div className="p-3 bg-[#F4F1EA] border border-[#D8D2C4] rounded-[4px] text-xs text-[#262320] space-y-1">
-              <strong className="text-[#1B4332] block">Why Sell Now to ABC Foods?</strong>
+              <strong className="text-[#1B4332] block">{t.farmer.whySellNowTitle}</strong>
               <p className="text-[#635E59] leading-relaxed">
-                Direct procurement buyer ABC Foods offers ₹2,420/Qtl with local Niphad hub pickup (30 km). Transport freight is only ₹1,200 with zero APMC mandi cess, locking in <strong>₹1,91,200 (₹2,390/Qtl net)</strong> compared to ₹1,78,000 at distant mandis after long-haul deductions.
+                {t.farmer.whySellNowDesc}
               </p>
             </div>
           </div>
@@ -237,10 +239,10 @@ export default function FarmerHubPage() {
             <div className="flex items-center justify-between pb-2 border-b border-[#D8D2C4]">
               <h3 className="font-heading font-bold text-sm text-[#262320] flex items-center gap-2">
                 <Users className="w-4 h-4 text-[#1B4332]" />
-                <span>Active Buyer Offer</span>
+                <span>{t.farmer.activeBuyerOffer}</span>
               </h3>
               <span className="text-[10px] font-bold text-[#1B4332] bg-[#EAF2ED] px-2 py-0.5 rounded border border-[#B7D5C4]">
-                ACCEPTED
+                {t.farmer.acceptedStatus}
               </span>
             </div>
 
@@ -253,8 +255,8 @@ export default function FarmerHubPage() {
                 <ReputationCluster ratingScore={4.7} completedDealsCount={140} onTimeDeliveryPercent={98} size="sm" />
               </div>
               <div className="pt-2 border-t border-[#D8D2C4] flex items-center justify-between text-xs">
-                <span className="text-[#635E59]">Agreed Bid:</span>
-                <span className="font-bold text-[#1B4332] text-sm">₹2,420 / Qtl (80 Qtl)</span>
+                <span className="text-[#635E59]">{t.buyerMatching.offeredPrice}</span>
+                <span className="font-bold text-[#1B4332] text-sm">₹2,420 {t.common.perQuintal} (80 {t.common.quintals})</span>
               </div>
             </div>
           </div>
@@ -264,32 +266,32 @@ export default function FarmerHubPage() {
             <div className="flex items-center justify-between pb-2 border-b border-[#D8D2C4]">
               <h3 className="font-heading font-bold text-sm text-[#262320] flex items-center gap-2">
                 <Truck className="w-4 h-4 text-[#1B4332]" />
-                <span>Corridor Logistics</span>
+                <span>{t.ecosystem.stepTransport}</span>
               </h3>
               <span className="text-[10px] font-bold text-[#1B4332] bg-[#EAF2ED] px-2 py-0.5 rounded border border-[#B7D5C4]">
-                ASSIGNED
+                {t.farmer.assignedStatus}
               </span>
             </div>
 
             <div className="space-y-1.5 text-xs">
               <div className="font-bold text-sm text-[#262320]">Sahyadri Agri Logistics</div>
               <div className="flex items-center gap-2">
-                <VerificationBadge customLabel="Commercial License" />
+                <VerificationBadge customLabel={t.farmer.commercialLicense} />
               </div>
               <div className="pt-1">
                 <ReputationCluster ratingScore={4.8} completedDealsCount={230} onTimeDeliveryPercent={96.5} size="sm" />
               </div>
               <div className="pt-2 border-t border-[#D8D2C4] space-y-1 text-xs text-[#635E59]">
                 <div className="flex justify-between">
-                  <span>Vehicle:</span>
+                  <span>{t.farmer.vehicleLabel}</span>
                   <span className="font-semibold text-[#262320]">6 Tonnes Eicher Truck</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Corridor Route:</span>
+                  <span>{t.farmer.corridorRoute}</span>
                   <span className="font-semibold text-[#262320]">Niphad → Local Hub (30 km)</span>
                 </div>
                 <div className="flex justify-between text-[#1B4332] font-bold pt-1 border-t border-[#D8D2C4]/50">
-                  <span>Freight Cost:</span>
+                  <span>{t.farmer.freightCost}</span>
                   <span>₹1,200</span>
                 </div>
               </div>
@@ -307,14 +309,15 @@ export default function FarmerHubPage() {
             const txnBuyer = activeTxn?.buyer?.companyName || 'ABC Foods Pvt Ltd [Demo]';
             const txnPayment = activeTxn?.payments?.[0]?.paymentStatus || 'INITIATED';
             const txnNet = activeTxn?.netRealisation ? formatINR(activeTxn.netRealisation) : '₹1,91,200';
+            const txnStatusLabel = txnStatus === 'COMPLETED' ? t.commonStatuses.completed : t.commonStatuses.inTransit;
             return (
               <div className="bg-white border border-[#D8D2C4] rounded-[8px] p-5 space-y-3 shadow-none hover:border-[#1B4332] transition-all">
                 <div className="flex items-center justify-between pb-2 border-b border-[#D8D2C4]">
                   <h3 className="font-heading font-bold text-sm text-[#262320] flex items-center gap-2">
                     <CreditCard className="w-4 h-4 text-[#1B4332]" />
-                    <span>Commercial Transaction</span>
+                    <span>{t.farmer.commercialTransaction}</span>
                   </h3>
-                  <StatusIndicator status="pending" label={txnStatus} />
+                  <StatusIndicator status={txnStatus === 'COMPLETED' ? 'success' : 'pending'} label={txnStatusLabel} />
                 </div>
 
                 <div className="space-y-2 text-xs">
@@ -327,20 +330,20 @@ export default function FarmerHubPage() {
                     </span>
                   </div>
                   <div className="text-sm font-black font-heading text-[#262320]">
-                    {txnCrop} ({txnQty} Qtl)
+                    {txnCrop} ({txnQty} {t.common.quintals})
                   </div>
                   <div className="flex justify-between text-[#635E59]">
-                    <span>Buyer:</span>
+                    <span>{t.common.buyer}:</span>
                     <span className="font-semibold text-[#262320] truncate max-w-[150px]">{txnBuyer}</span>
                   </div>
                   <div className="flex justify-between text-[#635E59]">
-                    <span>Est. Net Realisation:</span>
+                    <span>{t.farmer.netRealisationEst}:</span>
                     <span className="font-bold text-[#1B4332]">{txnNet}</span>
                   </div>
                   <div className="pt-2">
                     <Link href={`/transactions/${txnId}`}>
                       <Button size="sm" variant="outline" className="w-full text-xs gap-1 border-[#D8D2C4] hover:bg-stone-50">
-                        <span>View Transaction Details</span>
+                        <span>{t.farmer.viewTxnDetails}</span>
                         <ArrowRight className="w-3 h-3" />
                       </Button>
                     </Link>
@@ -354,9 +357,9 @@ export default function FarmerHubPage() {
 
       {/* 4. Transparency & Demonstration Notice */}
       <div className="p-4 rounded-[4px] bg-[#ECE7DE] border border-[#D8D2C4] text-xs text-[#635E59] space-y-1">
-        <strong className="text-[#262320] block">Agricultural Data Transparency</strong>
+        <strong className="text-[#262320] block">{t.farmer.dataTransparencyTitle}</strong>
         <p>
-          Demonstration scenario modeled for Maharashtra APMC market linkages. All calculations follow actual distance-weighted freight formulas and physical assayer standards.
+          {t.farmer.dataTransparencyNotice}
         </p>
       </div>
     </PageContainer>

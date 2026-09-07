@@ -217,7 +217,7 @@ function LotsPageContent() {
       case 'SOLD':
         return <Badge variant="purple">{t.lots.filterSold}</Badge>;
       case 'CANCELLED':
-        return <Badge variant="red">Cancelled</Badge>;
+        return <Badge variant="red">{t.commonStatuses.cancelled}</Badge>;
       default:
         return <Badge variant="gray">{status}</Badge>;
     }
@@ -256,7 +256,7 @@ function LotsPageContent() {
           <div className="text-2xl font-black font-heading text-[#262320] mt-1">
             {metrics.totalLots}
           </div>
-          <span className="text-[11px] text-[#5A554E] block mt-0.5">Total registered lots</span>
+          <span className="text-[11px] text-[#5A554E] block mt-0.5">{t.lots.totalRegisteredLots}</span>
         </div>
 
         <div className="bg-[#EAF2ED] border border-[#B7D5C4] rounded-[8px] p-4">
@@ -266,7 +266,7 @@ function LotsPageContent() {
           <div className="text-2xl font-black font-heading text-[#1B4332] mt-1">
             {metrics.activeLots}
           </div>
-          <span className="text-[11px] text-[#2D6A4F] block mt-0.5">Open for buyer discovery</span>
+          <span className="text-[11px] text-[#2D6A4F] block mt-0.5">{t.lots.openForBuyerDiscovery}</span>
         </div>
 
         <div className="bg-[#FFFBEB] border border-[#FDE68A] rounded-[8px] p-4">
@@ -276,16 +276,16 @@ function LotsPageContent() {
           <div className="text-2xl font-black font-heading text-[#92400E] mt-1">
             {metrics.draftLots}
           </div>
-          <span className="text-[11px] text-[#B45309] block mt-0.5">Unpublished drafts</span>
+          <span className="text-[11px] text-[#B45309] block mt-0.5">{t.lots.unpublishedDrafts}</span>
         </div>
 
         <div className="bg-[#E0F2FE] border border-[#BAE6FD] rounded-[8px] p-4">
           <span className="text-xs font-bold text-[#0369A1] uppercase tracking-wider block">
-            {locale === 'mr' ? 'एकूण परिमाण' : locale === 'te' ? 'మొత్తం వాల్యూమ్' : 'Total Volume'}
+            {t.lots.totalVolume}
           </span>
           <div className="text-2xl font-black font-heading text-[#0369A1] mt-1">
             {metrics.totalQuantityQuintals}{' '}
-            <span className="text-sm font-normal text-[#0369A1]">Qtl</span>
+            <span className="text-sm font-normal text-[#0369A1]">{t.common.quintals}</span>
           </div>
           <span className="text-[11px] text-[#0369A1] block mt-0.5">
             {(metrics.totalQuantityQuintals * 0.1).toFixed(1)} Metric Tonnes
@@ -387,14 +387,14 @@ function LotsPageContent() {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="text-base font-heading font-bold text-[#262320]">
-                  Registered Produce Lots ({filteredLots.length})
+                  {t.lots.registeredLotsTitle} ({filteredLots.length})
                 </CardTitle>
                 <CardDescription className="text-xs text-[#5A554E]">
-                  Active lots published for buyer matching and transport dispatch
+                  {t.lots.activeLotsSub}
                 </CardDescription>
               </div>
               <span className="text-xs font-semibold text-[#5A554E] bg-white px-2.5 py-1 rounded-[4px] border border-[#D8D2C4]">
-                Digital APMC Yard
+                {t.lots.digitalApmcYard}
               </span>
             </div>
           </CardHeader>
@@ -405,15 +405,15 @@ function LotsPageContent() {
               <table className="w-full text-left text-sm">
                 <thead className="bg-[#F4F1EA] text-[#5A554E] uppercase text-[11px] font-bold tracking-wider border-b border-[#D8D2C4]">
                   <tr>
-                    <th className="py-3 px-4">Lot ID</th>
-                    <th className="py-3 px-4">Commodity</th>
-                    <th className="py-3 px-4">Quantity</th>
-                    <th className="py-3 px-4">Target Price</th>
-                    <th className="py-3 px-4">Location</th>
-                    <th className="py-3 px-4">Quality / Grade</th>
-                    <th className="py-3 px-4">Status</th>
-                    <th className="py-3 px-4">Offers</th>
-                    <th className="py-3 px-4 text-right">Actions</th>
+                    <th className="py-3 px-4">{t.lots.lotId}</th>
+                    <th className="py-3 px-4">{t.lots.crop}</th>
+                    <th className="py-3 px-4">{t.lots.volume}</th>
+                    <th className="py-3 px-4">{t.lots.targetPrice}</th>
+                    <th className="py-3 px-4">{t.lots.location}</th>
+                    <th className="py-3 px-4">{t.lots.grade}</th>
+                    <th className="py-3 px-4">{t.lots.status}</th>
+                    <th className="py-3 px-4">{t.lots.offersReceived}</th>
+                    <th className="py-3 px-4 text-right">{t.lots.actions}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#EBE7DF]">
@@ -441,13 +441,13 @@ function LotsPageContent() {
                           </span>
                           {lot.unit !== 'Quintal' && (
                             <span className="text-xs text-[#5A554E] block">
-                              ({lot.quantityQuintals} Qtl)
+                              ({lot.quantityQuintals} {t.common.quintals})
                             </span>
                           )}
                         </td>
                         <td className="py-3.5 px-4 font-heading font-bold text-[#1B4332] whitespace-nowrap">
                           ₹{price.toLocaleString('en-IN')}{' '}
-                          <span className="text-xs font-normal text-[#5A554E]">/ Qtl</span>
+                          <span className="text-xs font-normal text-[#5A554E]">{t.common.perQuintal}</span>
                         </td>
                         <td className="py-3.5 px-4 text-xs text-[#5A554E]">
                           <div className="flex items-center gap-1">
@@ -463,7 +463,7 @@ function LotsPageContent() {
                         <td className="py-3.5 px-4 whitespace-nowrap">
                           <span className="inline-flex items-center gap-1 text-xs font-semibold bg-[#EAF2ED] text-[#1B4332] px-2 py-0.5 rounded-[4px] border border-[#B7D5C4]">
                             <Sparkles className="w-3 h-3 text-[#2D6A4F]" />
-                            <span>{lot.expectedGrade || 'Not Graded'}</span>
+                            <span>{lot.expectedGrade || t.lots.notGraded}</span>
                           </span>
                         </td>
                         <td className="py-3.5 px-4 whitespace-nowrap">
@@ -473,7 +473,7 @@ function LotsPageContent() {
                           <span className="font-semibold text-[#262320]">
                             {(lot.offers && lot.offers.length) || 0}
                           </span>{' '}
-                          offers
+                          {t.lots.offersCount}
                         </td>
                         <td className="py-3.5 px-4 text-right whitespace-nowrap">
                           <div className="flex items-center justify-end gap-1.5">
@@ -487,7 +487,7 @@ function LotsPageContent() {
                                 title={t.lots.calculateRealisation}
                               >
                                 <Scale className="w-3 h-3 text-[#1B4332]" />
-                                <span>Realisation</span>
+                                <span>{t.netRealisation.netRealisation}</span>
                               </Button>
                             </Link>
 
@@ -532,16 +532,16 @@ function LotsPageContent() {
 
                     <div className="grid grid-cols-2 gap-2 bg-[#F4F1EA] p-2.5 rounded-[6px] text-xs">
                       <div>
-                        <span className="text-[#5A554E] block">Volume</span>
+                        <span className="text-[#5A554E] block">{t.lots.volume}</span>
                         <span className="font-bold text-[#262320]">
                           {lot.quantity} {lot.unit}
                         </span>
                       </div>
                       <div className="text-right">
-                        <span className="text-[#5A554E] block">Target Price</span>
+                        <span className="text-[#5A554E] block">{t.lots.targetPrice}</span>
                         <span className="font-heading font-bold text-[#1B4332]">
                           ₹{price.toLocaleString('en-IN')}{' '}
-                          <span className="text-[10px] font-normal text-[#5A554E]">/ Qtl</span>
+                          <span className="text-[10px] font-normal text-[#5A554E]">{t.common.perQuintal}</span>
                         </span>
                       </div>
                     </div>
@@ -552,7 +552,7 @@ function LotsPageContent() {
                         <span className="truncate max-w-[180px]">{lot.location || lot.locationDistrict}</span>
                       </div>
                       <span className="font-semibold text-[#1B4332]">
-                        {lot.expectedGrade || 'Not Graded'}
+                        {lot.expectedGrade || t.lots.notGraded}
                       </span>
                     </div>
 
@@ -563,7 +563,7 @@ function LotsPageContent() {
                       >
                         <Button size="sm" variant="outline" className="w-full text-xs border-[#D8D2C4] hover:bg-[#F4F1EA] gap-1 justify-center">
                           <Scale className="w-3 h-3 text-[#1B4332]" />
-                          <span>Net Realisation</span>
+                          <span>{t.netRealisation.netRealisation}</span>
                         </Button>
                       </Link>
 

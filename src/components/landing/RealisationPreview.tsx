@@ -2,12 +2,14 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useLanguage } from '@/i18n/LanguageContext';
 import { Button } from '@/components/ui/Button';
 import { calculateNetRealisation, formatINR } from '@/lib/utils';
 import { NetRealisationLedger } from '@/components/ui/NetRealisationLedger';
 import { Scale, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export function RealisationPreview() {
+  const { t } = useLanguage();
   const quantity = 100; // 100 Quintals of Onion
 
   // Option A: Distant Mandi (e.g. Vashi APMC: 260 km away, Gross: ₹2,400/Qtl)
@@ -40,8 +42,8 @@ export function RealisationPreview() {
 
   const getDifferenceText = (isOptionWinner: boolean) => {
     if (!isOptionWinner) return null;
-    if (netDifference === 0) return 'Same net realisation';
-    return `+${formatINR(netDifference)} more net realisation`;
+    if (netDifference === 0) return t.home.sameNetRealisation;
+    return `+${formatINR(netDifference)} ${t.home.moreNetRealisation}`;
   };
 
   return (
@@ -51,13 +53,13 @@ export function RealisationPreview() {
         <div className="max-w-3xl mx-auto text-center space-y-2 mb-8">
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[4px] bg-[#FEF3C7] text-[#92400E] border border-[#FDE68A] text-xs font-bold uppercase tracking-wider">
             <Scale className="w-3.5 h-3.5" />
-            <span>Real Market Decision</span>
+            <span>{t.home.realMarketDecisionBadge}</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold font-heading text-[#262320] tracking-tight">
-            Highest price is not always highest earnings.
+            {t.home.realMarketDecisionTitle}
           </h2>
           <p className="text-sm sm:text-base font-body text-[#635E59]">
-            Compare two real selling options for <strong>100 Quintals of Onion (Niphad, Nashik)</strong> with all road freight, warehouse rent, and APMC cess accounted for.
+            {t.home.realMarketDecisionSubtitle}
           </p>
         </div>
 
@@ -70,15 +72,15 @@ export function RealisationPreview() {
             <div className="flex items-center justify-between pb-3 border-b border-[#D8D2C4]">
               <div>
                 <span className="text-xs font-bold text-[#635E59] uppercase tracking-wider block">
-                  Option A • Distant Mandi
+                  {t.home.optionADistantMandi}
                 </span>
                 <h3 className="font-heading font-bold text-lg text-[#262320]">
                   Vashi APMC (Navi Mumbai)
                 </h3>
-                <span className="text-xs text-[#635E59]">260 km road haul from Nashik</span>
+                <span className="text-xs text-[#635E59]">260 km {t.home.roadHaulFromNashik}</span>
               </div>
               <div className="text-right">
-                <span className="text-xs text-[#635E59] block">Nominal Price</span>
+                <span className="text-xs text-[#635E59] block">{t.home.nominalPrice}</span>
                 <span className="text-xl font-bold font-heading text-[#262320]">₹2,400 / Qtl</span>
               </div>
             </div>
@@ -98,7 +100,7 @@ export function RealisationPreview() {
               <div className="p-2.5 bg-[#EAF2ED] border border-[#B7D5C4] rounded-[4px] text-xs font-bold text-[#1B4332] flex items-center justify-between">
                 <span className="flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4" />
-                  <span>Higher Take-Home Realisation</span>
+                  <span>{t.netRealisation.bestSellingOption}</span>
                 </span>
                 <span>{getDifferenceText(true)}</span>
               </div>
@@ -113,7 +115,7 @@ export function RealisationPreview() {
               <div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-bold text-[#1B4332] uppercase tracking-wider block">
-                    Option B • Nearby Direct Buyer
+                    {t.home.optionBLocalBuyer}
                   </span>
                   <span className="px-1.5 py-0.2 bg-[#EAF2ED] text-[#1B4332] text-[10px] font-bold rounded border border-[#B7D5C4]">
                     RECOMMENDED
@@ -122,10 +124,10 @@ export function RealisationPreview() {
                 <h3 className="font-heading font-bold text-lg text-[#262320]">
                   ABC Foods Processing Hub
                 </h3>
-                <span className="text-xs text-[#635E59]">30 km local haul (Niphad farmgate)</span>
+                <span className="text-xs text-[#635E59]">30 km {t.home.roadHaulFromNashik}</span>
               </div>
               <div className="text-right">
-                <span className="text-xs text-[#635E59] block">Nominal Price</span>
+                <span className="text-xs text-[#635E59] block">{t.home.nominalPrice}</span>
                 <span className="text-xl font-bold font-heading text-[#635E59]">₹2,280 / Qtl</span>
               </div>
             </div>
@@ -145,7 +147,7 @@ export function RealisationPreview() {
               <div className="p-2.5 bg-[#EAF2ED] border border-[#B7D5C4] rounded-[4px] text-xs font-bold text-[#1B4332] flex items-center justify-between">
                 <span className="flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4" />
-                  <span>Higher Take-Home Realisation</span>
+                  <span>{t.netRealisation.bestSellingOption}</span>
                 </span>
                 <span>{getDifferenceText(true)}</span>
               </div>
@@ -156,11 +158,11 @@ export function RealisationPreview() {
         {/* Decision Summary Banner */}
         <div className="max-w-5xl mx-auto mt-6 p-4 rounded-[4px] bg-[#ECE7DE] border border-[#D8D2C4] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs sm:text-sm text-[#262320]">
           <div>
-            <strong>KisanSetu Insight:</strong> Selling locally at ₹2,280/Qtl saves ₹12,950 in transport freight and cess, delivering <strong>+₹4,270 higher profit</strong> into the farmer&apos;s bank account.
+            <strong>KisanSetu:</strong> {t.home.realMarketDecisionSubtitle}
           </div>
           <Link href="/calculator">
             <Button size="sm" variant="primary" className="shrink-0 bg-[#1B4332] hover:bg-[#2D6A4F] text-white gap-1.5">
-              <span>Calculate For Your Lot</span>
+              <span>{t.markets.calculateNetRealisation}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Button>
           </Link>

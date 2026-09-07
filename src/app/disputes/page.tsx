@@ -214,7 +214,7 @@ export default function DisputesPage() {
       <PageHeader
         title={t.disputes.hubTitle}
         description={t.disputes.hubSubtitle}
-        badge={<Badge variant="red">Human Supervised Redressal</Badge>}
+        badge={<Badge variant="red">{t.common.humanSupervised}</Badge>}
         action={
           <div className="flex items-center gap-2">
             <Button
@@ -224,7 +224,7 @@ export default function DisputesPage() {
               className="gap-1.5 text-xs border-[#D8D2C4] bg-white hover:bg-stone-50"
             >
               <RefreshCw className="w-3.5 h-3.5 text-[#1B4332]" />
-              <span>Refresh</span>
+              <span>{t.common.refresh}</span>
             </Button>
             <Button
               variant="primary"
@@ -238,7 +238,7 @@ export default function DisputesPage() {
             <Link href="/transactions">
               <Button variant="outline" size="sm" className="gap-1.5 text-xs border-[#D8D2C4] bg-white">
                 <CreditCard className="w-3.5 h-3.5" />
-                <span>Transactions</span>
+                <span>{t.nav.transactions}</span>
               </Button>
             </Link>
             <Link href="/admin">
@@ -248,7 +248,7 @@ export default function DisputesPage() {
                 className="gap-1.5 text-xs border-[#D8D2C4] text-[#8C2D19] hover:bg-[#FDF2F0] bg-white"
               >
                 <Scale className="w-3.5 h-3.5 text-[#8C2D19]" />
-                <span>Admin Desk</span>
+                <span>{t.common.adminDesk}</span>
               </Button>
             </Link>
           </div>
@@ -284,7 +284,7 @@ export default function DisputesPage() {
           <CardHeader className="p-4 pb-2">
             <span className="text-[11px] font-bold text-[#635E59] uppercase tracking-wider flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5 text-amber-700" />
-              <span>Open Grievances</span>
+              <span>{t.common.openGrievances}</span>
             </span>
             <div className="text-2xl font-black font-heading text-amber-800 mt-1">
               {openCount}
@@ -299,7 +299,7 @@ export default function DisputesPage() {
           <CardHeader className="p-4 pb-2">
             <span className="text-[11px] font-bold text-[#635E59] uppercase tracking-wider flex items-center gap-1.5">
               <Scale className="w-3.5 h-3.5 text-blue-700" />
-              <span>Under Review</span>
+              <span>{t.common.underReview}</span>
             </span>
             <div className="text-2xl font-black font-heading text-blue-900 mt-1">
               {reviewCount}
@@ -313,8 +313,8 @@ export default function DisputesPage() {
         <Card className="border-[#D8D2C4] bg-white shadow-none rounded-[8px]">
           <CardHeader className="p-4 pb-2">
             <span className="text-[11px] font-bold text-[#635E59] uppercase tracking-wider flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
-              <span>Resolved</span>
+              <CheckCircle2 className="w-4 h-4 text-emerald-700" />
+              <span>{t.common.resolved}</span>
             </span>
             <div className="text-2xl font-black font-heading text-[#1B4332] mt-1">
               {resolvedCount}
@@ -329,7 +329,7 @@ export default function DisputesPage() {
           <CardHeader className="p-4 pb-2">
             <span className="text-[11px] font-bold text-[#635E59] uppercase tracking-wider flex items-center gap-1.5">
               <FileText className="w-3.5 h-3.5 text-[#635E59]" />
-              <span>Closed Cases</span>
+              <span>{t.common.closedCases}</span>
             </span>
             <div className="text-2xl font-black font-heading text-[#262320] mt-1">
               {closedCount}
@@ -419,7 +419,7 @@ export default function DisputesPage() {
       {loading ? (
         <div className="p-16 text-center space-y-3 bg-white rounded-[8px] border border-[#D8D2C4]">
           <Loader2 className="w-8 h-8 animate-spin mx-auto text-[#1B4332]" />
-          <p className="text-xs text-[#635E59] font-medium">Loading trade grievance records...</p>
+          <p className="text-xs text-[#635E59] font-medium">{t.common.loadingGrievances}</p>
         </div>
       ) : filteredDisputes.length === 0 ? (
         <Card className="p-12 text-center space-y-3 bg-white border-dashed border-[#D8D2C4] rounded-[8px]">
@@ -437,11 +437,11 @@ export default function DisputesPage() {
               onClick={() => setShowRaiseModal(true)}
               className="text-xs bg-[#1B4332] hover:bg-[#2D6A4F] text-white"
             >
-              Raise a Grievance
+              <span>{t.disputes.raiseGrievanceTitle}</span>
             </Button>
             <Link href="/transactions">
               <Button variant="outline" size="sm" className="text-xs border-[#D8D2C4]">
-                View Transactions
+                <span>{t.nav.transactions}</span>
               </Button>
             </Link>
           </div>
@@ -479,7 +479,7 @@ export default function DisputesPage() {
 
               <CardContent className="p-4 pt-3 text-xs space-y-3">
                 <div className="p-3 bg-[#FAFAF8] rounded-[4px] border border-[#D8D2C4] space-y-1">
-                  <span className="text-[10px] text-[#635E59] uppercase font-bold block">Summary of Discrepancy:</span>
+                  <span className="text-[10px] text-[#635E59] uppercase font-bold block">{t.common.summaryDiscrepancy}:</span>
                   <p className="text-[#262320] leading-relaxed">{d.evidenceSummary}</p>
                   <span className="text-[10px] text-[#635E59] block pt-1">
                     Raised by: <strong className="text-[#262320]">{d.raisedBy?.fullName}</strong> ({d.raisedBy?.role})
@@ -490,7 +490,7 @@ export default function DisputesPage() {
                   <div className="p-3 bg-emerald-50/50 rounded-[4px] border border-[#B7D5C4] text-emerald-950 space-y-1">
                     <span className="text-[10px] text-[#1B4332] uppercase font-bold block flex items-center gap-1">
                       <CheckCircle2 className="w-3.5 h-3.5" />
-                      <span>Official Human Adjudication Notes:</span>
+                      <span>{t.common.adjudicationNotes}:</span>
                     </span>
                     <p className="text-xs leading-relaxed text-[#262320]">{d.resolutionNotes}</p>
                     {d.resolvedAt && (

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useLanguage } from '@/i18n/LanguageContext';
 import { Hero } from '@/components/landing/Hero';
 import { RealisationPreview } from '@/components/landing/RealisationPreview';
 import { ValueProps } from '@/components/landing/ValueProps';
@@ -24,22 +25,24 @@ import {
 } from 'lucide-react';
 
 export default function HomePage() {
+  const { t } = useLanguage();
+
   const steps = [
-    { num: '1', title: 'Add Produce', desc: 'List commodity, quantity, and expected quality grade.' },
-    { num: '2', title: 'Check Markets', desc: 'Inspect modal prices and arrivals across nearby APMCs.' },
-    { num: '3', title: 'Compare Net Realisation', desc: 'Deduct road freight and cess to see true take-home pay.' },
-    { num: '4', title: 'Match With Buyers', desc: 'Receive binding digital offers from verified buyers.' },
-    { num: '5', title: 'Arrange Transport', desc: 'Book verified corridor carriers with fixed freight rates.' },
-    { num: '6', title: 'Complete Transaction', desc: 'Milestone escrow releases and empirical trade ratings.' },
+    { num: '1', title: t.home.step1Title, desc: t.home.step1Desc },
+    { num: '2', title: t.home.step2Title, desc: t.home.step2Desc },
+    { num: '3', title: t.home.step3Title, desc: t.home.step3Desc },
+    { num: '4', title: t.home.step4Title, desc: t.home.step4Desc },
+    { num: '5', title: t.home.step5Title, desc: t.home.step5Desc },
+    { num: '6', title: t.home.step6Title, desc: t.home.step6Desc },
   ];
 
   const quickActions = [
-    { label: "Today's Mandi Prices", href: '/markets', icon: TrendingUp, desc: 'APMC modal prices & trends' },
-    { label: 'Create Produce Lot', href: '/lots?action=create', icon: PackagePlus, desc: 'List harvest for buyers' },
-    { label: 'Net Realisation Engine', href: '/calculator', icon: Scale, desc: 'Compare actual earnings' },
-    { label: 'Find Verified Buyers', href: '/buyer', icon: Users, desc: 'Browse direct procurement demands' },
-    { label: 'Book Corridor Logistics', href: '/transporter', icon: Truck, desc: 'Capacity matching & freight quotes' },
-    { label: 'Commercial Transactions', href: '/transactions', icon: CreditCard, desc: 'Escrow & milestone tracking' },
+    { label: t.home.quickMandiPrices, href: '/markets', icon: TrendingUp, desc: t.home.quickMandiPricesDesc },
+    { label: t.home.quickCreateLot, href: '/lots?action=create', icon: PackagePlus, desc: t.home.quickCreateLotDesc },
+    { label: t.home.quickNetRealisation, href: '/calculator', icon: Scale, desc: t.home.quickNetRealisationDesc },
+    { label: t.home.quickFindBuyers, href: '/buyer', icon: Users, desc: t.home.quickFindBuyersDesc },
+    { label: t.home.quickLogistics, href: '/transporter', icon: Truck, desc: t.home.quickLogisticsDesc },
+    { label: t.home.quickTransactions, href: '/transactions', icon: CreditCard, desc: t.home.quickTransactionsDesc },
   ];
 
   return (
@@ -58,13 +61,13 @@ export default function HomePage() {
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center space-y-2 mb-8">
             <span className="text-xs font-bold text-[#1B4332] uppercase tracking-wider block">
-              Transparent Process
+              {t.home.transparentProcess}
             </span>
             <h2 className="text-2xl sm:text-3xl font-bold font-heading text-[#262320] tracking-tight">
-              How It Works
+              {t.home.howItWorksTitle}
             </h2>
             <p className="text-sm sm:text-base font-body text-[#635E59]">
-              From produce registration to bank settlement in 6 straightforward steps.
+              {t.home.howItWorksSubtitle}
             </p>
           </div>
 
@@ -96,13 +99,13 @@ export default function HomePage() {
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center space-y-2 mb-8">
             <span className="text-xs font-bold text-[#1B4332] uppercase tracking-wider block">
-              Farmer Tools
+              {t.home.farmerToolsTitle}
             </span>
             <h2 className="text-2xl sm:text-3xl font-bold font-heading text-[#262320] tracking-tight">
-              Direct Farmer Actions
+              {t.home.farmerToolsTitle}
             </h2>
             <p className="text-sm sm:text-base font-body text-[#635E59]">
-              Jump directly into the workflow you need today.
+              {t.home.howItWorksSubtitle}
             </p>
           </div>
 

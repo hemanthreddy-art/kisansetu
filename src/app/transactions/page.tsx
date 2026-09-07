@@ -154,21 +154,21 @@ export default function TransactionsPage() {
       case 'PAYMENT_INITIATED':
         return <Badge variant="blue">{t.transactions.paymentInitiated}</Badge>;
       case 'QUALITY_CONFIRMED':
-        return <Badge variant="emerald">Quality Assayed</Badge>;
+        return <Badge variant="emerald">{t.commonStatuses.qualityAssayed}</Badge>;
       case 'DELIVERED':
-        return <Badge variant="blue">Delivered</Badge>;
+        return <Badge variant="blue">{t.commonStatuses.delivered}</Badge>;
       case 'IN_TRANSIT':
-        return <Badge variant="purple">In Transit</Badge>;
+        return <Badge variant="purple">{t.commonStatuses.inTransit}</Badge>;
       case 'TRANSPORT_ACCEPTED':
-        return <Badge variant="blue">Vehicle Assigned</Badge>;
+        return <Badge variant="blue">{t.commonStatuses.vehicleAssigned}</Badge>;
       case 'TRANSPORT_REQUESTED':
-        return <Badge variant="amber">Transport Booked</Badge>;
+        return <Badge variant="amber">{t.commonStatuses.transportBooked}</Badge>;
       case 'DISPUTED':
         return <Badge variant="red">{t.transactions.filterDisputed}</Badge>;
       case 'OFFER_ACCEPTED':
-        return <Badge variant="amber">Offer Accepted</Badge>;
+        return <Badge variant="amber">{t.commonStatuses.offerAccepted}</Badge>;
       case 'CANCELLED':
-        return <Badge variant="gray">Cancelled</Badge>;
+        return <Badge variant="gray">{t.commonStatuses.cancelled}</Badge>;
       default:
         return <Badge variant="gray">{status}</Badge>;
     }
@@ -180,7 +180,7 @@ export default function TransactionsPage() {
       <PageHeader
         title={t.transactions.hubTitle}
         description={t.transactions.hubSubtitle}
-        badge={<Badge variant="emerald">Commercial Ledger</Badge>}
+        badge={<Badge variant="emerald">{t.common.commercialLedger}</Badge>}
         action={
           <div className="flex items-center gap-2">
             <Button
@@ -190,7 +190,7 @@ export default function TransactionsPage() {
               className="gap-1.5 text-xs border-[#D8D2C4] bg-white hover:bg-stone-50"
             >
               <RefreshCw className="w-3.5 h-3.5 text-[#1B4332]" />
-              <span>Refresh</span>
+              <span>{t.common.refresh}</span>
             </Button>
             <Link href="/disputes">
               <Button
@@ -212,7 +212,7 @@ export default function TransactionsPage() {
           <CardHeader className="p-4 pb-2">
             <span className="text-[11px] font-bold text-[#635E59] uppercase tracking-wider flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5 text-amber-700" />
-              <span>Active Contracts</span>
+              <span>{t.transactions.activeContracts}</span>
             </span>
             <div className="text-2xl font-black font-heading text-[#262320] mt-1">
               {activeCount}

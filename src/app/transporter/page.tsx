@@ -251,7 +251,7 @@ function TransporterHubContent() {
             className="gap-2 text-xs border-[#D8D2C4] text-[#1B4332] hover:bg-[#F4F1EA]"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-            <span>Refresh Network</span>
+            <span>{t.transport.refreshNetwork}</span>
           </Button>
         }
       />
@@ -309,7 +309,7 @@ function TransporterHubContent() {
             <div className="text-xs text-[#5A5243] flex items-center gap-2 flex-wrap">
               <span>Contact: <strong className="text-[#262320]">{activeMeta.representative}</strong> ({activeMeta.phone})</span>
               <span className="text-[#D8D2C4]">•</span>
-              <span className="font-mono">RTO Permit: <strong className="text-[#262320]">{activeMeta.commercialLicenseNo}</strong></span>
+              <span className="font-mono">{t.transport.rtoPermit}: <strong className="text-[#262320]">{activeMeta.commercialLicenseNo}</strong></span>
               <span className="text-[#D8D2C4]">•</span>
               <span>{t.transport.operationalDistrictsLabel}: <strong className="text-[#262320]">{activeMeta.operationalDistricts}</strong></span>
             </div>
@@ -659,7 +659,7 @@ function TransporterHubContent() {
                       {req.status === 'DELIVERED' && (
                         <span className="text-xs font-bold text-[#1B4332] flex items-center gap-1">
                           <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                          <span>Transit Completed</span>
+                          <span>{t.transport.transitCompleted}</span>
                         </span>
                       )}
                     </div>
@@ -673,7 +673,7 @@ function TransporterHubContent() {
           <div className="p-3 bg-[#FDFBF7] border border-[#D8D2C4] rounded-lg text-xs text-[#5A5243] flex items-start gap-2">
             <Info className="w-4 h-4 text-[#1B4332] shrink-0 mt-0.5" />
             <p>
-              <strong>Corridor Milestone Tracking:</strong> Dispatches record status milestones confirmed by the transporter, driver, or receiving mandi gate receipt. No continuous GPS or simulated live vehicle maps are displayed.
+              <strong>{t.transport.corridorMilestoneTracking}:</strong> Dispatches record status milestones confirmed by the transporter, driver, or receiving mandi gate receipt. No continuous GPS or simulated live vehicle maps are displayed.
             </p>
           </div>
         </div>
