@@ -994,12 +994,12 @@ function LotDetailPageContent() {
         {/* The Two Clearly Separated Tier Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* TIER 1: AI PRELIMINARY ASSESSMENT CARD */}
-          <Card className="border-[#B7D5C4] shadow-none hover:shadow-none transition-all flex flex-col justify-between">
+          <Card className="border-dashed border-amber-300 bg-amber-50/20 shadow-none hover:shadow-none transition-all flex flex-col justify-between">
             <div>
-              <CardHeader className="pb-3 border-b border-gray-100 bg-emerald-50/30">
+              <CardHeader className="pb-3 border-b border-amber-100 bg-amber-50/50">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <Camera className="w-4 h-4 text-emerald-700" />
+                    <Camera className="w-4 h-4 text-amber-700" />
                     <span className="text-xs font-mono font-bold text-gray-500 uppercase">Tier 1</span>
                   </div>
                   <Badge variant="amber" className="text-[11px] font-bold px-2.5 py-0.5">
@@ -1016,21 +1016,25 @@ function LotDetailPageContent() {
 
               <CardContent className="pt-4 space-y-3">
                 {/* Disclaimer banner */}
-                <div className="p-2.5 rounded-xl bg-amber-50/60 border border-amber-200 text-amber-900 text-xs">
+                <div className="p-2.5 rounded-xl bg-amber-50/80 border border-amber-200 text-amber-900 text-xs">
                   <span className="font-semibold">{t.quality.tier1Disclaimer}</span>
                 </div>
 
                 {/* Photo preview in Tier 1 card if available */}
                 {(persistedPhoto || selectedPhoto) && (
-                  <div className="rounded-xl overflow-hidden border border-[#B7D5C4] bg-gray-900/5 relative">
+                  <div className="rounded-xl overflow-hidden border border-amber-200 bg-amber-50/40 relative">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={persistedPhoto || selectedPhoto || ''}
-                      alt="Produce visual preview"
+                      alt="Submitted Produce Photo"
                       className="w-full h-36 object-contain bg-black/5"
                     />
-                    <div className="absolute bottom-2 right-2">
-                      <Badge variant="amber" className="text-[10px] font-bold shadow-xs">
+                    <div className="p-2 bg-amber-100/90 border-t border-amber-200 text-[11px] text-amber-900 font-medium flex items-center justify-between">
+                      <span className="flex items-center gap-1.5">
+                        <Camera className="w-3.5 h-3.5 text-amber-700" />
+                        Submitted Produce Photo
+                      </span>
+                      <Badge variant="amber" className="text-[9px] font-bold py-0 px-1.5">
                         {t.quality.tier1Badge}
                       </Badge>
                     </div>
@@ -1039,11 +1043,16 @@ function LotDetailPageContent() {
 
                 {latestAi ? (
                   <div className="space-y-2.5 text-xs text-gray-700">
-                    <div className="flex justify-between py-1.5 border-b border-gray-100">
+                    <div className="flex justify-between items-center py-1.5 border-b border-gray-100">
                       <span className="text-gray-500">{t.quality.estimatedGradeLabel}:</span>
-                      <strong className="text-[#1B4332] font-bold text-sm">
-                        {latestAi.preliminaryGrade} ({(latestAi.confidenceScore * 100).toFixed(0)}% confidence)
-                      </strong>
+                      <div className="flex items-center gap-2">
+                        <strong className="text-amber-900 font-bold text-sm">
+                          {latestAi.preliminaryGrade}
+                        </strong>
+                        <Badge variant="amber" className="text-[10px] py-0 px-1.5 font-bold">
+                          AI Assessment — Not Verified
+                        </Badge>
+                      </div>
                     </div>
 
                     <div className="flex justify-between py-1.5 border-b border-gray-100">
@@ -1113,15 +1122,15 @@ function LotDetailPageContent() {
           <Card
             className={`shadow-none hover:shadow-none transition-all flex flex-col justify-between ${
               latestPhysical?.verificationStatus === 'PHYSICALLY_VERIFIED'
-                ? 'border-emerald-300 ring-1 ring-emerald-500/20'
+                ? 'border-emerald-300 ring-1 ring-emerald-500/20 bg-emerald-50/10'
                 : 'border-[#D8D2C4]'
             }`}
           >
             <div>
-              <CardHeader className="pb-3 border-b border-gray-100 bg-purple-50/20">
+              <CardHeader className="pb-3 border-b border-gray-100 bg-[#E8EFE9]">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <FileCheck2 className="w-4 h-4 text-purple-700" />
+                    <FileCheck2 className="w-4 h-4 text-emerald-800" />
                     <span className="text-xs font-mono font-bold text-gray-500 uppercase">Tier 2</span>
                   </div>
                   {latestPhysical?.verificationStatus === 'PHYSICALLY_VERIFIED' ? (
@@ -1212,7 +1221,7 @@ function LotDetailPageContent() {
                   <div className="py-8 text-center space-y-2">
                     <FileCheck2 className="w-8 h-8 text-gray-300 mx-auto" />
                     <p className="text-xs text-gray-500 max-w-xs mx-auto">
-                      Physical verification pending. Authorized MSAMB / APMC quality inspectors will conduct in-person physical assaying.
+                      Physical verification pending. Certified quality inspectors will conduct in-person physical assaying.
                     </p>
                   </div>
                 )}
@@ -1229,7 +1238,78 @@ function LotDetailPageContent() {
             </div>
           </Card>
         </div>
-      </section>
+
+        {/* Quality Impact on Selling Panel */}
+        <Card className="border-[#B7D5C4] bg-white shadow-xs overflow-hidden mt-6">
+          <CardHeader className="bg-[#E8EFE9] border-b border-[#B7D5C4] pb-3">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-[#1B4332]" />
+              <div>
+                <CardTitle className="text-base text-[#1B4332] font-bold">
+                  Quality Impact on Selling
+                </CardTitle>
+                <CardDescription className="text-xs text-[#262320]/80">
+                  How verified quality directly unlocks commercial discovery, pricing premiums, and buyer trust
+                </CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-4 pb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {/* 1. Buyer Matching */}
+              <div className="p-3 rounded-lg border border-[#D8D2C4] bg-stone-50/50 space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center text-xs font-bold text-emerald-800">
+                    1
+                  </div>
+                  <span className="text-xs font-bold text-[#1B4332]">Buyer Matching</span>
+                </div>
+                <p className="text-[11px] text-stone-600 leading-relaxed">
+                  Verified lots receive algorithmic priority in buyer procurement search and institutional demand matching.
+                </p>
+              </div>
+
+              {/* 2. Offer Eligibility */}
+              <div className="p-3 rounded-lg border border-[#D8D2C4] bg-stone-50/50 space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-amber-100 flex items-center justify-center text-xs font-bold text-amber-800">
+                    2
+                  </div>
+                  <span className="text-xs font-bold text-amber-900">Offer Eligibility</span>
+                </div>
+                <p className="text-[11px] text-stone-600 leading-relaxed">
+                  Unlocks Grade A institutional premiums (+5% to +15% over mandi reference) and binding digital counter-offers.
+                </p>
+              </div>
+
+              {/* 3. Dispute Protection */}
+              <div className="p-3 rounded-lg border border-[#D8D2C4] bg-stone-50/50 space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center text-xs font-bold text-emerald-800">
+                    3
+                  </div>
+                  <span className="text-xs font-bold text-[#1B4332]">Dispute Protection</span>
+                </div>
+                <p className="text-[11px] text-stone-600 leading-relaxed">
+                  Physical assay certificate protects farmers against subjective deductions or rejections upon delivery.
+                </p>
+              </div>
+
+              {/* 4. Transport Planning */}
+              <div className="p-3 rounded-lg border border-[#D8D2C4] bg-stone-50/50 space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-xs font-bold text-blue-800">
+                    4
+                  </div>
+                  <span className="text-xs font-bold text-blue-900">Logistics Efficiency</span>
+                </div>
+                <p className="text-[11px] text-stone-600 leading-relaxed">
+                  Accurate packaging and moisture grading prevent transit spoilage and enable optimal vehicle allocation.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card></section>
 
       {/* Specifications Card */}
       <Card>
