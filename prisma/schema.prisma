@@ -1,0 +1,518 @@
+// KisanSetu - Prisma Database Schema
+// SIH Problem Statement 26132: Strengthening market linkages and price discovery for farmers
+// Problem Owner: Government of Maharashtra
+// Modular Monolith Architecture for Student/Hackathon Team
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ----------------------------------------------------
+// 1. CORE USER & PROFILES
+// ----------------------------------------------------
+
+model User {
+  id                 String              @id @default(cuid())
+  phone              String              @unique
+  email              String?             @unique
+  fullName           String
+  role               String              @default("FARMER") // FARMER, FPO, BUYER, TRANSPORTER, QUALITY_INSPECTOR, ADMIN
+  preferredLanguage  String              @default("mr") // "en", "mr", "te"
+  isActive           Boolean             @default(true)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+
+  // Profiles
+  farmerProfile      FarmerProfile?
+  buyerProfile       BuyerProfile?
+  transporterProfile TransporterProfile?
+  inspectorProfile   QualityInspector?
+
+  // Shared Relations
+  verifications      Verification[]
+  notifications      Notification[]
+  ratingsGiven       Rating[]            @relation("RaterUser")
+  ratingsReceived    Rating[]            @relation("RateeUser")
+  disputesRaised     Dispute[]           @relation("DisputeRaiser")
+}
+
+// 2. Farmer Profile
+model FarmerProfile {
+  id              String       @id @default(cuid())
+  userId          String       @unique
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  state           String       @default("Maharashtra")
+  district        String       // e.g. Nashik, Pune, Solapur, Ahmednagar
+  taluka          String
+  village         String?
+  pincode         String?
+  landAreaAcres   Float?
+  preferredCrops  String?      // Stored as comma-separated or JSON string
+  isFpoMember     Boolean      @default(false)
+  fpoId           String?
+  fpo             FPO?         @relation(fields: [fpoId], references: [id])
+  produceLots     ProduceLot[]
+  transactions    Transaction[]
+
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+}
+
+// 3. FPO (Farmer Producer Organization)
+model FPO {
+  id                 String          @id @default(cuid())
+  name               String
+  registrationNumber String          @unique
+  state              String          @default("Maharashtra")
+  district           String
+  taluka             String?
+  headOfficeAddress  String?
+  contactPerson      String
+  contactPhone       String
+  contactEmail       String?
+  totalMembersCount  Int             @default(0)
+  verified           Boolean         @default(false)
+
+  members            FarmerProfile[]
+  produceLots        ProduceLot[]
+
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+}
+
+// 4. Buyer Profile
+model BuyerProfile {
+  id              String        @id @default(cuid())
+  userId          String        @unique
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  companyName     String
+  buyerType       String        // "WHOLESALER", "RETAILER", "FOOD_PROCESSOR", "EXPORTER", "INSTITUTIONAL"
+  gstin           String?
+  tradeLicenseNo  String?
+  registeredState String        @default("Maharashtra")
+  operatingCities String?
+  verified        Boolean       @default(false)
+
+  demands         BuyerDemand[]
+  offers          Offer[]
+  transactions    Transaction[]
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+// 5. Transporter Profile
+model TransporterProfile {
+  id                   String               @id @default(cuid())
+  userId               String               @unique
+  user                 User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  businessName         String
+  commercialLicenseNo  String?
+  operationalDistricts String?              // e.g. "Nashik, Mumbai, Pune, Nagpur"
+  verified             Boolean              @default(false)
+  ratingScore          Float                @default(4.7)
+  completedTripsCount  Int                  @default(0)
+  onTimeDeliveryPercent Float               @default(95.0)
+
+  vehicles             TransporterVehicle[]
+  transportRequests    TransportRequest[]
+  transactions         Transaction[]
+
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+}
+
+// 6. Quality Inspector
+model QualityInspector {
+  id                   String                @id @default(cuid())
+  userId               String                @unique
+  user                 User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  agencyName           String                // e.g. "MSAMB Quality Cell", "APMC Inspector"
+  licenseNumber        String                @unique
+  assignedDistricts    String                // Comma-separated
+  isActive             Boolean               @default(true)
+
+  physicalInspections  QualityVerification[]
+
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+}
+
+// ----------------------------------------------------
+// 2. PRODUCE LOTS & QUALITY (CORE LINKAGE)
+// ----------------------------------------------------
+
+// 7. Produce Lot (Farmer/FPO -> Produce Lot)
+model ProduceLot {
+  id                       String                @id @default(cuid())
+  lotCode                  String                @unique // e.g. KS-ONION-2026-0001
+  farmerId                 String
+  farmer                   FarmerProfile         @relation(fields: [farmerId], references: [id])
+  fpoId                    String?
+  fpo                      FPO?                  @relation(fields: [fpoId], references: [id])
+
+  commodity                String                // e.g. "Onion", "Tomato", "Soybean", "Cotton", "Grapes", "Sugarcane"
+  variety                  String?               // e.g. "Nashik Red", "JS-335"
+  quantity                 Float                 // Numeric quantity
+  unit                     String                @default("Quintal") // "Quintal", "Tonnes", "Kg"
+  quantityQuintals         Float                 // Standardized in Quintals
+  expectedPrice            Float                 // In INR
+  expectedPricePerQuintal  Float                 // In INR per quintal
+  expectedGrade            String                @default("Not Graded Yet") // "A", "B", "C", "Not Graded Yet"
+  harvestDate              DateTime
+  readyForPickupDate       DateTime              // Availability date
+  locationDistrict         String                // Maharashtra District
+  locationTaluka           String?
+  locationVillage          String?
+  location                 String?               // Village or taluka address
+  description              String?
+  lotPhotosJson            String?               // JSON array of image URLs
+  status                   String                @default("AVAILABLE") // DRAFT, AVAILABLE, RESERVED, SOLD, CANCELLED
+
+  // Explicitly Required Relationships
+  offers                   Offer[]               // Produce Lot -> Buyer Offers
+  aiAssessments            QualityAssessment[]   // Produce Lot -> Quality Assessment
+  physicalVerifications    QualityVerification[]
+  transportRequests        TransportRequest[]    // Produce Lot -> Transport Request
+  transactions             Transaction[]
+
+  createdAt                DateTime              @default(now())
+  updatedAt                DateTime              @updatedAt
+}
+
+// 20. Quality Assessment (AI-Assisted Preliminary Visual Assessment)
+// PRINCIPLE: Upload photo -> AI preliminary visual screening (NOT official crop grade)
+// STATUS: AI_ASSESSMENT_NOT_VERIFIED
+model QualityAssessment {
+  id                String      @id @default(cuid())
+  lotId             String
+  lot               ProduceLot  @relation(fields: [lotId], references: [id], onDelete: Cascade)
+  
+  status            String      @default("AI_ASSESSMENT_NOT_VERIFIED") // AI_ASSESSMENT_NOT_VERIFIED
+  estimatedGrade    String      // "Grade A", "Grade B", "Grade C"
+  confidenceScore   Float       @default(0.85) // 0.0 - 1.0
+  color             String?     // e.g. "Deep Red", "Golden Yellow"
+  visibleDamage     String?     // e.g. "Minimal (< 2%)"
+  sizeUniformity    Float?      // Percentage e.g. 88.5
+  visibleDefects    Float?      // Percentage e.g. 3.2
+  assessmentNotes   String?
+  visualParameters  String?     // JSON optional
+  disclaimer        String      @default("AI Assessment — Not Verified. Preliminary visual estimate only. Requires authorized physical verification for formal trade grading.")
+  assessedAt        DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+}
+
+// 21. Physical Quality Verification (By Authorized / FPO Inspector)
+// PRINCIPLE: Physical inspection by authorized inspector gives final verified status
+// STATUS: PENDING, PHYSICALLY_VERIFIED, REJECTED, REQUIRES_REINSPECTION
+model QualityVerification {
+  id                 String            @id @default(cuid())
+  lotId              String
+  lot                ProduceLot        @relation(fields: [lotId], references: [id], onDelete: Cascade)
+  inspectorId        String
+  inspector          QualityInspector  @relation(fields: [inspectorId], references: [id])
+
+  status             String            @default("PENDING") // PENDING, PHYSICALLY_VERIFIED, REJECTED, REQUIRES_REINSPECTION
+  officialGrade      String            // e.g. "Grade A", "Grade B", "Grade C", "Fair Average Quality"
+  moisturePercentage Float?
+  foreignMatterPerc  Float?
+  inspectionLocation String            @default("On-Farm") // "On-Farm", "APMC Yard", "Warehouse"
+  inspectionDate     DateTime          @default(now())
+  inspectionNotes    String?
+  certificateNumber  String            @unique
+  verifiedAt         DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+}
+
+// ----------------------------------------------------
+// 3. MARKET INTELLIGENCE & DEMAND
+// ----------------------------------------------------
+
+// 8. Market (APMC Mandis and Private Markets across Maharashtra)
+model Market {
+  id             String          @id @default(cuid())
+  name           String          // e.g. "Lasalgaon APMC", "Pune Market Yard", "Vashi APMC"
+  marketCode     String          @unique
+  marketType     String          @default("APMC") // "APMC", "PRIVATE", "DIRECT_PURCHASE_CENTER"
+  district       String
+  state          String          @default("Maharashtra")
+  latitude       Float?
+  longitude      Float?
+
+  prices         MarketPrice[]
+  arrivals       MarketArrival[]
+
+  createdAt      DateTime        @default(now())
+}
+
+// 9. Market Price
+model MarketPrice {
+  id             String    @id @default(cuid())
+  marketId       String
+  market         Market    @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  commodity      String    // e.g. "Onion", "Tomato", "Soybean"
+  variety        String?
+  minPrice       Float     // Rs per Quintal
+  maxPrice       Float     // Rs per Quintal
+  modalPrice     Float     // Most frequent trade price per Quintal
+  priceDate      DateTime
+  source         String    @default("Agmarknet / MSAMB")
+
+  createdAt      DateTime  @default(now())
+
+  @@index([commodity, priceDate])
+}
+
+// 10. Market Arrival Volumes
+model MarketArrival {
+  id                    String    @id @default(cuid())
+  marketId              String
+  market                Market    @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  commodity             String
+  arrivalQuantityTonnes Float
+  arrivalDate           DateTime
+
+  createdAt             DateTime  @default(now())
+
+  @@index([commodity, arrivalDate])
+}
+
+// 11. Buyer Demand
+model BuyerDemand {
+  id                   String        @id @default(cuid())
+  buyerId              String
+  buyer                BuyerProfile  @relation(fields: [buyerId], references: [id], onDelete: Cascade)
+  commodity            String
+  variety              String?
+  requiredQuantityQtl  Float
+  unit                 String        @default("Quintal")
+  targetPricePerQtl    Float
+  minPricePerQtl       Float?
+  maxPricePerQtl       Float?
+  destinationDistrict  String
+  deliveryLocation     String?
+  deliveryDeadline     DateTime
+  requiredGrade        String?       @default("Grade A")
+  qualityRequirements  String?       // Specific grade/moisture requirements
+  description          String?
+  status               String        @default("ACTIVE") // ACTIVE, PAUSED, FULFILLED, CANCELLED
+  isActive             Boolean       @default(true)
+
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+}
+
+// 12. Offer (Produce Lot -> Buyer Offers)
+model Offer {
+  id                   String        @id @default(cuid())
+  lotId                String
+  lot                  ProduceLot    @relation(fields: [lotId], references: [id], onDelete: Cascade)
+  buyerId              String
+  buyer                BuyerProfile  @relation(fields: [buyerId], references: [id], onDelete: Cascade)
+
+  offeredPricePerQtl   Float
+  quantityQuintals     Float
+  proposedPickupDate   DateTime
+  paymentTerms         String        @default("ESCROW_ON_DELIVERY")
+  status               String        @default("PENDING")
+  notes                String?
+  validUntil           DateTime
+
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+}
+
+// ----------------------------------------------------
+// 4. LOGISTICS & STORAGE
+// ----------------------------------------------------
+
+// 13. Transporter Vehicle
+model TransporterVehicle {
+  id                 String              @id @default(cuid())
+  transporterId      String
+  transporter        TransporterProfile  @relation(fields: [transporterId], references: [id], onDelete: Cascade)
+
+  vehicleName        String?
+  vehicleType        String              // "PICKUP_1_TON", "LIGHT_TRUCK_3_TON", "HEAVY_TRUCK_10_TON"
+  registrationNumber String              @unique
+  capacityTonnes     Float
+  capacityQuintals   Float?
+  ratePerKm          Float               @default(35.0)
+  isRefrigerated     Boolean             @default(false)
+  isAvailable        Boolean             @default(true)
+
+  transportRequests  TransportRequest[]
+
+  createdAt          DateTime            @default(now())
+}
+
+// 14. Transport Request (Produce Lot -> Transport Request)
+model TransportRequest {
+  id                  String              @id @default(cuid())
+  lotId               String
+  lot                 ProduceLot          @relation(fields: [lotId], references: [id])
+  transporterId       String?
+  transporter         TransporterProfile? @relation(fields: [transporterId], references: [id])
+  vehicleId           String?
+  vehicle             TransporterVehicle? @relation(fields: [vehicleId], references: [id])
+
+  pickupLocation      String              // Farm/FPO location
+  dropLocation        String              // Mandi / Buyer warehouse location
+  pickupDistrict      String?
+  dropDistrict        String?
+  distanceKm          Float
+  quantityQuintals    Float?
+  estimatedTrips      Int                 @default(1)
+  ratePerKm           Float?
+  estimatedCost       Float               // In Indian Rupees
+  status              String              @default("REQUESTED") // REQUESTED, ACCEPTED, REJECTED, IN_TRANSIT, DELIVERED, CANCELLED
+  notes               String?
+
+  scheduledPickup     DateTime
+  actualDelivery      DateTime?
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+}
+
+// 15. Storage Facility (Warehouses / Cold Storages across Maharashtra)
+model StorageFacility {
+  id                     String    @id @default(cuid())
+  name                   String    // e.g. "Maharashtra State Warehousing Corp - Nashik"
+  facilityType           String    // "COLD_STORAGE", "DRY_WAREHOUSE", "SILO"
+  district               String
+  state                  String    @default("Maharashtra")
+  totalCapacityTonnes    Float
+  availableCapacityTonnes Float
+  ratePerQuintalPerMonth Float
+  contactPhone           String?
+
+  createdAt              DateTime  @default(now())
+}
+
+// ----------------------------------------------------
+// 5. TRANSACTIONS, PAYMENTS, RATINGS & DISPUTES
+// ----------------------------------------------------
+
+// 16. Transaction (Fulfilled Deal & Net Realisation Anchor)
+model Transaction {
+  id                      String             @id @default(cuid())
+  transactionCode         String             @unique // e.g. TXN-2026-0001
+  lotId                   String
+  lot                     ProduceLot         @relation(fields: [lotId], references: [id])
+  farmerId                String
+  farmer                  FarmerProfile      @relation(fields: [farmerId], references: [id])
+  buyerId                 String
+  buyer                   BuyerProfile       @relation(fields: [buyerId], references: [id])
+  transporterId           String?
+  transporter             TransporterProfile? @relation(fields: [transporterId], references: [id])
+
+  agreedPricePerQuintal   Float
+  quantityQuintals        Float
+
+  // CORE USP REALISATION ACCOUNTING
+  grossSaleValue          Float              // agreedPricePerQuintal * quantityQuintals
+  transportCost           Float              @default(0.0)
+  storageCost             Float              @default(0.0)
+  otherCosts              Float              @default(0.0) // Mandi cess, loading, packaging
+  netRealisation          Float              // grossSaleValue - transportCost - storageCost - otherCosts
+
+  status                  String             @default("INITIATED")
+
+  // Relationships
+  payments                Payment[]          // Transaction -> Payment
+  ratings                 Rating[]           // Transaction -> Ratings
+  disputes                Dispute[]          // Transaction -> Dispute
+
+  createdAt               DateTime           @default(now())
+  updatedAt               DateTime           @updatedAt
+}
+
+// 17. Payment (Escrow & Settlement Tracking)
+model Payment {
+  id               String         @id @default(cuid())
+  transactionId    String
+  transaction      Transaction    @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+
+  amount           Float
+  paymentMethod    String         // "UPI", "NEFT_RTGS", "ESCROW_GATEWAY"
+  paymentStatus    String         @default("PENDING")
+  escrowReference  String?
+  payoutDate       DateTime?
+
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+}
+
+// 18. Rating (3-Way Ratings tied directly to completed transactions)
+// PRINCIPLE: Ratings MUST be tied to completed transactions. No arbitrary ratings.
+model Rating {
+  id             String       @id @default(cuid())
+  transactionId  String
+  transaction    Transaction  @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  raterId        String
+  rater          User         @relation("RaterUser", fields: [raterId], references: [id])
+  rateeId        String
+  ratee          User         @relation("RateeUser", fields: [rateeId], references: [id])
+
+  rolePair       String       // "FARMER_TO_BUYER", "BUYER_TO_FARMER", "FARMER_TO_TRANSPORTER", "BUYER_TO_TRANSPORTER"
+  ratingScore    Int          // 1 to 5 stars
+  feedback       String?
+
+  createdAt      DateTime     @default(now())
+}
+
+// 19. Verification (KYC & Trust Records)
+model Verification {
+  id             String              @id @default(cuid())
+  userId         String
+  user           User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  documentType   String              // "AADHAAR_MASKED", "PAN", "7_12_EXTRACT", "GST_CERTIFICATE"
+  documentNumber String?             // Masked/Hashed identifier
+  status         String              @default("PENDING")
+  verifiedAt     DateTime?
+  notes          String?
+
+  createdAt      DateTime            @default(now())
+}
+
+// 22. Dispute (Evidence-Based Grievance Resolution)
+// PRINCIPLE: Resolves disputes using transaction evidence, NOT arbitrary automated rulings
+model Dispute {
+  id                String         @id @default(cuid())
+  disputeCode       String         @unique
+  transactionId     String
+  transaction       Transaction    @relation(fields: [transactionId], references: [id])
+  raisedById        String
+  raisedBy          User           @relation("DisputeRaiser", fields: [raisedById], references: [id])
+
+  reason            String         // "QUALITY_MISMATCH", "DELIVERY_DELAY", "PAYMENT_DELAY", "WEIGHT_DISCREPANCY"
+  evidenceSummary   String         // Reference to agreed lot, physical quality verification, weighing receipts
+  evidenceFilesJson String?        // JSON list of uploaded evidence documents/photos
+  status            String         @default("OPEN")
+  resolutionNotes   String?
+  resolvedAt        DateTime?
+
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+}
+
+// 23. Notification
+model Notification {
+  id         String    @id @default(cuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title      String
+  message    String
+  type       String    // "PRICE_ALERT", "OFFER_RECEIVED", "INSPECTION_UPDATE", "TRANSACTION"
+  linkUrl    String?
+  isRead     Boolean   @default(false)
+
+  createdAt  DateTime  @default(now())
+}
