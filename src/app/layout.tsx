@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { LanguageProvider } from '@/i18n/LanguageContext';
+import { AuthProvider } from '@/lib/AuthContext';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 
@@ -44,9 +45,11 @@ export default function RootLayout({
     <html lang="mr" className={`${plusJakartaSans.variable} ${notoSans.variable}`}>
       <body className="min-h-screen flex flex-col antialiased bg-[#F4F1EA] text-[#262320] selection:bg-emerald-200 selection:text-emerald-900">
         <LanguageProvider>
-          <Navbar />
-          <main className="flex-1 pb-16 lg:pb-0">{children}</main>
-          <Footer />
+          <AuthProvider>
+            <Navbar />
+            <main className="flex-1 pb-16 lg:pb-0">{children}</main>
+            <Footer />
+          </AuthProvider>
         </LanguageProvider>
       </body>
     </html>

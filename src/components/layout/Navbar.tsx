@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useLanguage } from '@/i18n/LanguageContext';
+import { useAuth } from '@/lib/AuthContext';
 import { Locale } from '@/i18n/translations';
 import {
   Sprout,
@@ -11,6 +12,10 @@ import {
   Mic,
   X,
   ChevronDown,
+  User,
+  UserCheck,
+  LayoutDashboard,
+  LogOut,
 } from 'lucide-react';
 import { FarmerVoiceAssistant } from '@/components/farmer/FarmerVoiceAssistant';
 import { MobileNav } from '@/components/layout/MobileNav';
@@ -18,8 +23,10 @@ import { MobileNav } from '@/components/layout/MobileNav';
 export function Navbar() {
   const pathname = usePathname();
   const { locale, setLocale, t } = useLanguage();
+  const { user, logout, switchRole, isAuthenticated } = useAuth();
   const [isVoiceOpen, setIsVoiceOpen] = useState(false);
   const [isGovernanceOpen, setIsGovernanceOpen] = useState(false);
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
 
   const languages: { code: Locale; label: string }[] = [
     { code: 'en', label: 'English' },
@@ -157,8 +164,101 @@ export function Navbar() {
               </div>
             </nav>
 
-            {/* Language Selector & Voice Action (Desktop & Mobile) */}
+            {/* Language Selector, Account & Voice Action */}
             <div className="flex items-center gap-2">
+              {/* Account / Login State */}
+              {isAuthenticated && user ? (
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setIsAccountOpen(!isAccountOpen)}
+                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] text-xs font-bold bg-[#EAF2ED] text-[#1B4332] border border-[#B7D5C4] hover:bg-[#D4E8DC] transition-colors min-h-[38px] sm:min-h-[36px]"
+                    aria-label="Open account menu"
+                  >
+                    <UserCheck className="w-3.5 h-3.5 text-[#1B4332]" />
+                    <span className="max-w-[120px] sm:max-w-[150px] truncate">
+                      {user.fullName.split('(')[0].trim()} · {user.role === 'FARMER' ? t.common.authRolePillFarmer : user.role === 'BUYER' ? t.common.authRolePillBuyer : t.common.authRolePillTransporter}
+                    </span>
+                    <ChevronDown className="w-3 h-3 text-[#1B4332]" />
+                  </button>
+
+                  {isAccountOpen && (
+                    <div
+                      className="absolute right-0 mt-1 w-64 bg-white border border-[#D8D2C4] rounded-[4px] shadow-md py-2 z-50 animate-fadeIn"
+                      onMouseLeave={() => setIsAccountOpen(false)}
+                    >
+                      <div className="px-3 pb-2 mb-2 border-b border-[#D8D2C4]">
+                        <div className="text-[10px] font-bold uppercase tracking-wider text-[#635E59]">
+                          {t.common.authCurrentRole}
+                        </div>
+                        <div className="text-xs font-bold text-[#262320] truncate">
+                          {user.fullName}
+                        </div>
+                        {user.organization && (
+                          <div className="text-[11px] text-[#635E59] truncate">
+                            {user.organization}
+                          </div>
+                        )}
+                      </div>
+
+                      <Link
+                        href={user.portalPath}
+                        onClick={() => setIsAccountOpen(false)}
+                        className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-[#262320] hover:bg-[#ECE7DE]"
+                      >
+                        <LayoutDashboard className="w-4 h-4 text-[#1B4332]" />
+                        <span>{t.nav.myDashboard}</span>
+                      </Link>
+
+                      <div className="px-3 py-1.5 text-[11px] font-bold text-[#635E59] uppercase tracking-wider">
+                        {t.nav.switchRole}
+                      </div>
+                      <div className="grid grid-cols-3 gap-1 px-3 mb-2">
+                        {(['FARMER', 'BUYER', 'TRANSPORTER'] as const).map((r) => (
+                          <button
+                            key={r}
+                            type="button"
+                            onClick={() => {
+                              setIsAccountOpen(false);
+                              switchRole(r);
+                            }}
+                            className={`py-1 px-1 text-[10px] font-bold rounded-[3px] border text-center transition-colors ${
+                              user.role === r
+                                ? 'bg-[#1B4332] text-white border-[#1B4332]'
+                                : 'bg-[#ECE7DE] text-[#262320] border-[#D8D2C4] hover:bg-[#D8D2C4]'
+                            }`}
+                          >
+                            {r === 'FARMER' ? t.common.authRolePillFarmer : r === 'BUYER' ? t.common.authRolePillBuyer : t.common.authRolePillTransporter}
+                          </button>
+                        ))}
+                      </div>
+
+                      <div className="border-t border-[#D8D2C4] pt-1">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsAccountOpen(false);
+                            logout();
+                          }}
+                          className="w-full text-left flex items-center gap-2 px-3 py-2 text-xs font-semibold text-[#92400E] hover:bg-[#FEF3C7]"
+                        >
+                          <LogOut className="w-4 h-4" />
+                          <span>{t.nav.logout}</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link
+                  href="/login"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] text-xs font-bold bg-[#1B4332] text-white hover:bg-[#2D6A4F] transition-colors min-h-[38px] sm:min-h-[36px]"
+                >
+                  <User className="w-3.5 h-3.5" />
+                  <span>{t.nav.login}</span>
+                </Link>
+              )}
+
               {/* Voice Access Button */}
               <button
                 type="button"

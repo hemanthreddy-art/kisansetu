@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useLanguage } from '@/i18n/LanguageContext';
+import { useAuth } from '@/lib/AuthContext';
 import { Locale } from '@/i18n/translations';
 import {
   Home,
@@ -18,6 +19,10 @@ import {
   ShieldCheck,
   Globe,
   Mic,
+  User,
+  UserCheck,
+  LayoutDashboard,
+  LogOut,
 } from 'lucide-react';
 
 interface MobileNavProps {
@@ -27,6 +32,7 @@ interface MobileNavProps {
 export function MobileNav({ onOpenVoice }: MobileNavProps) {
   const pathname = usePathname();
   const { locale, setLocale, t } = useLanguage();
+  const { user, logout, switchRole, isAuthenticated } = useAuth();
   const [isMoreOpen, setIsMoreOpen] = useState(false);
 
   const languages: { code: Locale; label: string }[] = [
@@ -146,6 +152,99 @@ export function MobileNav({ onOpenVoice }: MobileNavProps) {
               >
                 <X className="w-5 h-5" />
               </button>
+            </div>
+
+            {/* User Account / Role Clarity Section */}
+            <div className="p-3 bg-[#F9F8F5] border border-[#D8D2C4] rounded-[6px]">
+              {isAuthenticated && user ? (
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-[4px] bg-[#1B4332] text-white flex items-center justify-center">
+                        <UserCheck className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold text-[#262320]">
+                          {user.fullName.split('(')[0].trim()}
+                        </div>
+                        <div className="text-[11px] text-[#635E59]">
+                          {user.organization || user.location}
+                        </div>
+                      </div>
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider bg-[#EAF2ED] text-[#1B4332] px-2 py-0.5 rounded-[2px] border border-[#B7D5C4]">
+                      {user.role === 'FARMER' ? t.common.authRolePillFarmer : user.role === 'BUYER' ? t.common.authRolePillBuyer : t.common.authRolePillTransporter}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href={user.portalPath}
+                      onClick={() => setIsMoreOpen(false)}
+                      className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 bg-[#1B4332] text-white text-xs font-bold rounded-[4px] min-h-[44px] hover:bg-[#2D6A4F] transition-colors"
+                    >
+                      <LayoutDashboard className="w-4 h-4" />
+                      <span>{t.nav.myDashboard}</span>
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsMoreOpen(false);
+                        logout();
+                      }}
+                      className="flex items-center justify-center gap-1 py-2 px-3 bg-[#FFFFFF] border border-[#D8D2C4] text-[#92400E] text-xs font-bold rounded-[4px] min-h-[44px] hover:bg-[#FEF3C7] transition-colors"
+                    >
+                      <LogOut className="w-3.5 h-3.5" />
+                      <span>{t.nav.logout}</span>
+                    </button>
+                  </div>
+
+                  {/* Mobile Role Switch Buttons */}
+                  <div>
+                    <span className="text-[10px] font-bold text-[#635E59] uppercase tracking-wider block mb-1.5">
+                      {t.nav.switchRole}
+                    </span>
+                    <div className="grid grid-cols-3 gap-1.5">
+                      {(['FARMER', 'BUYER', 'TRANSPORTER'] as const).map((r) => (
+                        <button
+                          key={r}
+                          type="button"
+                          onClick={() => {
+                            setIsMoreOpen(false);
+                            switchRole(r);
+                          }}
+                          className={`py-1.5 px-1 text-[11px] font-bold rounded-[3px] border text-center transition-colors min-h-[38px] ${
+                            user.role === r
+                              ? 'bg-[#1B4332] text-white border-[#1B4332]'
+                              : 'bg-[#ECE7DE] text-[#262320] border-[#D8D2C4] hover:bg-[#D8D2C4]'
+                          }`}
+                        >
+                          {r === 'FARMER' ? t.common.authRolePillFarmer : r === 'BUYER' ? t.common.authRolePillBuyer : t.common.authRolePillTransporter}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <div className="text-xs font-bold text-[#262320]">
+                      {t.common.authLoginTitle}
+                    </div>
+                    <div className="text-[11px] text-[#635E59]">
+                      {t.common.authChooseRole}
+                    </div>
+                  </div>
+                  <Link
+                    href="/login"
+                    onClick={() => setIsMoreOpen(false)}
+                    className="flex items-center gap-1.5 py-2 px-4 bg-[#1B4332] text-white text-xs font-bold rounded-[4px] min-h-[44px] hover:bg-[#2D6A4F] transition-colors"
+                  >
+                    <User className="w-4 h-4" />
+                    <span>{t.nav.login}</span>
+                  </Link>
+                </div>
+              )}
             </div>
 
             {/* Quick Voice Assistant Entry */}

@@ -80,6 +80,29 @@ export interface TranslationDictionary {
     adjudicationNotes: string;
     noGrievancesFound: string;
     monitoredActiveTrades: string;
+    authLoginTitle: string;
+    authLoginSubtitle: string;
+    authChooseRole: string;
+    authFarmerRole: string;
+    authFarmerDesc: string;
+    authBuyerRole: string;
+    authBuyerDesc: string;
+    authTransporterRole: string;
+    authTransporterDesc: string;
+    authDemoNotice: string;
+    authQuickDemoLogin: string;
+    authChangeRole: string;
+    authMobileLabel: string;
+    authMobilePlaceholder: string;
+    authPasswordLabel: string;
+    authPasswordPlaceholder: string;
+    authSignInBtn: string;
+    authSigningIn: string;
+    authRolePillFarmer: string;
+    authRolePillBuyer: string;
+    authRolePillTransporter: string;
+    authCurrentRole: string;
+    authLoggedOut: string;
   };
   home: {
     transparentProcess: string;
@@ -186,6 +209,11 @@ export interface TranslationDictionary {
     inspector: string;
     disputes: string;
     admin: string;
+    login: string;
+    logout: string;
+    switchRole: string;
+    myDashboard: string;
+    account: string;
   };
   hero: {
     badge: string;
@@ -953,6 +981,30 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "adjudicationNotes": "Adjudication Determination & Officer Notes",
       "noGrievancesFound": "No grievances matching current filter.",
       "monitoredActiveTrades": "Monitored Active Trades"
+    ,
+      authLoginTitle: "KisanSetu Portal Access",
+      authLoginSubtitle: "Select your agricultural role to enter your dedicated marketplace workspace.",
+      authChooseRole: "Choose how you are using KisanSetu",
+      authFarmerRole: "Farmer",
+      authFarmerDesc: "Sell produce, compare markets, manage lots and track transactions",
+      authBuyerRole: "Buyer",
+      authBuyerDesc: "Find produce, post demand, match lots and manage purchases",
+      authTransporterRole: "Transporter",
+      authTransporterDesc: "Accept transport requests, manage fleet and track dispatches",
+      authDemoNotice: "Demo authentication — no real credentials are required.",
+      authQuickDemoLogin: "One-Click Demo Login",
+      authChangeRole: "Change Role",
+      authMobileLabel: "Mobile Number / Identifier",
+      authMobilePlaceholder: "Enter registered mobile number",
+      authPasswordLabel: "Password / Demo PIN",
+      authPasswordPlaceholder: "Enter any demo password (e.g. 123456)",
+      authSignInBtn: "Sign In to Portal",
+      authSigningIn: "Signing In...",
+      authRolePillFarmer: "Farmer",
+      authRolePillBuyer: "Buyer",
+      authRolePillTransporter: "Transporter",
+      authCurrentRole: "Active Role",
+      authLoggedOut: "Logged Out",
     },
     home: {
       "transparentProcess": "Transparent Process",
@@ -1058,6 +1110,11 @@ export const translations: Record<Locale, TranslationDictionary> = {
       inspector: 'Quality Inspector',
       disputes: 'Grievances',
       admin: 'State Admin',
+    login: 'Login',
+    logout: 'Logout',
+    switchRole: 'Switch Role',
+    myDashboard: 'My Dashboard',
+    account: 'Account',
     },
     hero: {
       badge: 'Maharashtra & Coastal Agriculture Market Linkage',
@@ -1833,6 +1890,30 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "adjudicationNotes": "अधिकारी निर्णय व पडताळणी नोंदी",
       "noGrievancesFound": "सध्याच्या फिल्टरनुसार कोणतीही तक्रार आढळली नाही.",
       "monitoredActiveTrades": "निरीक्षणाखालील सक्रिय सौदे"
+    ,
+      authLoginTitle: "किसानसेतू पोर्टल प्रवेश",
+      authLoginSubtitle: "आपल्या समर्पित बाजारपेठ कार्यक्षेत्रात प्रवेश करण्यासाठी आपली कृषी भूमिका निवडा.",
+      authChooseRole: "तुम्ही किसानसेतू कसे वापरत आहात ते निवडा",
+      authFarmerRole: "शेतकरी",
+      authFarmerDesc: "शेतमाल विका, बाजारभाव पडताळा, लॉट व्यवस्थापित करा आणि सौदे ट्रॅक करा",
+      authBuyerRole: "खरेदीदार",
+      authBuyerDesc: "शेतमाल शोधा, मागणी नोंदवा, लॉट मॅच करा आणि खरेदी व्यवस्थापित करा",
+      authTransporterRole: "वाहतूकदार",
+      authTransporterDesc: "वाहतूक मागण्या स्वीकारा, वाहन ताफा व्यवस्थापित करा आणि वाहतूक ट्रॅक करा",
+      authDemoNotice: "प्रोटोटाइप प्रात्यक्षिक लॉगिन — खऱ्या क्रेडेन्शियल्सची आवश्यकता नाही.",
+      authQuickDemoLogin: "एक-क्लिक प्रात्यक्षिक लॉगिन",
+      authChangeRole: "भूमिका बदला",
+      authMobileLabel: "नोंदणीकृत मोबाईल क्रमांक / ओळख",
+      authMobilePlaceholder: "नोंदणीकृत मोबाईल क्रमांक प्रविष्ट करा",
+      authPasswordLabel: "पासवर्ड / प्रात्यक्षिक पिन",
+      authPasswordPlaceholder: "कोणताही प्रात्यक्षिक पासवर्ड टाका (उदा. १२३४५६)",
+      authSignInBtn: "पोर्टलवर प्रवेश करा",
+      authSigningIn: "प्रवेश करत आहे...",
+      authRolePillFarmer: "शेतकरी",
+      authRolePillBuyer: "खरेदीदार",
+      authRolePillTransporter: "वाहतूकदार",
+      authCurrentRole: "सक्रिय भूमिका",
+      authLoggedOut: "लॉगआउट केले",
     },
     home: {
       "transparentProcess": "पारदर्शक प्रक्रिया",
@@ -1938,6 +2019,11 @@ export const translations: Record<Locale, TranslationDictionary> = {
       inspector: 'गुणवत्ता निरीक्षक',
       disputes: 'तक्रारी व वाद',
       admin: 'राज्य प्रशासन',
+    login: 'लॉगिन',
+    logout: 'बाहेर पडा',
+    switchRole: 'भूमिका बदला',
+    myDashboard: 'माझा डॅशबोर्ड',
+    account: 'खाते',
     },
     hero: {
       badge: 'महाराष्ट्र आणि किनारी कृषी बाजार जोडणी',
@@ -2713,6 +2799,30 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "adjudicationNotes": "అధికారి నిర్ణయం మరియు గమనికలు",
       "noGrievancesFound": "ఎంచుకున్న ఫిల్టర్‌కు సరిపోలే ఫిర్యాదులు లేవు.",
       "monitoredActiveTrades": "పర్యవేక్షించబడుతున్న వాణిజ్యాలు"
+    ,
+      authLoginTitle: "కిసాన్ సేతు పోర్టల్ లాగిన్",
+      authLoginSubtitle: "మీ అంకితమైన మార్కెట్‌ప్లేస్ వర్క్‌స్పేస్‌లోకి ప్రవేశించడానికి మీ వ్యవసాయ పాత్రను ఎంచుకోండి.",
+      authChooseRole: "మీరు కిసాన్ సేతును ఎలా ఉపయోగిస్తున్నారో ఎంచుకోండి",
+      authFarmerRole: "రైతు",
+      authFarmerDesc: "ఉత్పత్తులను అమ్మండి, మార్కెట్లను సరిపోల్చండి, లాట్లను నిర్వహించండి మరియు లావాదేవీలను ట్రాక్ చేయండి",
+      authBuyerRole: "కొనుగోలుదారు",
+      authBuyerDesc: "ఉత్పత్తులను కనుగొనండి, డిమాండ్ పోస్ట్ చేయండి, లాట్లను సరిపోల్చండి మరియు కొనుగోళ్లను నిర్వహించండి",
+      authTransporterRole: "రవాణాదారు",
+      authTransporterDesc: "రవాణా అభ్యర్థనలను అంగీకరించండి, వాహనాలను నిర్వహించండి మరియు డెలివరీలను ట్రాక్ చేయండి",
+      authDemoNotice: "ప్రోటోటైప్ డెమో లాగిన్ — వాస్తవ ఆధారాలు అవసరం లేదు.",
+      authQuickDemoLogin: "వన్-క్లిక్ డెమో లాగిన్",
+      authChangeRole: "పాత్రను మార్చండి",
+      authMobileLabel: "మొబైల్ నంబర్ / ఐడెంటిఫైయర్",
+      authMobilePlaceholder: "నమోదిత మొబైల్ నంబర్‌ను నమోదు చేయండి",
+      authPasswordLabel: "పాస్‌వర్డ్ / డెమో పిన్",
+      authPasswordPlaceholder: "ఏదైనా డెమో పాస్‌వర్డ్ నమోదు చేయండి (ఉదా. 123456)",
+      authSignInBtn: "పోర్టల్‌లోకి ప్రవేశించండి",
+      authSigningIn: "ప్రవేశిస్తోంది...",
+      authRolePillFarmer: "రైతు",
+      authRolePillBuyer: "కొనుగోలుదారు",
+      authRolePillTransporter: "రవాణాదారు",
+      authCurrentRole: "క్రియాశీల పాత్ర",
+      authLoggedOut: "లాగౌట్ అయ్యారు",
     },
     home: {
       "transparentProcess": "పారదర్శక విధానం",
@@ -2818,6 +2928,11 @@ export const translations: Record<Locale, TranslationDictionary> = {
       inspector: 'క్వాలిటీ ఇన్స్పెక్టర్',
       disputes: 'ఫిర్యాదులు',
       admin: 'రాష్ట్ర అడ్మిన్',
+    login: 'లాగిన్',
+    logout: 'లాగౌట్',
+    switchRole: 'పాత్రను మార్చండి',
+    myDashboard: 'నా డాష్‌బోర్డ్',
+    account: 'ఖాతా',
     },
     hero: {
       badge: 'వ్యవసాయ మార్కెట్ లింకేజ్ మరియు ధరల గుర్తింపు',
@@ -3592,6 +3707,30 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "adjudicationNotes": "अधिकारी निर्णय एवं टिप्पणी",
       "noGrievancesFound": "वर्तमान फ़िल्टर अनुसार कोई शिकायत नहीं मिली।",
       "monitoredActiveTrades": "निगरानी अधीन सक्रिय सौदे"
+    ,
+      authLoginTitle: "किसानसेतु पोर्टल प्रवेश",
+      authLoginSubtitle: "अपने समर्पित बाज़ार कार्यक्षेत्र में प्रवेश करने के लिए अपनी कृषि भूमिका चुनें।",
+      authChooseRole: "चुनें कि आप किसानसेतु का उपयोग किस प्रकार कर रहे हैं",
+      authFarmerRole: "किसान",
+      authFarmerDesc: "उपज बेचें, बाज़ार भाव तुलना करें, लॉट प्रबंधित करें और लेन-देन ट्रैक करें",
+      authBuyerRole: "खरीदार",
+      authBuyerDesc: "उपज खोजें, मांग दर्ज करें, लॉट मैच करें और खरीद प्रबंधित करें",
+      authTransporterRole: "ट्रांसपोर्टर",
+      authTransporterDesc: "परिवहन अनुरोध स्वीकारें, वाहन बेड़े का प्रबंधन करें और प्रेषण ट्रैक करें",
+      authDemoNotice: "प्रोटोटाइप डेमो लॉगिन — वास्तविक क्रेडेंशियल्स की आवश्यकता नहीं है।",
+      authQuickDemoLogin: "एक-क्लिक डेमो लॉगिन",
+      authChangeRole: "भूमिका बदलें",
+      authMobileLabel: "पंजीकृत मोबाइल नंबर / पहचान",
+      authMobilePlaceholder: "पंजीकृत मोबाइल नंबर दर्ज करें",
+      authPasswordLabel: "पासवर्ड / डेमो पिन",
+      authPasswordPlaceholder: "कोई भी डेमो पासवर्ड दर्ज करें (उदा. 123456)",
+      authSignInBtn: "पोर्टल में प्रवेश करें",
+      authSigningIn: "प्रवेश हो रहा है...",
+      authRolePillFarmer: "किसान",
+      authRolePillBuyer: "खरीदार",
+      authRolePillTransporter: "ट्रांसपोर्टर",
+      authCurrentRole: "सक्रिय भूमिका",
+      authLoggedOut: "लॉगआउट हो गया",
     },
     home: {
       "transparentProcess": "पारदर्शी प्रक्रिया",
@@ -3697,6 +3836,12 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "inspector": "गुणवत्ता निरीक्षक",
       "disputes": "विवाद व शिकायतें",
       "admin": "राज्य प्रशासन"
+    ,
+      login: "लॉगिन",
+      logout: "लॉगआउट",
+      switchRole: "भूमिका बदलें",
+      myDashboard: "मेरा डैशबोर्ड",
+      account: "खाता",
     },
     "hero": {
       "badge": "महाराष्ट्र एवं विजाग कृषि बाजार लिंकेज",
