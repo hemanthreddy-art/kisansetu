@@ -10,6 +10,7 @@ import { VerificationBadge } from '@/components/ui/VerificationBadge';
 import { ReputationCluster } from '@/components/ui/ReputationCluster';
 import { NetRealisationLedger } from '@/components/ui/NetRealisationLedger';
 import { FarmerVoiceAssistant } from '@/components/farmer/FarmerVoiceAssistant';
+import { formatINR } from '@/lib/utils';
 import { ProduceLot } from '@/types';
 import {
   Users,
@@ -298,34 +299,47 @@ export default function FarmerHubPage() {
           {/* Active Commercial Transaction */}
           {(() => {
             const activeTxn = transactions[0];
+            const txnId = activeTxn?.id || 'cmtpuvylf0003m0yf0gxrt25r';
             const txnCode = activeTxn?.transactionCode || 'TXN-2026-P8-3687';
             const txnStatus = activeTxn?.status || 'IN_TRANSIT';
-            const txnNet = activeTxn?.netRealisation ? '₹' + activeTxn.netRealisation.toLocaleString('en-IN') : '₹1,91,200';
+            const txnCrop = activeTxn?.lot?.commodity || 'Onion';
+            const txnQty = activeTxn?.quantityQuintals || 80;
+            const txnBuyer = activeTxn?.buyer?.companyName || 'ABC Foods Pvt Ltd [Demo]';
+            const txnPayment = activeTxn?.payments?.[0]?.paymentStatus || 'INITIATED';
+            const txnNet = activeTxn?.netRealisation ? formatINR(activeTxn.netRealisation) : '₹1,91,200';
             return (
-              <div className="bg-white border border-[#D8D2C4] rounded-[8px] p-5 space-y-3">
+              <div className="bg-white border border-[#D8D2C4] rounded-[8px] p-5 space-y-3 shadow-none hover:border-[#1B4332] transition-all">
                 <div className="flex items-center justify-between pb-2 border-b border-[#D8D2C4]">
                   <h3 className="font-heading font-bold text-sm text-[#262320] flex items-center gap-2">
                     <CreditCard className="w-4 h-4 text-[#1B4332]" />
-                    <span>Active Transaction</span>
+                    <span>Commercial Transaction</span>
                   </h3>
                   <StatusIndicator status="pending" label={txnStatus} />
                 </div>
 
                 <div className="space-y-2 text-xs">
-                  <div className="font-mono text-xs font-bold text-[#1B4332]">
-                    {txnCode}
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-xs font-bold text-[#1B4332] bg-[#EAF2ED] px-2 py-0.5 rounded-[4px] border border-[#B7D5C4]">
+                      {txnCode}
+                    </span>
+                    <span className="text-[10px] text-[#635E59] font-mono">
+                      Pay: <strong className="text-[#1B4332]">{txnPayment}</strong>
+                    </span>
+                  </div>
+                  <div className="text-sm font-black font-heading text-[#262320]">
+                    {txnCrop} ({txnQty} Qtl)
                   </div>
                   <div className="flex justify-between text-[#635E59]">
-                    <span>Escrow Milestone:</span>
-                    <span className="font-semibold text-[#262320]">20% Advance Deposited</span>
+                    <span>Buyer:</span>
+                    <span className="font-semibold text-[#262320] truncate max-w-[150px]">{txnBuyer}</span>
                   </div>
                   <div className="flex justify-between text-[#635E59]">
-                    <span>Locked Net Realisation:</span>
+                    <span>Est. Net Realisation:</span>
                     <span className="font-bold text-[#1B4332]">{txnNet}</span>
                   </div>
                   <div className="pt-2">
-                    <Link href="/transactions">
-                      <Button size="sm" variant="outline" className="w-full text-xs gap-1 border-[#D8D2C4]">
+                    <Link href={`/transactions/${txnId}`}>
+                      <Button size="sm" variant="outline" className="w-full text-xs gap-1 border-[#D8D2C4] hover:bg-stone-50">
                         <span>View Transaction Details</span>
                         <ArrowRight className="w-3 h-3" />
                       </Button>
