@@ -119,6 +119,39 @@ export interface TranslationDictionary {
     roadHaulFromNashik: string;
     sameNetRealisation: string;
     moreNetRealisation: string;
+    modulesBadge: string;
+    modulesTitle: string;
+    modulesSubtitle: string;
+    modFarmerHubCode: string;
+    modFarmerHubTitle: string;
+    modFarmerHubDesc: string;
+    modMarketIntelCode: string;
+    modMarketIntelTitle: string;
+    modMarketIntelDesc: string;
+    modRealisationCode: string;
+    modRealisationTitle: string;
+    modRealisationDesc: string;
+    modBuyerDemandCode: string;
+    modBuyerDemandTitle: string;
+    modBuyerDemandDesc: string;
+    modLogisticsCode: string;
+    modLogisticsTitle: string;
+    modLogisticsDesc: string;
+    modEscrowPayCode: string;
+    modEscrowPayTitle: string;
+    modEscrowPayDesc: string;
+    modQualityAssayCode: string;
+    modQualityAssayTitle: string;
+    modQualityAssayDesc: string;
+    modVoiceAccessCode: string;
+    modVoiceAccessTitle: string;
+    modVoiceAccessDesc: string;
+    modDisputesCode: string;
+    modDisputesTitle: string;
+    modDisputesDesc: string;
+    modAdminPortalCode: string;
+    modAdminPortalTitle: string;
+    modAdminPortalDesc: string;
   };
 
   brand: {
@@ -958,7 +991,40 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "nominalPrice": "Nominal Price",
       "roadHaulFromNashik": "road haul from Nashik",
       "sameNetRealisation": "Same net realisation",
-      "moreNetRealisation": "more net realisation"
+      "moreNetRealisation": "more net realisation",
+      "modulesBadge": "Platform Capabilities",
+      "modulesTitle": "System Modules & Transparency",
+      "modulesSubtitle": "All core modules are functional in the prototype demonstration with transparent status indicators.",
+      "modFarmerHubCode": "FARMER HUB",
+      "modFarmerHubTitle": "Farmer & FPO Hub",
+      "modFarmerHubDesc": "Produce lot registration, FPO member pooling, and competitive buyer offer management.",
+      "modMarketIntelCode": "MARKET INTEL",
+      "modMarketIntelTitle": "Mandi Intelligence",
+      "modMarketIntelDesc": "Daily APMC market prices, modal rates, and commodity arrival volumes across Maharashtra.",
+      "modRealisationCode": "REALISATION",
+      "modRealisationTitle": "Net Realisation Engine",
+      "modRealisationDesc": "Core calculation deducting transport freight, warehouse rent, and mandi fees to find true net profit.",
+      "modBuyerDemandCode": "BUYER DEMAND",
+      "modBuyerDemandTitle": "Buyer Portal & Matching",
+      "modBuyerDemandDesc": "Procurement demand posting, verified lot browsing, and digital counter-offers.",
+      "modLogisticsCode": "LOGISTICS",
+      "modLogisticsTitle": "Transporter Network",
+      "modLogisticsDesc": "Farm dispatch booking, vehicle capacity allocation, and transparent freight quotations.",
+      "modEscrowPayCode": "ESCROW & PAY",
+      "modEscrowPayTitle": "Commercial Transactions",
+      "modEscrowPayDesc": "Milestone escrow payments, delivery acknowledgments, and dispute mediation.",
+      "modQualityAssayCode": "QUALITY ASSAY",
+      "modQualityAssayTitle": "Quality Verification Desk",
+      "modQualityAssayDesc": "Tier 1 AI visual screening and Tier 2 assayer physical inspection workflows.",
+      "modVoiceAccessCode": "VOICE ACCESS",
+      "modVoiceAccessTitle": "Voice-First Assistant",
+      "modVoiceAccessDesc": "Multilingual speech inquiry for farmers in Marathi, Hindi, Telugu, and English.",
+      "modDisputesCode": "DISPUTES",
+      "modDisputesTitle": "Grievance Redressal",
+      "modDisputesDesc": "Transparent APMC arbitrator notes, evidence uploads, and dispute resolution.",
+      "modAdminPortalCode": "ADMIN PORTAL",
+      "modAdminPortalTitle": "State APMC Administration",
+      "modAdminPortalDesc": "Statewide market linkages, price discovery analytics, and governance controls.",
     },
     brand: {
       name: 'KisanSetu',
@@ -1805,7 +1871,40 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "nominalPrice": "प्रचलित भाव",
       "roadHaulFromNashik": "नाशिकपासून अंतर",
       "sameNetRealisation": "समान शुद्ध प्राप्ती",
-      "moreNetRealisation": "अधिक शुद्ध प्राप्ती"
+      "moreNetRealisation": "अधिक शुद्ध प्राप्ती",
+      "modulesBadge": "प्लॅटफॉर्म क्षमता",
+      "modulesTitle": "सिस्टम मॉड्यूल्स आणि पारदर्शकता",
+      "modulesSubtitle": "प्रोटोटाइप प्रात्यक्षिकामध्ये पारदर्शक स्थिती निर्देशकांसह सर्व मुख्य मॉड्यूल्स कार्यक्षम आहेत.",
+      "modFarmerHubCode": "शेतकरी हब",
+      "modFarmerHubTitle": "शेतकरी आणि एफपीओ हब",
+      "modFarmerHubDesc": "शेतमाल नोंदणी, एफपीओ सदस्य एकत्रीकरण आणि स्पर्धात्मक खरेदीदार ऑफर व्यवस्थापन.",
+      "modMarketIntelCode": "बाजार माहिती",
+      "modMarketIntelTitle": "मंडी बुद्धिमत्ता व भाव",
+      "modMarketIntelDesc": "महाराष्ट्रातील दैनंदिन एपीएमसी बाजार भाव, सरासरी दर आणि शेतमालाची आवक.",
+      "modRealisationCode": "निव्वळ प्राप्ती",
+      "modRealisationTitle": "निव्वळ प्राप्ती कॅल्क्युलेटर",
+      "modRealisationDesc": "खरा निव्वळ नफा शोधण्यासाठी वाहतूक भाडे, गोदामाचे भाडे आणि मंडी उपकर वजा करणारी मुख्य गणना.",
+      "modBuyerDemandCode": "खरेदीदार मागणी",
+      "modBuyerDemandTitle": "खरेदीदार पोर्टल आणि जुळणी",
+      "modBuyerDemandDesc": "खरेदी मागणी नोंदणी, पडताळणी केलेले लॉट पाहणे आणि डिजिटल प्रति-ऑफर.",
+      "modLogisticsCode": "वाहतूक व्यवस्था",
+      "modLogisticsTitle": "वाहतूकदार नेटवर्क",
+      "modLogisticsDesc": "शेतमालाची वाहतूक बुकिंग, वाहनाची क्षमता वाटप आणि पारदर्शक भाडे दर.",
+      "modEscrowPayCode": "एस्क्रो आणि देयके",
+      "modEscrowPayTitle": "व्यापारी व्यवहार",
+      "modEscrowPayDesc": "टप्प्याटप्प्याने एस्क्रो देयके, डिलिव्हरी पोचपावती आणि वाद मध्यस्थी.",
+      "modQualityAssayCode": "गुणवत्ता तपासणी",
+      "modQualityAssayTitle": "गुणवत्ता पडताळणी कक्ष",
+      "modQualityAssayDesc": "टियर १ एआय दृश्य तपासणी आणि टियर २ अधिकृत प्रत्यक्ष तपासणी प्रक्रिया.",
+      "modVoiceAccessCode": "आवाज संवाद",
+      "modVoiceAccessTitle": "व्हॉइस-फर्स्ट सहाय्यक",
+      "modVoiceAccessDesc": "मराठी, हिंदी, तेलगू आणि इंग्रजीमध्ये शेतकऱ्यांसाठी बहुभाषिक आवाज चौकशी.",
+      "modDisputesCode": "तक्रार निवारण",
+      "modDisputesTitle": "तक्रार निवारण कक्ष",
+      "modDisputesDesc": "पारदर्शक एपीएमसी मध्यस्थ नोंदी, पुरावे अपलोड आणि वाद निवारण.",
+      "modAdminPortalCode": "प्रशासन पोर्टल",
+      "modAdminPortalTitle": "राज्य एपीएमसी प्रशासन",
+      "modAdminPortalDesc": "राज्यव्यापी बाजार जोडणी, भाव शोध विश्लेषण आणि प्रशासकीय नियंत्रणे.",
     },
     brand: {
       name: 'किसानसेतू',
@@ -2652,7 +2751,40 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "nominalPrice": "సాధారణ ధర",
       "roadHaulFromNashik": "నాసిక్ నుండి దూరం",
       "sameNetRealisation": "సమాన నికర రాబడి",
-      "moreNetRealisation": "అధిక నికర రాబడి"
+      "moreNetRealisation": "అధిక నికర రాబడి",
+      "modulesBadge": "ప్లాట్‌ఫారమ్ సామర్థ్యాలు",
+      "modulesTitle": "సిస్టమ్ మాడ్యూల్స్ మరియు పారదర్శకత",
+      "modulesSubtitle": "ప్రోటోటైప్ ప్రదర్శనలో పారదర్శక స్థితి సూచికలతో అన్ని కీలక మాడ్యూల్స్ పనిచేస్తున్నాయి.",
+      "modFarmerHubCode": "రైతు హబ్",
+      "modFarmerHubTitle": "రైతు & ఎఫ్‌పిఓ హబ్",
+      "modFarmerHubDesc": "ఉత్పత్తి లాట్ నమోదు, ఎఫ్‌పిఓ సభ్యుల సమీకరణ మరియు పోటీ కొనుగోలుదారు ఆఫర్ల నిర్వహణ.",
+      "modMarketIntelCode": "మార్కెట్ సమాచారం",
+      "modMarketIntelTitle": "మండీ ఇంటెలిజెన్స్",
+      "modMarketIntelDesc": "మహారాష్ట్ర అంతటా రోజువారీ ఏపీఎంసీ మార్కెట్ ధరలు, సగటు రేట్లు మరియు సరుకుల రాక పరిమాణం.",
+      "modRealisationCode": "నికర రాబడి",
+      "modRealisationTitle": "నికర రాబడి ఇంజిన్",
+      "modRealisationDesc": "నిజమైన నికర లాభాన్ని తెలుసుకోవడానికి రవాణా ఖర్చు, గోడౌన్ అద్దె మరియు మార్కెట్ రుసుములను తీసివేసే గణన.",
+      "modBuyerDemandCode": "కొనుగోలుదారు డిమాండ్",
+      "modBuyerDemandTitle": "కొనుగోలుదారు పోర్టల్ & మ్యాచింగ్",
+      "modBuyerDemandDesc": "కొనుగోలు డిమాండ్ పోస్టింగ్, ధృవీకరించిన లాట్‌ల బ్రౌజింగ్ మరియు డిజిటల్ కౌంటర్ ఆఫర్లు.",
+      "modLogisticsCode": "రవాణా & లాజిస్టిక్స్",
+      "modLogisticsTitle": "ట్రాన్స్‌పోర్టర్ నెట్‌వర్క్",
+      "modLogisticsDesc": "పొలం వద్దే రవాణా బుకింగ్, వాహన సామర్థ్య కేటాయింపు మరియు పారదర్శక సరుకు రవాణా కొటేషన్లు.",
+      "modEscrowPayCode": "ఎస్క్రో & చెల్లింపులు",
+      "modEscrowPayTitle": "వాణిజ్య లావాదేవీలు",
+      "modEscrowPayDesc": "మైలురాయి ఎస్క్రో చెల్లింపులు, డెలివరీ రశీదులు మరియు వివాద మధ్యవర్తిత్వం.",
+      "modQualityAssayCode": "నాణ్యత తనిఖీ",
+      "modQualityAssayTitle": "నాణ్యత ధృవీకరణ డెస్క్",
+      "modQualityAssayDesc": "టైర్ 1 AI విజువల్ స్క్రీనింగ్ మరియు టైర్ 2 అస్సేయర్ భౌతిక తనిఖీ ప్రక్రియ.",
+      "modVoiceAccessCode": "వాయిస్ యాక్సెస్",
+      "modVoiceAccessTitle": "వాయిస్-ఫస్ట్ అసిస్టెంట్",
+      "modVoiceAccessDesc": "మరాఠీ, హిందీ, తెలుగు మరియు ఆంగ్లంలో రైతుల కోసం బహుభాషా వాయిస్ విచారణ.",
+      "modDisputesCode": "వివాదాలు",
+      "modDisputesTitle": "ఫిర్యాదుల పరిష్కారం",
+      "modDisputesDesc": "పారదర్శక ఏపీఎంసీ మధ్యవర్తి నోట్స్, సాక్ష్యాల అప్‌లోడ్ మరియు వివాద పరిష్కారం.",
+      "modAdminPortalCode": "అడ్మిన్ పోర్టల్",
+      "modAdminPortalTitle": "రాష్ట్ర ఏపీఎంసీ పరిపాలన",
+      "modAdminPortalDesc": "రాష్ట్రవ్యాప్త మార్కెట్ అనుసంధానం, ధరల విశ్లేషణ మరియు పాలనా నియంత్రణలు.",
     },
     brand: {
       name: 'కిసాన్ సేతు',
@@ -3498,7 +3630,40 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "nominalPrice": "प्रचलित भाव",
       "roadHaulFromNashik": "नासिक से सड़क दूरी",
       "sameNetRealisation": "समान शुद्ध प्राप्ति",
-      "moreNetRealisation": "अधिक शुद्ध प्राप्ति"
+      "moreNetRealisation": "अधिक शुद्ध प्राप्ति",
+      "modulesBadge": "प्लेटफ़ॉर्म क्षमताएं",
+      "modulesTitle": "सिस्टम मॉड्यूल और पारदर्शिता",
+      "modulesSubtitle": "प्रोटोटाइप प्रदर्शन में पारदर्शी स्थिति संकेतकों के साथ सभी मुख्य मॉड्यूल कार्यशील हैं।",
+      "modFarmerHubCode": "किसान हब",
+      "modFarmerHubTitle": "किसान और एफपीओ हब",
+      "modFarmerHubDesc": "उपज लॉट पंजीकरण, एफपीओ सदस्य एकत्रीकरण और प्रतिस्पर्धी खरीदार ऑफर प्रबंधन।",
+      "modMarketIntelCode": "बाजार सूचना",
+      "modMarketIntelTitle": "मंडी बुद्धिमत्ता",
+      "modMarketIntelDesc": "महाराष्ट्र भर में दैनिक एपीएमसी बाजार भाव, मॉडल दरें और कृषि उपज की आवक।",
+      "modRealisationCode": "शुद्ध प्राप्ति",
+      "modRealisationTitle": "शुद्ध प्राप्ति इंजन",
+      "modRealisationDesc": "सच्चा शुद्ध लाभ जानने के लिए परिवहन भाड़ा, गोदाम किराया और मंडी शुल्क घटाने वाली मुख्य गणना।",
+      "modBuyerDemandCode": "खरीदार मांग",
+      "modBuyerDemandTitle": "खरीदार पोर्टल और मिलान",
+      "modBuyerDemandDesc": "खरीद मांग पोस्टिंग, सत्यापित लॉट देखना और डिजिटल काउंटर-ऑफर।",
+      "modLogisticsCode": "लॉजिस्टिक्स व परिवहन",
+      "modLogisticsTitle": "ट्रांसपोर्टर नेटवर्क",
+      "modLogisticsDesc": "खेत से प्रेषण बुकिंग, वाहन क्षमता आवंटन और पारदर्शी माल ढुलाई उद्धरण।",
+      "modEscrowPayCode": "एस्क्रो और भुगतान",
+      "modEscrowPayTitle": "व्यावसायिक लेनदेन",
+      "modEscrowPayDesc": "चरणबद्ध एस्क्रो भुगतान, वितरण पावती और विवाद मध्यस्थता।",
+      "modQualityAssayCode": "गुणवत्ता परीक्षण",
+      "modQualityAssayTitle": "गुणवत्ता सत्यापन डेस्क",
+      "modQualityAssayDesc": "टियर 1 एआई दृश्य स्क्रीनिंग और टियर 2 परीक्षक प्रत्यक्ष भौतिक निरीक्षण कार्यप्रवाह।",
+      "modVoiceAccessCode": "वॉयस एक्सेस",
+      "modVoiceAccessTitle": "वॉयस-फर्स्ट सहायक",
+      "modVoiceAccessDesc": "मराठी, हिंदी, तेलुगु और अंग्रेजी में किसानों के लिए बहुभाषी वॉयस पूछताछ।",
+      "modDisputesCode": "विवाद व शिकायतें",
+      "modDisputesTitle": "शिकायत निवारण",
+      "modDisputesDesc": "पारदर्शी एपीएमसी मध्यस्थ टिप्पणियां, साक्ष्य अपलोड और विवाद समाधान।",
+      "modAdminPortalCode": "प्रशासन पोर्टल",
+      "modAdminPortalTitle": "राज्य एपीएमसी प्रशासन",
+      "modAdminPortalDesc": "राज्यव्यापी बाजार संपर्क, मूल्य खोज विश्लेषण और प्रशासनिक नियंत्रण।",
     },
     "brand": {
       "name": "किसानसेतु",
