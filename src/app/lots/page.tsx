@@ -5,24 +5,26 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { KEY_CROPS, MAHARASHTRA_DISTRICTS, ANDHRA_PRADESH_DISTRICTS } from '@/lib/constants';
+import { PageContainer } from '@/components/layout/PageContainer';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
+import { Input } from '@/components/ui/Input';
+import { Select } from '@/components/ui/Select';
 import {
   Package,
   PlusCircle,
   MapPin,
-  Calendar,
-  Tag,
   CheckCircle2,
   AlertCircle,
   ArrowRight,
   X,
   Filter,
-  Eye,
   Loader2,
   Scale,
   Sparkles,
+  FileText,
 } from 'lucide-react';
 import { ProduceLot } from '@/types';
 
@@ -222,73 +224,78 @@ function LotsPageContent() {
   };
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 max-w-6xl space-y-8">
+    <PageContainer maxWidth="7xl" className="space-y-6 sm:space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-gray-200">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <Badge variant="emerald">{t.lots.badge}</Badge>
-          </div>
-          <h1 className="text-3xl font-black text-gray-900 tracking-tight flex items-center gap-3">
-            <Package className="w-8 h-8 text-emerald-700" />
-            <span>{t.lots.title}</span>
-          </h1>
-          <p className="text-gray-600 text-sm sm:text-base max-w-3xl">{t.lots.subtitle}</p>
-        </div>
-
-        <div className="flex items-center gap-2">
+      <PageHeader
+        title={t.lots.title}
+        description={t.lots.subtitle}
+        badge={<Badge variant="emerald">{t.lots.badge}</Badge>}
+        action={
           <Button
             variant="primary"
+            size="md"
             onClick={() => {
               setFieldErrors({});
               setFormSuccessMessage(null);
               setIsModalOpen(true);
             }}
-            className="gap-2 shadow-md hover:shadow-lg transition-all"
+            className="gap-2"
           >
-            <PlusCircle className="w-5 h-5" />
+            <PlusCircle className="w-4 h-4" />
             <span>{t.lots.createNew}</span>
           </Button>
-        </div>
-      </div>
+        }
+      />
 
-      {/* Metrics Banner */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm">
-          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider block">
+      {/* Metrics Summary Bar */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+        <div className="bg-white border border-[#D8D2C4] rounded-[8px] p-4">
+          <span className="text-xs font-bold text-[#5A554E] uppercase tracking-wider block">
             {t.lots.filterAll}
           </span>
-          <div className="text-2xl font-black text-gray-900 mt-1">{metrics.totalLots}</div>
+          <div className="text-2xl font-black font-heading text-[#262320] mt-1">
+            {metrics.totalLots}
+          </div>
+          <span className="text-[11px] text-[#5A554E] block mt-0.5">Total registered lots</span>
         </div>
 
-        <div className="bg-emerald-50/60 border border-emerald-200 rounded-2xl p-4 shadow-sm">
-          <span className="text-xs font-semibold text-emerald-700 uppercase tracking-wider block">
+        <div className="bg-[#EAF2ED] border border-[#B7D5C4] rounded-[8px] p-4">
+          <span className="text-xs font-bold text-[#1B4332] uppercase tracking-wider block">
             {t.lots.filterAvailable}
           </span>
-          <div className="text-2xl font-black text-emerald-900 mt-1">{metrics.activeLots}</div>
+          <div className="text-2xl font-black font-heading text-[#1B4332] mt-1">
+            {metrics.activeLots}
+          </div>
+          <span className="text-[11px] text-[#2D6A4F] block mt-0.5">Open for buyer discovery</span>
         </div>
 
-        <div className="bg-amber-50/60 border border-amber-200 rounded-2xl p-4 shadow-sm">
-          <span className="text-xs font-semibold text-amber-700 uppercase tracking-wider block">
+        <div className="bg-[#FFFBEB] border border-[#FDE68A] rounded-[8px] p-4">
+          <span className="text-xs font-bold text-[#92400E] uppercase tracking-wider block">
             {t.lots.filterDraft}
           </span>
-          <div className="text-2xl font-black text-amber-900 mt-1">{metrics.draftLots}</div>
+          <div className="text-2xl font-black font-heading text-[#92400E] mt-1">
+            {metrics.draftLots}
+          </div>
+          <span className="text-[11px] text-[#B45309] block mt-0.5">Unpublished drafts</span>
         </div>
 
-        <div className="bg-sky-50/60 border border-sky-200 rounded-2xl p-4 shadow-sm">
-          <span className="text-xs font-semibold text-sky-700 uppercase tracking-wider block">
+        <div className="bg-[#E0F2FE] border border-[#BAE6FD] rounded-[8px] p-4">
+          <span className="text-xs font-bold text-[#0369A1] uppercase tracking-wider block">
             {locale === 'mr' ? 'एकूण परिमाण' : locale === 'te' ? 'మొత్తం వాల్యూమ్' : 'Total Volume'}
           </span>
-          <div className="text-2xl font-black text-sky-950 mt-1">
+          <div className="text-2xl font-black font-heading text-[#0369A1] mt-1">
             {metrics.totalQuantityQuintals}{' '}
-            <span className="text-sm font-semibold text-sky-700">Qtl</span>
+            <span className="text-sm font-normal text-[#0369A1]">Qtl</span>
           </div>
+          <span className="text-[11px] text-[#0369A1] block mt-0.5">
+            {(metrics.totalQuantityQuintals * 0.1).toFixed(1)} Metric Tonnes
+          </span>
         </div>
       </div>
 
-      {/* Filter Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-gray-100">
-        <Filter className="w-4 h-4 text-gray-400 mr-1 shrink-0" />
+      {/* Status Navigation Tabs */}
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-2 border-b border-[#D8D2C4]">
+        <Filter className="w-4 h-4 text-[#5A554E] mr-1 shrink-0" />
         {[
           { id: 'ALL', label: t.lots.filterAll, count: lots.length },
           {
@@ -315,18 +322,18 @@ function LotsPageContent() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all shrink-0 flex items-center gap-2 ${
+            className={`px-3 py-1.5 rounded-[4px] text-xs font-semibold transition-all shrink-0 flex items-center gap-1.5 border ${
               activeTab === tab.id
-                ? 'bg-emerald-700 text-white shadow-sm'
-                : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                ? 'bg-[#1B4332] text-white border-[#1B4332]'
+                : 'bg-white text-[#262320] border-[#D8D2C4] hover:bg-[#F4F1EA]'
             }`}
           >
             <span>{tab.label}</span>
             <span
-              className={`text-xs px-2 py-0.5 rounded-full ${
+              className={`text-[10px] px-1.5 py-0.2 rounded-full ${
                 activeTab === tab.id
-                  ? 'bg-emerald-800 text-emerald-100'
-                  : 'bg-gray-200 text-gray-600'
+                  ? 'bg-[#2D6A4F] text-white'
+                  : 'bg-[#ECE7DE] text-[#5A554E]'
               }`}
             >
               {tab.count}
@@ -335,30 +342,30 @@ function LotsPageContent() {
         ))}
       </div>
 
-      {/* Lots Content List */}
+      {/* Lots Content: Table / Mobile Cards */}
       {loading ? (
         <div className="py-20 text-center space-y-3">
-          <Loader2 className="w-8 h-8 text-emerald-700 animate-spin mx-auto" />
-          <p className="text-gray-500 font-medium text-sm">{t.lots.loading}</p>
+          <Loader2 className="w-8 h-8 text-[#1B4332] animate-spin mx-auto" />
+          <p className="text-[#5A554E] font-medium text-sm">{t.lots.loading}</p>
         </div>
       ) : error ? (
-        <div className="p-6 rounded-2xl bg-rose-50 border border-rose-200 text-center space-y-3">
-          <AlertCircle className="w-8 h-8 text-rose-600 mx-auto" />
-          <p className="text-rose-900 font-semibold">{error}</p>
+        <div className="p-6 rounded-[8px] bg-[#FEE2E2] border border-[#FCA5A5] text-center space-y-3">
+          <AlertCircle className="w-8 h-8 text-[#991B1B] mx-auto" />
+          <p className="text-[#991B1B] font-semibold">{error}</p>
           <Button variant="outline" size="sm" onClick={fetchLots}>
             Retry
           </Button>
         </div>
       ) : filteredLots.length === 0 ? (
         /* Empty State */
-        <Card className="border-dashed border-2 border-gray-300 bg-gray-50/50 text-center py-16 px-4">
+        <Card className="border-dashed border-2 border-[#D8D2C4] bg-[#FAFAF8] text-center py-16 px-4 shadow-none">
           <div className="max-w-md mx-auto space-y-4">
-            <div className="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-800 mx-auto flex items-center justify-center">
+            <div className="w-16 h-16 rounded-[8px] bg-[#EAF2ED] text-[#1B4332] mx-auto flex items-center justify-center">
               <Package className="w-8 h-8" />
             </div>
             <div className="space-y-1">
-              <h3 className="text-xl font-bold text-gray-900">{t.lots.emptyTitle}</h3>
-              <p className="text-gray-600 text-sm">{t.lots.emptyDesc}</p>
+              <h3 className="text-xl font-heading font-bold text-[#262320]">{t.lots.emptyTitle}</h3>
+              <p className="text-[#5A554E] text-sm">{t.lots.emptyDesc}</p>
             </div>
             <Button
               variant="primary"
@@ -375,342 +382,360 @@ function LotsPageContent() {
           </div>
         </Card>
       ) : (
-        /* Produce Lot Cards */
-        <div className="grid grid-cols-1 gap-5">
-          {filteredLots.map((lot) => (
-            <Card
-              key={lot.id}
-              className="hover:border-emerald-300 hover:shadow-md transition-all border-gray-200"
-            >
-              <CardHeader className="pb-3">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono font-bold text-sm text-emerald-950 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
-                      {lot.lotCode}
-                    </span>
-                    {getStatusBadge(lot.status)}
-                  </div>
-                  <span className="text-xs text-emerald-800 font-semibold bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>{lot.expectedGrade || 'Not Graded Yet'}</span>
-                  </span>
-                </div>
-
-                <CardTitle className="text-xl text-gray-900 mt-2 flex items-center gap-2">
-                  <span>{lot.commodity}</span>
-                  {lot.variety && (
-                    <>
-                      <span className="text-gray-400 font-normal">•</span>
-                      <span className="text-gray-600 font-medium text-lg">{lot.variety}</span>
-                    </>
-                  )}
+        <Card className="shadow-none border-[#D8D2C4]">
+          <CardHeader className="border-b border-[#D8D2C4] pb-3 bg-[#F4F1EA]">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-base font-heading font-bold text-[#262320]">
+                  Registered Produce Lots ({filteredLots.length})
                 </CardTitle>
-
-                <CardDescription className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-gray-600 mt-2">
-                  <span className="flex items-center gap-1 font-medium">
-                    <MapPin className="w-3.5 h-3.5 text-gray-400" />
-                    {lot.location || lot.locationDistrict}, {lot.locationDistrict}
-                  </span>
-                  <span>•</span>
-                  <span className="flex items-center gap-1 font-medium">
-                    <Tag className="w-3.5 h-3.5 text-gray-400" />
-                    {t.lots.volume}:{' '}
-                    <strong className="text-gray-900 font-bold">
-                      {lot.quantity} {lot.unit}
-                    </strong>
-                    {lot.unit !== 'Quintal' && (
-                      <span className="text-gray-500 font-normal">
-                        ({lot.quantityQuintals} Quintals)
-                      </span>
-                    )}
-                  </span>
-                  <span>•</span>
-                  <span className="font-medium">
-                    {t.lots.targetPrice}:{' '}
-                    <strong className="text-emerald-800 font-bold">
-                      ₹{lot.expectedPricePerQuintal || lot.expectedPrice}/Qtl
-                    </strong>
-                  </span>
-                  <span>•</span>
-                  <span className="flex items-center gap-1 text-gray-500">
-                    <Calendar className="w-3.5 h-3.5 text-gray-400" />
-                    {t.lots.availabilityDateLabel}:{' '}
-                    {new Date(lot.readyForPickupDate).toLocaleDateString()}
-                  </span>
+                <CardDescription className="text-xs text-[#5A554E]">
+                  Active lots published for buyer matching and transport dispatch
                 </CardDescription>
-              </CardHeader>
+              </div>
+              <span className="text-xs font-semibold text-[#5A554E] bg-white px-2.5 py-1 rounded-[4px] border border-[#D8D2C4]">
+                Digital APMC Yard
+              </span>
+            </div>
+          </CardHeader>
 
-              <CardContent className="pt-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-gray-100 bg-gray-50/40 rounded-b-2xl">
-                <div className="flex items-center gap-2 text-xs font-medium text-gray-600">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                  <span>
-                    {(lot.offers && lot.offers.length) || 0} {t.lots.offersReceived}
-                  </span>
-                </div>
+          <CardContent className="p-0">
+            {/* Desktop Table View (md+) */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-[#F4F1EA] text-[#5A554E] uppercase text-[11px] font-bold tracking-wider border-b border-[#D8D2C4]">
+                  <tr>
+                    <th className="py-3 px-4">Lot ID</th>
+                    <th className="py-3 px-4">Commodity</th>
+                    <th className="py-3 px-4">Quantity</th>
+                    <th className="py-3 px-4">Target Price</th>
+                    <th className="py-3 px-4">Location</th>
+                    <th className="py-3 px-4">Quality / Grade</th>
+                    <th className="py-3 px-4">Status</th>
+                    <th className="py-3 px-4">Offers</th>
+                    <th className="py-3 px-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#EBE7DF]">
+                  {filteredLots.map((lot) => {
+                    const price = lot.expectedPricePerQuintal || lot.expectedPrice || 0;
+                    const qty = lot.quantityQuintals || lot.quantity;
+                    return (
+                      <tr key={lot.id} className="hover:bg-[#F9F7F3] transition-colors">
+                        <td className="py-3.5 px-4 font-mono font-bold text-xs text-[#1B4332] whitespace-nowrap">
+                          {lot.lotCode}
+                        </td>
+                        <td className="py-3.5 px-4 font-semibold text-[#262320]">
+                          <div className="flex items-center gap-1.5">
+                            <span>{lot.commodity}</span>
+                          </div>
+                          {lot.variety && (
+                            <span className="text-xs text-[#5A554E] font-normal block">
+                              {lot.variety}
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-3.5 px-4 whitespace-nowrap">
+                          <span className="font-bold text-[#262320]">
+                            {lot.quantity} {lot.unit}
+                          </span>
+                          {lot.unit !== 'Quintal' && (
+                            <span className="text-xs text-[#5A554E] block">
+                              ({lot.quantityQuintals} Qtl)
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-3.5 px-4 font-heading font-bold text-[#1B4332] whitespace-nowrap">
+                          ₹{price.toLocaleString('en-IN')}{' '}
+                          <span className="text-xs font-normal text-[#5A554E]">/ Qtl</span>
+                        </td>
+                        <td className="py-3.5 px-4 text-xs text-[#5A554E]">
+                          <div className="flex items-center gap-1">
+                            <MapPin className="w-3 h-3 text-[#5A554E] shrink-0" />
+                            <span className="truncate max-w-[140px]" title={lot.location || lot.locationDistrict}>
+                              {lot.location || lot.locationDistrict}
+                            </span>
+                          </div>
+                          <span className="text-[11px] text-[#7C766D] pl-4 block">
+                            {lot.locationDistrict}
+                          </span>
+                        </td>
+                        <td className="py-3.5 px-4 whitespace-nowrap">
+                          <span className="inline-flex items-center gap-1 text-xs font-semibold bg-[#EAF2ED] text-[#1B4332] px-2 py-0.5 rounded-[4px] border border-[#B7D5C4]">
+                            <Sparkles className="w-3 h-3 text-[#2D6A4F]" />
+                            <span>{lot.expectedGrade || 'Not Graded'}</span>
+                          </span>
+                        </td>
+                        <td className="py-3.5 px-4 whitespace-nowrap">
+                          {getStatusBadge(lot.status)}
+                        </td>
+                        <td className="py-3.5 px-4 text-xs text-[#5A554E] whitespace-nowrap">
+                          <span className="font-semibold text-[#262320]">
+                            {(lot.offers && lot.offers.length) || 0}
+                          </span>{' '}
+                          offers
+                        </td>
+                        <td className="py-3.5 px-4 text-right whitespace-nowrap">
+                          <div className="flex items-center justify-end gap-1.5">
+                            <Link
+                              href={`/calculator?price=${price}&crop=${encodeURIComponent(lot.commodity.toLowerCase())}&quantity=${qty}`}
+                            >
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="text-xs py-1 px-2 border-[#D8D2C4] hover:bg-[#F4F1EA] gap-1"
+                                title={t.lots.calculateRealisation}
+                              >
+                                <Scale className="w-3 h-3 text-[#1B4332]" />
+                                <span>Realisation</span>
+                              </Button>
+                            </Link>
 
-                <div className="flex flex-wrap items-center gap-2">
-                  <Link
-                    href={`/calculator?price=${lot.expectedPricePerQuintal || lot.expectedPrice}&crop=${encodeURIComponent(lot.commodity)}`}
-                  >
-                    <Button size="sm" variant="outline" className="text-xs gap-1.5 min-h-[38px]">
-                      <Scale className="w-3.5 h-3.5 text-emerald-700" />
-                      <span>{t.lots.calculateRealisation}</span>
-                    </Button>
-                  </Link>
+                            <Link href={`/lots/${lot.lotCode}`}>
+                              <Button
+                                size="sm"
+                                variant="primary"
+                                className="text-xs py-1 px-2.5 gap-1"
+                              >
+                                <span>{t.lots.viewDetails}</span>
+                                <ArrowRight className="w-3 h-3" />
+                              </Button>
+                            </Link>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
 
-                  <Link href={`/lots/${lot.lotCode}`}>
-                    <Button size="sm" variant="primary" className="text-xs gap-1.5 min-h-[38px]">
-                      <Eye className="w-3.5 h-3.5" />
-                      <span>{t.lots.viewDetails}</span>
-                      <ArrowRight className="w-3 h-3" />
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+            {/* Mobile Card View (<md, 360px - 767px) */}
+            <div className="block md:hidden divide-y divide-[#EBE7DF]">
+              {filteredLots.map((lot) => {
+                const price = lot.expectedPricePerQuintal || lot.expectedPrice || 0;
+                const qty = lot.quantityQuintals || lot.quantity;
+                return (
+                  <div key={lot.id} className="p-4 space-y-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <span className="font-mono font-bold text-xs text-[#1B4332] block">
+                          {lot.lotCode}
+                        </span>
+                        <h4 className="font-heading font-bold text-base text-[#262320]">
+                          {lot.commodity}
+                          {lot.variety && <span className="font-normal text-xs text-[#5A554E]"> • {lot.variety}</span>}
+                        </h4>
+                      </div>
+                      {getStatusBadge(lot.status)}
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 bg-[#F4F1EA] p-2.5 rounded-[6px] text-xs">
+                      <div>
+                        <span className="text-[#5A554E] block">Volume</span>
+                        <span className="font-bold text-[#262320]">
+                          {lot.quantity} {lot.unit}
+                        </span>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-[#5A554E] block">Target Price</span>
+                        <span className="font-heading font-bold text-[#1B4332]">
+                          ₹{price.toLocaleString('en-IN')}{' '}
+                          <span className="text-[10px] font-normal text-[#5A554E]">/ Qtl</span>
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between text-xs text-[#5A554E]">
+                      <div className="flex items-center gap-1">
+                        <MapPin className="w-3.5 h-3.5 shrink-0" />
+                        <span className="truncate max-w-[180px]">{lot.location || lot.locationDistrict}</span>
+                      </div>
+                      <span className="font-semibold text-[#1B4332]">
+                        {lot.expectedGrade || 'Not Graded'}
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 pt-1">
+                      <Link
+                        href={`/calculator?price=${price}&crop=${encodeURIComponent(lot.commodity.toLowerCase())}&quantity=${qty}`}
+                        className="block"
+                      >
+                        <Button size="sm" variant="outline" className="w-full text-xs border-[#D8D2C4] hover:bg-[#F4F1EA] gap-1 justify-center">
+                          <Scale className="w-3 h-3 text-[#1B4332]" />
+                          <span>Net Realisation</span>
+                        </Button>
+                      </Link>
+
+                      <Link href={`/lots/${lot.lotCode}`} className="block">
+                        <Button size="sm" variant="primary" className="w-full text-xs gap-1 justify-center">
+                          <span>{t.lots.viewDetails}</span>
+                          <ArrowRight className="w-3 h-3" />
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
       )}
 
-      {/* CREATE LOT MODAL */}
+      {/* CREATE PRODUCE LOT MODAL */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto animate-fadeIn">
-          <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-gray-200 overflow-hidden my-8">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 overflow-y-auto">
+          <div className="relative w-full max-w-2xl bg-white rounded-[8px] shadow-lg border border-[#D8D2C4] overflow-hidden my-8">
             {/* Modal Header */}
-            <div className="px-6 py-5 bg-gradient-to-r from-emerald-800 to-emerald-900 text-white flex items-center justify-between">
+            <div className="px-6 py-4 bg-[#1B4332] text-white flex items-center justify-between">
               <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-200">
-                    KisanSetu Produce Lot
-                  </span>
-                </div>
-                <h2 className="text-xl font-bold mt-1">{t.lots.createModalTitle}</h2>
+                <span className="text-xs font-bold uppercase tracking-wider text-[#A3E635] block">
+                  KisanSetu Digital Mandi
+                </span>
+                <h2 className="text-lg sm:text-xl font-heading font-bold text-white mt-0.5">
+                  {t.lots.createModalTitle}
+                </h2>
                 <p className="text-xs text-emerald-100">{t.lots.createModalSubtitle}</p>
               </div>
               <button
+                type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="p-2 rounded-full hover:bg-emerald-700/50 text-emerald-100 hover:text-white transition-all"
+                className="p-1.5 rounded-[4px] hover:bg-[#2D6A4F] text-white transition-colors"
+                aria-label="Close modal"
               >
-                <X className="w-6 h-6" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Modal Body */}
-            <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
+            <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto text-sm">
               {/* Success Alert Banner */}
               {formSuccessMessage && (
-                <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-300 text-emerald-900 flex items-center gap-3 animate-fadeIn">
-                  <CheckCircle2 className="w-6 h-6 text-emerald-700 shrink-0" />
-                  <span className="text-sm font-semibold">{formSuccessMessage}</span>
+                <div className="p-4 rounded-[6px] bg-[#EAF2ED] border border-[#B7D5C4] text-[#1B4332] flex items-center gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-[#2D6A4F] shrink-0" />
+                  <span className="font-semibold text-xs sm:text-sm">{formSuccessMessage}</span>
                 </div>
               )}
 
               {/* General Error Banner */}
               {fieldErrors.general && (
-                <div className="p-4 rounded-2xl bg-rose-50 border border-rose-300 text-rose-900 flex items-center gap-3">
-                  <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
-                  <span className="text-sm font-semibold">{fieldErrors.general}</span>
+                <div className="p-4 rounded-[6px] bg-[#FEE2E2] border border-[#FCA5A5] text-[#991B1B] flex items-center gap-3">
+                  <AlertCircle className="w-5 h-5 text-[#991B1B] shrink-0" />
+                  <span className="font-semibold text-xs sm:text-sm">{fieldErrors.general}</span>
                 </div>
               )}
 
-              {/* 1. Crop Selection */}
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-900 flex items-center gap-1">
-                  <span>{t.lots.cropLabel}</span>
-                  <span className="text-rose-500">*</span>
-                </label>
-
-                {/* Quick select pills */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2 max-h-64 overflow-y-auto p-1 rounded-xl border border-gray-100 bg-gray-50/50">
-                  {KEY_CROPS.map((crop) => {
-                    const displayName =
-                      locale === 'mr'
-                        ? crop.nameMr
-                        : locale === 'te'
-                        ? crop.nameTe
-                        : locale === 'hi'
-                        ? crop.nameHi
-                        : crop.nameEn;
-                    const isSelected = formData.crop.toLowerCase() === crop.nameEn.toLowerCase();
-                    return (
-                      <button
-                        key={crop.id}
-                        type="button"
-                        onClick={() => setFormData({ ...formData, crop: crop.nameEn })}
-                        className={`px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 border transition-all ${
-                          isSelected
-                            ? 'bg-emerald-50 border-emerald-600 text-emerald-900 ring-2 ring-emerald-600/20 shadow-xs'
-                            : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-100'
-                        }`}
-                      >
-                        <span className="text-base">{crop.icon}</span>
-                        <span className="truncate">{displayName}</span>
-                      </button>
-                    );
-                  })}
+              {/* SECTION 1: PRODUCE */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 border-b border-[#D8D2C4] pb-1.5">
+                  <Package className="w-4 h-4 text-[#1B4332]" />
+                  <h3 className="font-heading font-bold text-xs uppercase tracking-wider text-[#1B4332]">
+                    1. Produce Information
+                  </h3>
                 </div>
 
-                <input
-                  type="text"
-                  value={formData.crop}
-                  onChange={(e) => setFormData({ ...formData, crop: e.target.value })}
-                  placeholder={t.lots.cropCustomPlaceholder}
-                  className="w-full mt-2 px-4 py-2.5 rounded-xl border border-gray-300 text-sm focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600"
-                />
-                {fieldErrors.crop && (
-                  <p className="text-xs text-rose-600 font-medium">{fieldErrors.crop}</p>
-                )}
-              </div>
-
-              {/* 2. Variety & Quality Grade */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label className="text-sm font-semibold text-gray-800">
-                    {t.lots.varietyLabel}
+                {/* Crop Selection */}
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-[#262320] flex items-center gap-1">
+                    <span>{t.lots.cropLabel}</span>
+                    <span className="text-[#B91C1C]">*</span>
                   </label>
-                  <input
-                    type="text"
-                    value={formData.variety}
-                    onChange={(e) => setFormData({ ...formData, variety: e.target.value })}
-                    placeholder={t.lots.varietyPlaceholder}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm focus:ring-2 focus:ring-emerald-600"
+
+                  {/* Quick select pills */}
+                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 max-h-48 overflow-y-auto p-1.5 rounded-[6px] border border-[#D8D2C4] bg-[#FAFAF8]">
+                    {KEY_CROPS.map((crop) => {
+                      const displayName =
+                        locale === 'mr'
+                          ? crop.nameMr
+                          : locale === 'te'
+                          ? crop.nameTe
+                          : locale === 'hi'
+                          ? crop.nameHi
+                          : crop.nameEn;
+                      const isSelected = formData.crop.toLowerCase() === crop.nameEn.toLowerCase();
+                      return (
+                        <button
+                          key={crop.id}
+                          type="button"
+                          onClick={() => setFormData({ ...formData, crop: crop.nameEn })}
+                          className={`px-2 py-1.5 rounded-[4px] text-xs font-semibold flex items-center gap-1.5 border transition-all ${
+                            isSelected
+                              ? 'bg-[#1B4332] border-[#1B4332] text-white shadow-xs'
+                              : 'bg-white border-[#D8D2C4] text-[#262320] hover:bg-[#F4F1EA]'
+                          }`}
+                        >
+                          <span className="text-sm">{crop.icon}</span>
+                          <span className="truncate">{displayName}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <Input
+                    value={formData.crop}
+                    onChange={(e) => setFormData({ ...formData, crop: e.target.value })}
+                    placeholder={t.lots.cropCustomPlaceholder}
+                    error={fieldErrors.crop}
                   />
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-sm font-semibold text-gray-800">
-                    {t.lots.expectedGradeLabel}
-                  </label>
-                  <select
-                    value={formData.expectedGrade}
-                    onChange={(e) => setFormData({ ...formData, expectedGrade: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm focus:ring-2 focus:ring-emerald-600 bg-white"
-                  >
-                    <option value="Grade A">{t.lots.gradeA}</option>
-                    <option value="Grade B">{t.lots.gradeB}</option>
-                    <option value="Grade C">{t.lots.gradeC}</option>
-                    <option value="Not Graded Yet">{t.lots.gradeNotYet}</option>
-                  </select>
+                {/* Variety & Quantity */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="sm:col-span-1">
+                    <Input
+                      label={t.lots.varietyLabel}
+                      value={formData.variety}
+                      onChange={(e) => setFormData({ ...formData, variety: e.target.value })}
+                      placeholder={t.lots.varietyPlaceholder}
+                    />
+                  </div>
+
+                  <div className="sm:col-span-1">
+                    <Input
+                      type="number"
+                      min="1"
+                      step="any"
+                      label={t.lots.quantityLabel}
+                      value={formData.quantity}
+                      onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
+                      error={fieldErrors.quantity}
+                    />
+                  </div>
+
+                  <div className="sm:col-span-1">
+                    <Select
+                      label={t.lots.unitLabel}
+                      value={formData.unit}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          unit: e.target.value as 'Quintal' | 'Tonnes' | 'Kg',
+                        })
+                      }
+                    >
+                      <option value="Quintal">Quintals (क्विंटल)</option>
+                      <option value="Tonnes">Tonnes (टन)</option>
+                      <option value="Kg">Kilograms (किलो)</option>
+                    </Select>
+                  </div>
                 </div>
               </div>
 
-              {/* 3. Quantity and Unit */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="sm:col-span-2 space-y-1.5">
-                  <label className="text-sm font-bold text-gray-900 flex items-center gap-1">
-                    <span>{t.lots.quantityLabel}</span>
-                    <span className="text-rose-500">*</span>
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    step="any"
-                    value={formData.quantity}
-                    onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm focus:ring-2 focus:ring-emerald-600"
-                  />
-                  {fieldErrors.quantity && (
-                    <p className="text-xs text-rose-600 font-medium">{fieldErrors.quantity}</p>
-                  )}
+              {/* SECTION 2: LOCATION */}
+              <div className="space-y-3 pt-2">
+                <div className="flex items-center gap-2 border-b border-[#D8D2C4] pb-1.5">
+                  <MapPin className="w-4 h-4 text-[#1B4332]" />
+                  <h3 className="font-heading font-bold text-xs uppercase tracking-wider text-[#1B4332]">
+                    2. Pickup Location
+                  </h3>
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-sm font-semibold text-gray-800">
-                    {t.lots.unitLabel}
-                  </label>
-                  <select
-                    value={formData.unit}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        unit: e.target.value as 'Quintal' | 'Tonnes' | 'Kg',
-                      })
-                    }
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm focus:ring-2 focus:ring-emerald-600 bg-white"
-                  >
-                    <option value="Quintal">Quintals (क्विंटल)</option>
-                    <option value="Tonnes">Tonnes (टन)</option>
-                    <option value="Kg">Kilograms (किलो)</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* 4. Expected Price */}
-              <div className="space-y-1.5">
-                <label className="text-sm font-bold text-gray-900 flex items-center gap-1">
-                  <span>{t.lots.expectedPriceLabel}</span>
-                  <span className="text-rose-500">*</span>
-                </label>
-                <div className="relative">
-                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 font-bold text-gray-500">
-                    ₹
-                  </span>
-                  <input
-                    type="number"
-                    min="0"
-                    step="10"
-                    value={formData.expectedPrice}
-                    onChange={(e) => setFormData({ ...formData, expectedPrice: e.target.value })}
-                    className="w-full pl-8 pr-4 py-2.5 rounded-xl border border-gray-300 text-sm focus:ring-2 focus:ring-emerald-600"
-                  />
-                </div>
-                <p className="text-xs text-gray-500">
-                  {t.lots.expectedPricePerQtl}:{' '}
-                  <strong className="text-emerald-800">
-                    ₹
-                    {formData.unit === 'Tonnes'
-                      ? (Number(formData.expectedPrice) / 10 || 0).toFixed(0)
-                      : formData.unit === 'Kg'
-                      ? (Number(formData.expectedPrice) * 100 || 0).toFixed(0)
-                      : Number(formData.expectedPrice) || 0}
-                    /Quintal
-                  </strong>
-                </p>
-                {fieldErrors.expectedPrice && (
-                  <p className="text-xs text-rose-600 font-medium">{fieldErrors.expectedPrice}</p>
-                )}
-              </div>
-
-              {/* 5. Harvest & Availability Dates */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label className="text-sm font-semibold text-gray-800">
-                    {t.lots.harvestDateLabel}
-                  </label>
-                  <input
-                    type="date"
-                    value={formData.harvestDate}
-                    onChange={(e) => setFormData({ ...formData, harvestDate: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm focus:ring-2 focus:ring-emerald-600 bg-white"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-sm font-semibold text-gray-800">
-                    {t.lots.availabilityDateLabel}
-                  </label>
-                  <input
-                    type="date"
-                    value={formData.availabilityDate}
-                    onChange={(e) =>
-                      setFormData({ ...formData, availabilityDate: e.target.value })
-                    }
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm focus:ring-2 focus:ring-emerald-600 bg-white"
-                  />
-                </div>
-              </div>
-
-              {/* 6. District and Farm Address */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label className="text-sm font-bold text-gray-900 flex items-center gap-1">
-                    <span>{t.lots.districtLabel}</span>
-                    <span className="text-rose-500">*</span>
-                  </label>
-                  <select
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <Select
+                    label={t.lots.districtLabel}
                     value={formData.district}
                     onChange={(e) => setFormData({ ...formData, district: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm focus:ring-2 focus:ring-emerald-600 bg-white"
+                    error={fieldErrors.district}
                   >
                     <optgroup label="Maharashtra Districts">
                       {MAHARASHTRA_DISTRICTS.map((d) => (
@@ -726,53 +751,119 @@ function LotsPageContent() {
                         </option>
                       ))}
                     </optgroup>
-                  </select>
-                  {fieldErrors.district && (
-                    <p className="text-xs text-rose-600 font-medium">{fieldErrors.district}</p>
-                  )}
-                </div>
+                  </Select>
 
-                <div className="space-y-1.5">
-                  <label className="text-sm font-bold text-gray-900 flex items-center gap-1">
-                    <span>{t.lots.locationLabel}</span>
-                    <span className="text-rose-500">*</span>
-                  </label>
-                  <input
-                    type="text"
+                  <Input
+                    label={t.lots.locationLabel}
                     value={formData.location}
                     onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                     placeholder={t.lots.locationPlaceholder}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm focus:ring-2 focus:ring-emerald-600"
+                    error={fieldErrors.location}
                   />
-                  {fieldErrors.location && (
-                    <p className="text-xs text-rose-600 font-medium">{fieldErrors.location}</p>
-                  )}
                 </div>
               </div>
 
-              {/* 7. Description / Storage notes */}
-              <div className="space-y-1.5">
-                <label className="text-sm font-semibold text-gray-800">
-                  {t.lots.descriptionLabel}
-                </label>
-                <textarea
-                  rows={2}
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder={t.lots.descriptionPlaceholder}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm focus:ring-2 focus:ring-emerald-600"
-                />
+              {/* SECTION 3: QUALITY & PRICING */}
+              <div className="space-y-3 pt-2">
+                <div className="flex items-center gap-2 border-b border-[#D8D2C4] pb-1.5">
+                  <Sparkles className="w-4 h-4 text-[#1B4332]" />
+                  <h3 className="font-heading font-bold text-xs uppercase tracking-wider text-[#1B4332]">
+                    3. Pricing & Quality Expectation
+                  </h3>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <Input
+                      type="number"
+                      min="0"
+                      step="10"
+                      label={t.lots.expectedPriceLabel}
+                      value={formData.expectedPrice}
+                      onChange={(e) => setFormData({ ...formData, expectedPrice: e.target.value })}
+                      error={fieldErrors.expectedPrice}
+                      helperText={`${t.lots.expectedPricePerQtl}: ₹${
+                        formData.unit === 'Tonnes'
+                          ? (Number(formData.expectedPrice) / 10 || 0).toFixed(0)
+                          : formData.unit === 'Kg'
+                          ? (Number(formData.expectedPrice) * 100 || 0).toFixed(0)
+                          : Number(formData.expectedPrice) || 0
+                      }/Qtl`}
+                    />
+                  </div>
+
+                  <Select
+                    label={t.lots.expectedGradeLabel}
+                    value={formData.expectedGrade}
+                    onChange={(e) => setFormData({ ...formData, expectedGrade: e.target.value })}
+                  >
+                    <option value="Grade A">{t.lots.gradeA}</option>
+                    <option value="Grade B">{t.lots.gradeB}</option>
+                    <option value="Grade C">{t.lots.gradeC}</option>
+                    <option value="Not Graded Yet">{t.lots.gradeNotYet}</option>
+                  </Select>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-[#262320] mb-1.5">
+                      {t.lots.harvestDateLabel}
+                    </label>
+                    <input
+                      type="date"
+                      value={formData.harvestDate}
+                      onChange={(e) => setFormData({ ...formData, harvestDate: e.target.value })}
+                      className="w-full px-3.5 py-2.5 text-sm text-[#262320] bg-white border border-[#D8D2C4] rounded-[4px] min-h-[44px] focus:outline-none focus:border-[#1B4332]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-[#262320] mb-1.5">
+                      {t.lots.availabilityDateLabel}
+                    </label>
+                    <input
+                      type="date"
+                      value={formData.availabilityDate}
+                      onChange={(e) =>
+                        setFormData({ ...formData, availabilityDate: e.target.value })
+                      }
+                      className="w-full px-3.5 py-2.5 text-sm text-[#262320] bg-white border border-[#D8D2C4] rounded-[4px] min-h-[44px] focus:outline-none focus:border-[#1B4332]"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* SECTION 4: STORAGE & NOTES */}
+              <div className="space-y-3 pt-2">
+                <div className="flex items-center gap-2 border-b border-[#D8D2C4] pb-1.5">
+                  <FileText className="w-4 h-4 text-[#1B4332]" />
+                  <h3 className="font-heading font-bold text-xs uppercase tracking-wider text-[#1B4332]">
+                    4. Storage & Notes
+                  </h3>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-[#262320] mb-1.5">
+                    {t.lots.descriptionLabel}
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    placeholder={t.lots.descriptionPlaceholder}
+                    className="w-full px-3.5 py-2.5 text-sm text-[#262320] bg-white border border-[#D8D2C4] rounded-[4px] focus:outline-none focus:border-[#1B4332]"
+                  />
+                </div>
               </div>
             </div>
 
             {/* Modal Footer / Action Buttons */}
-            <div className="p-5 bg-gray-50 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-end gap-3">
+            <div className="p-4 bg-[#F4F1EA] border-t border-[#D8D2C4] flex flex-col sm:flex-row items-center justify-end gap-2.5">
               <Button
                 type="button"
                 variant="ghost"
                 onClick={() => setIsModalOpen(false)}
                 disabled={isSubmitting}
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto text-xs"
               >
                 {t.lots.cancelBtn}
               </Button>
@@ -782,9 +873,9 @@ function LotsPageContent() {
                 variant="outline"
                 onClick={() => handleSaveLot('DRAFT')}
                 disabled={isSubmitting}
-                className="w-full sm:w-auto text-amber-800 border-amber-600 hover:bg-amber-50"
+                className="w-full sm:w-auto text-xs border-[#B45309] text-[#B45309] hover:bg-[#FFFBEB]"
               >
-                {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : null}
+                {isSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-1" /> : null}
                 <span>{t.lots.saveDraftBtn}</span>
               </Button>
 
@@ -793,12 +884,12 @@ function LotsPageContent() {
                 variant="primary"
                 onClick={() => handleSaveLot('AVAILABLE')}
                 disabled={isSubmitting}
-                className="w-full sm:w-auto gap-2 shadow-sm"
+                className="w-full sm:w-auto text-xs gap-1.5"
               >
                 {isSubmitting ? (
-                  <Loader2 className="w-4 h-4 animate-spin mr-1" />
+                  <Loader2 className="w-3.5 h-3.5 animate-spin mr-1" />
                 ) : (
-                  <CheckCircle2 className="w-4 h-4" />
+                  <CheckCircle2 className="w-3.5 h-3.5" />
                 )}
                 <span>{t.lots.publishBtn}</span>
               </Button>
@@ -806,7 +897,7 @@ function LotsPageContent() {
           </div>
         </div>
       )}
-    </div>
+    </PageContainer>
   );
 }
 
@@ -815,7 +906,7 @@ export default function LotsPage() {
     <Suspense
       fallback={
         <div className="py-20 text-center">
-          <Loader2 className="w-8 h-8 text-emerald-700 animate-spin mx-auto" />
+          <Loader2 className="w-8 h-8 text-[#1B4332] animate-spin mx-auto" />
         </div>
       }
     >
@@ -823,4 +914,3 @@ export default function LotsPage() {
     </Suspense>
   );
 }
-
