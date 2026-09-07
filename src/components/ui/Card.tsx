@@ -12,15 +12,15 @@ export function Card({
   ...props
 }: CardProps) {
   const variants = {
-    default: 'bg-white border border-gray-200 shadow-sm text-gray-900',
-    muted: 'bg-gray-50 border border-gray-200 text-gray-800',
-    accent: 'bg-emerald-50/70 border border-emerald-200 text-emerald-950',
-    highlight: 'bg-amber-50/70 border border-amber-200 text-amber-950',
+    default: 'bg-white border border-[#D8D2C4] text-[#262320] shadow-none',
+    muted: 'bg-[#ECE7DE] border border-[#D8D2C4] text-[#262320]',
+    accent: 'bg-[#EAF2ED] border border-[#B7D5C4] text-[#1B4332]',
+    highlight: 'bg-[#FEF3C7] border border-[#FDE68A] text-[#92400E]',
   };
 
   return (
     <div
-      className={cn('rounded-2xl p-6 transition-all duration-200', variants[variant], className)}
+      className={cn('rounded-[8px] p-5 sm:p-6 transition-colors duration-150', variants[variant], className)}
       {...props}
     >
       {children}
@@ -47,7 +47,7 @@ export function CardTitle({
 }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h3
-      className={cn('text-xl font-bold tracking-tight text-gray-900', className)}
+      className={cn('font-heading text-lg sm:text-xl font-bold tracking-tight text-[#262320]', className)}
       {...props}
     >
       {children}
@@ -61,7 +61,7 @@ export function CardDescription({
   ...props
 }: React.HTMLAttributes<HTMLParagraphElement>) {
   return (
-    <p className={cn('text-sm text-gray-600', className)} {...props}>
+    <p className={cn('text-sm text-[#5A554E] leading-relaxed', className)} {...props}>
       {children}
     </p>
   );
@@ -86,7 +86,7 @@ export function CardFooter({
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn('flex items-center pt-4 border-t border-gray-100 mt-4', className)}
+      className={cn('flex items-center pt-4 border-t border-[#D8D2C4]/70 mt-4', className)}
       {...props}
     >
       {children}

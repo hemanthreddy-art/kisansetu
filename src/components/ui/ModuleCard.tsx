@@ -25,22 +25,22 @@ export function ModuleCard({
 }: ModuleCardProps) {
   return (
     <Link href={href} className="group block">
-      <Card className="h-full hover:shadow-md hover:border-emerald-300 transition-all">
+      <Card className="h-full hover:border-[#1B4332] transition-colors">
         <CardHeader>
           <div className="flex items-center justify-between gap-2">
-            <div className="p-3 bg-emerald-50 rounded-xl text-emerald-800 group-hover:bg-emerald-100 transition-colors">
+            <div className="p-2.5 bg-[#EAF2ED] rounded-[4px] text-[#1B4332] group-hover:bg-[#1B4332] group-hover:text-white transition-colors">
               {icon}
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="text-xs font-mono text-gray-400 font-medium">{code}</span>
+              <span className="text-[11px] font-mono text-[#7C766D] font-medium">{code}</span>
               <Badge variant={badgeVariant}>{status}</Badge>
             </div>
           </div>
-          <CardTitle className="mt-3 group-hover:text-emerald-800 transition-colors text-lg flex items-center justify-between">
+          <CardTitle className="mt-3 group-hover:text-[#1B4332] transition-colors text-base sm:text-lg flex items-center justify-between">
             <span>{title}</span>
-            <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all text-emerald-700" />
+            <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all text-[#1B4332]" />
           </CardTitle>
-          <CardDescription className="line-clamp-2 mt-1">
+          <CardDescription className="line-clamp-2 mt-1.5 text-xs sm:text-sm">
             {description}
           </CardDescription>
         </CardHeader>

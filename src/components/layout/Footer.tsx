@@ -47,32 +47,32 @@ export function Footer() {
           {/* Col 2: Producer & Buyer Hubs */}
           <div className="space-y-3">
             <h4 className="text-sm font-bold uppercase tracking-wider text-white">
-              Ecosystem Hubs
+              {t.nav.ecosystemPortals}
             </h4>
             <ul className="space-y-2 text-sm text-gray-400">
               <li>
                 <Link href="/farmer" className="hover:text-emerald-400 transition-colors">
-                  Farmer & FPO Portal
+                  {t.nav.farmer}
                 </Link>
               </li>
               <li>
                 <Link href="/buyer" className="hover:text-emerald-400 transition-colors">
-                  Buyer Demand Matching
+                  {t.nav.buyer}
                 </Link>
               </li>
               <li>
                 <Link href="/transporter" className="hover:text-emerald-400 transition-colors">
-                  Logistics & Transporter
+                  {t.nav.transporter}
                 </Link>
               </li>
               <li>
                 <Link href="/inspector" className="hover:text-emerald-400 transition-colors">
-                  Quality Inspector Desk
+                  {t.nav.inspector}
                 </Link>
               </li>
               <li>
                 <Link href="/admin" className="hover:text-emerald-400 transition-colors">
-                  State Admin Portal
+                  {t.nav.admin}
                 </Link>
               </li>
             </ul>
@@ -81,32 +81,32 @@ export function Footer() {
           {/* Col 3: Intelligence & Core USP */}
           <div className="space-y-3">
             <h4 className="text-sm font-bold uppercase tracking-wider text-white">
-              Market Discovery
+              {t.nav.markets}
             </h4>
             <ul className="space-y-2 text-sm text-gray-400">
               <li>
                 <Link href="/markets" className="hover:text-emerald-400 transition-colors">
-                  APMC Mandi Intelligence
+                  {t.nav.markets}
                 </Link>
               </li>
               <li>
                 <Link href="/calculator" className="hover:text-amber-400 transition-colors font-semibold">
-                  Net Realisation Engine
+                  {t.nav.calculator}
                 </Link>
               </li>
               <li>
                 <Link href="/lots" className="hover:text-emerald-400 transition-colors">
-                  Digital Produce Lots
+                  {t.nav.lots}
                 </Link>
               </li>
               <li>
                 <Link href="/transactions" className="hover:text-emerald-400 transition-colors">
-                  Escrow & Transactions
+                  {t.nav.transactions}
                 </Link>
               </li>
               <li>
                 <Link href="/disputes" className="hover:text-emerald-400 transition-colors">
-                  Evidence-Based Grievance
+                  {t.nav.disputes}
                 </Link>
               </li>
             </ul>

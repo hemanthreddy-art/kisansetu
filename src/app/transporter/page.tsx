@@ -5,19 +5,24 @@ import { useLanguage } from '@/i18n/LanguageContext';
 import { Card, CardHeader, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
+import { PageContainer } from '@/components/layout/PageContainer';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { VerificationBadge } from '@/components/ui/VerificationBadge';
+import { ReputationCluster } from '@/components/ui/ReputationCluster';
+import { formatINR } from '@/lib/utils';
 import {
   Truck,
   Gauge,
   Building2,
-  BadgeCheck,
   AlertCircle,
   CheckCircle2,
   Clock,
   Calendar,
   Loader2,
   XCircle,
-  Star,
   RefreshCw,
+  Info,
+  Snowflake,
 } from 'lucide-react';
 
 interface TransporterVehicleItem {
@@ -120,7 +125,7 @@ const DEMO_TRANSPORTERS_META = [
   },
 ];
 
-type ActiveTab = 'fleet' | 'requests' | 'dispatches';
+type ActiveTab = 'requests' | 'dispatches' | 'fleet';
 
 function TransporterHubContent() {
   const { t } = useLanguage();
@@ -136,12 +141,12 @@ function TransporterHubContent() {
 
   // Active transporter profile resolution
   const activeProfile = transporters.find(
-    (t) =>
-      t.businessName.toLowerCase().includes(activeKey.toLowerCase().replace('_', ' ')) ||
-      (activeKey === 'SAHYADRI_LOGISTICS' && t.businessName.includes('Sahyadri')) ||
-      (activeKey === 'MAHAKISAN_FREIGHT' && t.businessName.includes('MahaKisan')) ||
-      (activeKey === 'GODAVARI_COLDCHAIN' && t.businessName.includes('Godavari')) ||
-      (activeKey === 'GRAMIN_VAHAN' && t.businessName.includes('Gramin'))
+    (tr) =>
+      tr.businessName.toLowerCase().includes(activeKey.toLowerCase().replace('_', ' ')) ||
+      (activeKey === 'SAHYADRI_LOGISTICS' && tr.businessName.includes('Sahyadri')) ||
+      (activeKey === 'MAHAKISAN_FREIGHT' && tr.businessName.includes('MahaKisan')) ||
+      (activeKey === 'GODAVARI_COLDCHAIN' && tr.businessName.includes('Godavari')) ||
+      (activeKey === 'GRAMIN_VAHAN' && tr.businessName.includes('Gramin'))
   ) || transporters[0];
 
   const activeMeta =
@@ -227,50 +232,43 @@ function TransporterHubContent() {
   };
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-6xl space-y-8 animate-fadeIn">
-      {/* Top Breadcrumb / Title Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-gray-200">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <Badge variant="purple">Module T • Phase 5</Badge>
-            <span className="text-xs text-gray-500 font-mono font-bold">
-              {t.transport.roleBadge}
-            </span>
-          </div>
-          <h1 className="text-3xl font-black text-gray-900 tracking-tight flex items-center gap-3">
-            <Truck className="w-8 h-8 text-purple-700" />
-            <span>{t.transport.hubTitle}</span>
-          </h1>
-          <p className="text-gray-600 text-sm max-w-3xl">
-            {t.transport.hubSubtitle}
-          </p>
-        </div>
-
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={fetchData}
-          disabled={loading}
-          className="gap-2 text-xs border-purple-200 text-purple-900 hover:bg-purple-50 self-start sm:self-center"
-        >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-          <span>Refresh Network</span>
-        </Button>
-      </div>
+    <PageContainer maxWidth="7xl" className="py-6 space-y-6 animate-fadeIn">
+      {/* Page Header */}
+      <PageHeader
+        title={t.transport.hubTitle}
+        description={t.transport.hubSubtitle}
+        badge={
+          <Badge variant="gray">
+            {t.transport.roleBadge}
+          </Badge>
+        }
+        action={
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={fetchData}
+            disabled={loading}
+            className="gap-2 text-xs border-[#D8D2C4] text-[#1B4332] hover:bg-[#F4F1EA]"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+            <span>{t.transport.refreshNetwork}</span>
+          </Button>
+        }
+      />
 
       {/* Demo Transporter Switcher */}
-      <div className="bg-purple-50/70 border border-purple-200 rounded-3xl p-4 sm:p-5 shadow-sm space-y-3">
+      <div className="bg-[#FDFBF7] border border-[#D8D2C4] rounded-lg p-4 sm:p-5 shadow-none space-y-3">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-bold uppercase tracking-wider text-purple-900 flex items-center gap-1.5">
-            <Building2 className="w-4 h-4 text-purple-700" />
+          <span className="text-xs font-bold uppercase tracking-wider text-[#1B4332] flex items-center gap-1.5 font-heading">
+            <Building2 className="w-4 h-4 text-[#1B4332]" />
             <span>{t.transport.demoTransporterSelector}</span>
           </span>
-          <span className="text-[11px] text-purple-800 font-mono bg-white px-2.5 py-0.5 rounded-full border border-purple-200">
-            Fleet Profile Selector
+          <span className="text-[11px] text-[#5A5243] font-mono bg-[#F4F1EA] px-2.5 py-0.5 rounded border border-[#D8D2C4]">
+            [Prototype Demo Profiles]
           </span>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
           {DEMO_TRANSPORTERS_META.map((meta) => {
             const isSelected = activeKey === meta.key;
             return (
@@ -278,16 +276,16 @@ function TransporterHubContent() {
                 key={meta.key}
                 type="button"
                 onClick={() => setActiveKey(meta.key)}
-                className={`text-left p-3 rounded-2xl border transition-all text-xs space-y-1 ${
+                className={`text-left p-3 rounded-lg border transition-all text-xs space-y-1 ${
                   isSelected
-                    ? 'bg-purple-900 text-white border-purple-900 shadow-md ring-2 ring-purple-600/30'
-                    : 'bg-white text-gray-800 border-purple-100 hover:border-purple-300 hover:bg-purple-50/50'
+                    ? 'bg-[#1B4332] text-[#FDFBF7] border-[#1B4332] shadow-sm'
+                    : 'bg-white text-[#262320] border-[#D8D2C4] hover:border-[#1B4332]/50 hover:bg-[#F4F1EA]/50'
                 }`}
               >
-                <div className="font-bold truncate">{meta.businessName.split('[')[0]}</div>
-                <div className="flex items-center justify-between text-[10px] opacity-85">
+                <div className="font-bold truncate font-heading">{meta.businessName}</div>
+                <div className="flex items-center justify-between text-[11px] opacity-85">
                   <span>{meta.operationalDistricts.split(',')[0]}</span>
-                  <span>★ {meta.ratingScore.toFixed(1)}</span>
+                  <span className="font-mono">★ {meta.ratingScore.toFixed(1)}</span>
                 </div>
               </button>
             );
@@ -295,85 +293,63 @@ function TransporterHubContent() {
         </div>
       </div>
 
-      {/* Active Transporter Identity Card */}
-      <div className="bg-white border border-gray-200 rounded-3xl p-6 shadow-sm space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="space-y-1">
+      {/* Active Transporter Identity Card with Strict Trust Decoupling */}
+      <div className="bg-white border border-[#D8D2C4] rounded-lg p-5 sm:p-6 shadow-none space-y-4">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div className="space-y-2">
             <div className="flex items-center gap-2.5 flex-wrap">
-              <h2 className="text-2xl font-black text-gray-900">
+              <h2 className="text-xl sm:text-2xl font-black font-heading text-[#262320]">
                 {activeProfile?.businessName || activeMeta.businessName}
               </h2>
-              {activeMeta.verified ? (
-                <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">
-                  <BadgeCheck className="w-4 h-4 text-emerald-700" />
-                  {t.transport.verifiedPermit}
-                </span>
-              ) : (
-                <span className="inline-flex items-center gap-1 text-xs font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-lg">
-                  <AlertCircle className="w-4 h-4 text-amber-700" />
-                  {t.transport.unverifiedPermit}
-                </span>
-              )}
+              <VerificationBadge
+                type={activeMeta.verified ? 'identity' : 'provisional'}
+                customLabel={activeMeta.verified ? t.transport.verifiedPermit : t.transport.unverifiedPermit}
+              />
             </div>
-            <div className="text-xs text-gray-500 flex items-center gap-2 flex-wrap">
-              <span>Contact: {activeMeta.representative} ({activeMeta.phone})</span>
-              <span>•</span>
-              <span className="font-mono">RTO Permit: {activeMeta.commercialLicenseNo}</span>
-              <span>•</span>
-              <span>{t.transport.operationalDistrictsLabel}: {activeMeta.operationalDistricts}</span>
+            <div className="text-xs text-[#5A5243] flex items-center gap-2 flex-wrap">
+              <span>Contact: <strong className="text-[#262320]">{activeMeta.representative}</strong> ({activeMeta.phone})</span>
+              <span className="text-[#D8D2C4]">•</span>
+              <span className="font-mono">{t.transport.rtoPermit}: <strong className="text-[#262320]">{activeMeta.commercialLicenseNo}</strong></span>
+              <span className="text-[#D8D2C4]">•</span>
+              <span>{t.transport.operationalDistrictsLabel}: <strong className="text-[#262320]">{activeMeta.operationalDistricts}</strong></span>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="bg-purple-50 border border-purple-100 rounded-2xl px-4 py-2 text-center">
-              <span className="text-[10px] text-purple-700 uppercase font-bold block">
-                {t.transport.fleetRating}
-              </span>
-              <span className="text-lg font-black text-purple-900 flex items-center justify-center gap-1">
-                <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
-                {activeMeta.ratingScore.toFixed(1)}
-              </span>
-            </div>
-            <div className="bg-emerald-50 border border-emerald-100 rounded-2xl px-4 py-2 text-center">
-              <span className="text-[10px] text-emerald-700 uppercase font-bold block">
-                {t.transport.onTimeRate}
-              </span>
-              <span className="text-lg font-black text-emerald-900">
-                {activeMeta.onTimeDeliveryPercent}%
-              </span>
-            </div>
-            <div className="bg-gray-50 border border-gray-200 rounded-2xl px-4 py-2 text-center">
-              <span className="text-[10px] text-gray-600 uppercase font-bold block">
-                {t.transport.tripsCompleted}
-              </span>
-              <span className="text-lg font-black text-gray-900">
-                {activeMeta.completedTripsCount}
-              </span>
-            </div>
+          {/* Reputation Metrics (Strictly Decoupled from Permit Verification) */}
+          <div className="flex items-center gap-2 self-start lg:self-center">
+            <ReputationCluster
+              ratingScore={activeMeta.ratingScore}
+              completedDealsCount={activeMeta.completedTripsCount}
+              onTimeDeliveryPercent={activeMeta.onTimeDeliveryPercent}
+              size="md"
+            />
           </div>
         </div>
 
-        {/* SIH Transparent Cost Formula Banner */}
-        <div className="p-3.5 rounded-2xl bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-100 text-xs text-purple-900 space-y-1">
-          <div className="flex items-center gap-2 font-bold text-purple-950">
-            <Gauge className="w-4 h-4 text-purple-700" />
+        {/* Transparent Cost Formula Banner */}
+        <div className="p-3.5 rounded-lg bg-[#F4F1EA] border border-[#D8D2C4] text-xs text-[#262320] space-y-1.5">
+          <div className="flex items-center gap-2 font-bold text-[#1B4332] font-heading">
+            <Gauge className="w-4 h-4 text-[#1B4332]" />
             <span>{t.transport.formulaTitle}</span>
           </div>
-          <p className="font-mono text-[11px] bg-white/70 p-2 rounded-xl border border-purple-200/50">
+          <p className="font-mono text-[11px] bg-white p-2 rounded border border-[#D8D2C4] text-[#1B4332] font-bold">
             {t.transport.formulaText}
+          </p>
+          <p className="text-[11px] text-[#5A5243] leading-relaxed">
+            {t.transport.netRealisationNote}
           </p>
         </div>
       </div>
 
       {/* Tabs Bar */}
-      <div className="flex items-center gap-2 border-b border-gray-200 pb-1">
+      <div className="flex items-center gap-2 border-b border-[#D8D2C4] pb-1 overflow-x-auto">
         <button
           type="button"
           onClick={() => setActiveTab('requests')}
-          className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 ${
+          className={`px-4 py-2.5 rounded-lg font-bold text-xs sm:text-sm transition-all flex items-center gap-2 min-h-[44px] ${
             activeTab === 'requests'
-              ? 'bg-purple-900 text-white shadow-sm'
-              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+              ? 'bg-[#1B4332] text-[#FDFBF7] shadow-sm'
+              : 'text-[#5A5243] hover:text-[#262320] hover:bg-[#F4F1EA]'
           }`}
         >
           <Clock className="w-4 h-4" />
@@ -383,10 +359,10 @@ function TransporterHubContent() {
         <button
           type="button"
           onClick={() => setActiveTab('dispatches')}
-          className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 ${
+          className={`px-4 py-2.5 rounded-lg font-bold text-xs sm:text-sm transition-all flex items-center gap-2 min-h-[44px] ${
             activeTab === 'dispatches'
-              ? 'bg-purple-900 text-white shadow-sm'
-              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+              ? 'bg-[#1B4332] text-[#FDFBF7] shadow-sm'
+              : 'text-[#5A5243] hover:text-[#262320] hover:bg-[#F4F1EA]'
           }`}
         >
           <Truck className="w-4 h-4" />
@@ -396,10 +372,10 @@ function TransporterHubContent() {
         <button
           type="button"
           onClick={() => setActiveTab('fleet')}
-          className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 ${
+          className={`px-4 py-2.5 rounded-lg font-bold text-xs sm:text-sm transition-all flex items-center gap-2 min-h-[44px] ${
             activeTab === 'fleet'
-              ? 'bg-purple-900 text-white shadow-sm'
-              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+              ? 'bg-[#1B4332] text-[#FDFBF7] shadow-sm'
+              : 'text-[#5A5243] hover:text-[#262320] hover:bg-[#F4F1EA]'
           }`}
         >
           <Building2 className="w-4 h-4" />
@@ -409,13 +385,13 @@ function TransporterHubContent() {
 
       {/* Action Notification Banners */}
       {actionSuccess && (
-        <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs flex items-center gap-2 animate-fadeIn">
+        <div className="p-3 bg-emerald-50 border border-[#B7D5C4] text-[#1B4332] rounded-lg text-xs flex items-center gap-2 animate-fadeIn">
           <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
           <span>{actionSuccess}</span>
         </div>
       )}
       {actionError && (
-        <div className="p-3 bg-red-50 border border-red-200 text-red-800 rounded-xl text-xs flex items-center gap-2 animate-fadeIn">
+        <div className="p-3 bg-red-50 border border-red-200 text-red-800 rounded-lg text-xs flex items-center gap-2 animate-fadeIn">
           <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
           <span>{actionError}</span>
         </div>
@@ -428,23 +404,23 @@ function TransporterHubContent() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-bold text-gray-900">
+              <h3 className="text-base sm:text-lg font-bold font-heading text-[#262320]">
                 {t.transport.incomingRequestsTitle}
               </h3>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-[#5A5243]">
                 {t.transport.incomingRequestsSubtitle}
               </p>
             </div>
-            <span className="text-xs font-mono font-bold text-purple-900 bg-purple-50 px-3 py-1 rounded-full border border-purple-200">
+            <span className="text-xs font-mono font-bold text-[#1B4332] bg-[#F4F1EA] px-3 py-1 rounded border border-[#D8D2C4]">
               {pendingRequests.length} Pending
             </span>
           </div>
 
           {pendingRequests.length === 0 ? (
-            <Card className="border-dashed p-8 text-center text-gray-500 text-xs space-y-2">
-              <Truck className="w-8 h-8 text-gray-400 mx-auto" />
-              <p className="font-semibold text-gray-700">{t.transport.noRequestsReceived}</p>
-              <p className="text-gray-400">
+            <Card className="border-dashed border-[#D8D2C4] p-8 text-center text-[#5A5243] text-xs space-y-2 rounded-lg bg-white shadow-none">
+              <Truck className="w-8 h-8 text-[#8C827A] mx-auto" />
+              <p className="font-semibold text-[#262320]">{t.transport.noRequestsReceived}</p>
+              <p className="text-[#8C827A]">
                 When farmers or FPOs select your fleet vehicles on their lot details page, dispatch requests will appear here.
               </p>
             </Card>
@@ -453,83 +429,83 @@ function TransporterHubContent() {
               {pendingRequests.map((req) => (
                 <Card
                   key={req.id}
-                  className="border-gray-200 hover:border-purple-300 transition-all shadow-sm flex flex-col justify-between"
+                  className="border-[#D8D2C4] hover:border-[#1B4332]/40 transition-all shadow-none flex flex-col justify-between rounded-lg bg-white"
                 >
                   <div>
-                    <CardHeader className="pb-3 border-b border-gray-100">
+                    <CardHeader className="pb-3 border-b border-[#D8D2C4]/60">
                       <div className="flex items-start justify-between gap-2">
                         <div>
                           <div className="flex items-center gap-2">
-                            <span className="font-bold text-gray-900 text-base">
+                            <span className="font-bold text-[#262320] text-base font-heading">
                               {req.lot?.commodity} ({req.quantityQuintals || req.lot?.quantityQuintals || 'Lot'} Qtl)
                             </span>
-                            <Badge variant="amber" className="text-[11px] font-bold">
+                            <Badge variant="amber" className="text-[10px] font-bold">
                               {t.transport.statusRequested}
                             </Badge>
                           </div>
-                          <span className="text-xs font-mono text-gray-500">
+                          <span className="text-xs font-mono text-[#8C827A]">
                             LOT #{req.lot?.lotCode || req.lotId}
                           </span>
                         </div>
 
                         <div className="text-right">
-                          <span className="text-lg font-black text-purple-900 block">
-                            ₹{Number(req.estimatedCost).toLocaleString('en-IN')}
+                          <span className="text-lg font-black text-[#1B4332] block font-heading">
+                            {formatINR(req.estimatedCost)}
                           </span>
-                          <span className="text-[10px] text-gray-500">Gross Freight</span>
+                          <span className="text-[10px] text-[#5A5243]">Estimated Freight</span>
                         </div>
                       </div>
                     </CardHeader>
 
                     <CardContent className="pt-3 text-xs space-y-3">
-                      <div className="grid grid-cols-2 gap-2 text-[11px] bg-gray-50 p-2.5 rounded-xl border border-gray-100">
+                      <div className="grid grid-cols-2 gap-2 text-[11px] bg-[#F4F1EA] p-2.5 rounded-lg border border-[#D8D2C4]/60">
                         <div>
-                          <span className="text-gray-400 block">{t.transport.pickupLocationLabel}:</span>
-                          <span className="font-bold text-gray-800">{req.pickupLocation}</span>
+                          <span className="text-[#5A5243] block">{t.transport.pickupLocationLabel}:</span>
+                          <span className="font-bold text-[#262320]">{req.pickupLocation}</span>
                         </div>
                         <div>
-                          <span className="text-gray-400 block">{t.transport.dropLocationLabel}:</span>
-                          <span className="font-bold text-gray-800">{req.dropLocation}</span>
+                          <span className="text-[#5A5243] block">{t.transport.dropLocationLabel}:</span>
+                          <span className="font-bold text-[#262320]">{req.dropLocation}</span>
                         </div>
                         <div>
-                          <span className="text-gray-400 block">{t.transport.distanceLabel}:</span>
-                          <span className="font-bold text-gray-800">{req.distanceKm} km</span>
+                          <span className="text-[#5A5243] block">{t.transport.distanceLabel}:</span>
+                          <span className="font-bold text-[#262320]">{req.distanceKm} km</span>
                         </div>
                         <div>
-                          <span className="text-gray-400 block">{t.transport.tripsLabel}:</span>
-                          <span className="font-bold text-gray-800">{req.estimatedTrips || 1} Trip(s)</span>
+                          <span className="text-[#5A5243] block">{t.transport.tripsLabel}:</span>
+                          <span className="font-bold text-[#262320]">{req.estimatedTrips || 1} Trip(s)</span>
                         </div>
                       </div>
 
                       {req.vehicle && (
-                        <div className="text-[11px] text-purple-900 bg-purple-50 p-2 rounded-lg border border-purple-100 flex items-center justify-between">
+                        <div className="text-[11px] text-[#1B4332] bg-emerald-50/50 p-2 rounded-lg border border-[#B7D5C4] flex items-center justify-between">
                           <span>Requested Vehicle: <b>{req.vehicle.vehicleName}</b></span>
-                          <span className="font-mono text-[10px]">{req.vehicle.registrationNumber}</span>
+                          <span className="font-mono text-[10px] text-[#5A5243]">{req.vehicle.registrationNumber}</span>
                         </div>
                       )}
 
                       {req.scheduledPickup && (
-                        <div className="text-[11px] text-gray-600 flex items-center gap-1.5">
-                          <Calendar className="w-3.5 h-3.5 text-purple-700" />
-                          <span>{t.transport.scheduledPickupLabel}: <b>{new Date(req.scheduledPickup).toLocaleDateString()}</b></span>
+                        <div className="text-[11px] text-[#5A5243] flex items-center gap-1.5">
+                          <Calendar className="w-3.5 h-3.5 text-[#1B4332]" />
+                          <span>{t.transport.scheduledPickupLabel}: <strong className="text-[#262320]">{new Date(req.scheduledPickup).toLocaleDateString()}</strong></span>
                         </div>
                       )}
 
                       {req.notes && (
-                        <p className="text-[11px] text-gray-500 italic bg-white p-2 rounded-lg border border-gray-200">
+                        <p className="text-[11px] text-[#5A5243] italic bg-[#FDFBF7] p-2 rounded-lg border border-[#D8D2C4]">
                           &quot;{req.notes}&quot;
                         </p>
                       )}
                     </CardContent>
                   </div>
 
-                  <div className="p-4 pt-0 flex items-center gap-2 justify-end border-t border-gray-100">
+                  <div className="p-4 pt-0 flex items-center gap-2 justify-end border-t border-[#D8D2C4]/60">
                     <Button
                       variant="outline"
                       size="sm"
                       disabled={actionReqId === req.id}
                       onClick={() => handleUpdateStatus(req.id, 'REJECTED')}
-                      className="gap-1.5 text-xs text-red-700 border-red-200 hover:bg-red-50"
+                      className="gap-1.5 text-xs text-red-700 border-red-200 hover:bg-red-50 min-h-[36px]"
                     >
                       <XCircle className="w-3.5 h-3.5" />
                       <span>{t.transport.declineRequestBtn}</span>
@@ -540,7 +516,7 @@ function TransporterHubContent() {
                       size="sm"
                       disabled={actionReqId === req.id}
                       onClick={() => handleUpdateStatus(req.id, 'ACCEPTED')}
-                      className="gap-1.5 text-xs bg-purple-700 hover:bg-purple-800 text-white shadow-sm"
+                      className="gap-1.5 text-xs bg-[#1B4332] hover:bg-[#1B4332]/90 text-white min-h-[36px]"
                     >
                       {actionReqId === req.id ? (
                         <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -564,19 +540,19 @@ function TransporterHubContent() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-bold text-gray-900">
+              <h3 className="text-base sm:text-lg font-bold font-heading text-[#262320]">
                 {t.transport.activeDispatchesTitle}
               </h3>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-[#5A5243]">
                 {t.transport.activeDispatchesSubtitle}
               </p>
             </div>
           </div>
 
           {activeOrPastDispatches.length === 0 ? (
-            <Card className="border-dashed p-8 text-center text-gray-500 text-xs space-y-2">
-              <Truck className="w-8 h-8 text-gray-400 mx-auto" />
-              <p className="font-semibold text-gray-700">{t.transport.noDispatchesFound}</p>
+            <Card className="border-dashed border-[#D8D2C4] p-8 text-center text-[#5A5243] text-xs space-y-2 rounded-lg bg-white shadow-none">
+              <Truck className="w-8 h-8 text-[#8C827A] mx-auto" />
+              <p className="font-semibold text-[#262320]">{t.transport.noDispatchesFound}</p>
             </Card>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -599,15 +575,15 @@ function TransporterHubContent() {
                 }
 
                 return (
-                  <Card key={req.id} className="border-gray-200 shadow-sm flex flex-col justify-between">
+                  <Card key={req.id} className="border-[#D8D2C4] shadow-none flex flex-col justify-between rounded-lg bg-white">
                     <div>
-                      <CardHeader className="pb-3 border-b border-gray-100">
+                      <CardHeader className="pb-3 border-b border-[#D8D2C4]/60">
                         <div className="flex items-start justify-between gap-2">
                           <div>
-                            <span className="font-bold text-gray-900 text-sm block">
+                            <span className="font-bold text-[#262320] text-sm block font-heading">
                               {req.lot?.commodity} ({req.quantityQuintals || req.lot?.quantityQuintals || ''} Qtl)
                             </span>
-                            <span className="text-xs font-mono text-gray-500">
+                            <span className="text-xs font-mono text-[#8C827A]">
                               REQ #{req.id.slice(-8).toUpperCase()}
                             </span>
                           </div>
@@ -618,49 +594,49 @@ function TransporterHubContent() {
                       </CardHeader>
 
                       <CardContent className="pt-3 text-xs space-y-2.5">
-                        <div className="grid grid-cols-2 gap-2 text-[11px] bg-gray-50 p-2.5 rounded-xl border border-gray-100">
+                        <div className="grid grid-cols-2 gap-2 text-[11px] bg-[#F4F1EA] p-2.5 rounded-lg border border-[#D8D2C4]/60">
                           <div>
-                            <span className="text-gray-400 block">{t.transport.pickupLocationLabel}:</span>
-                            <span className="font-bold text-gray-800">{req.pickupLocation}</span>
+                            <span className="text-[#5A5243] block">{t.transport.pickupLocationLabel}:</span>
+                            <span className="font-bold text-[#262320]">{req.pickupLocation}</span>
                           </div>
                           <div>
-                            <span className="text-gray-400 block">{t.transport.dropLocationLabel}:</span>
-                            <span className="font-bold text-gray-800">{req.dropLocation}</span>
+                            <span className="text-[#5A5243] block">{t.transport.dropLocationLabel}:</span>
+                            <span className="font-bold text-[#262320]">{req.dropLocation}</span>
                           </div>
                           <div>
-                            <span className="text-gray-400 block">Corridor:</span>
-                            <span className="font-bold text-gray-800">{req.distanceKm} km • {req.estimatedTrips || 1} Trip(s)</span>
+                            <span className="text-[#5A5243] block">Corridor:</span>
+                            <span className="font-bold text-[#262320]">{req.distanceKm} km • {req.estimatedTrips || 1} Trip(s)</span>
                           </div>
                           <div>
-                            <span className="text-gray-400 block">Earnings:</span>
-                            <span className="font-black text-purple-900">₹{Number(req.estimatedCost).toLocaleString('en-IN')}</span>
+                            <span className="text-[#5A5243] block">Earnings:</span>
+                            <span className="font-black text-[#1B4332] font-heading">{formatINR(req.estimatedCost)}</span>
                           </div>
                         </div>
 
                         {req.scheduledPickup && (
-                          <div className="text-[11px] text-gray-600 flex items-center gap-1.5">
-                            <Calendar className="w-3.5 h-3.5 text-purple-700" />
-                            <span>{t.transport.scheduledPickupLabel}: <b>{new Date(req.scheduledPickup).toLocaleDateString()}</b></span>
+                          <div className="text-[11px] text-[#5A5243] flex items-center gap-1.5">
+                            <Calendar className="w-3.5 h-3.5 text-[#1B4332]" />
+                            <span>{t.transport.scheduledPickupLabel}: <strong className="text-[#262320]">{new Date(req.scheduledPickup).toLocaleDateString()}</strong></span>
                           </div>
                         )}
 
                         {req.actualDelivery && (
-                          <div className="text-[11px] text-emerald-800 bg-emerald-50 p-2 rounded-xl border border-emerald-200 flex items-center gap-1.5">
+                          <div className="text-[11px] text-[#1B4332] bg-emerald-50 p-2 rounded-lg border border-[#B7D5C4] flex items-center gap-1.5">
                             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                            <span>{t.transport.actualDeliveryLabel}: <b>{new Date(req.actualDelivery).toLocaleDateString()}</b></span>
+                            <span>{t.transport.actualDeliveryLabel}: <strong>{new Date(req.actualDelivery).toLocaleDateString()}</strong></span>
                           </div>
                         )}
                       </CardContent>
                     </div>
 
-                    <div className="p-4 pt-0 border-t border-gray-100 flex items-center justify-end gap-2">
+                    <div className="p-4 pt-0 border-t border-[#D8D2C4]/60 flex items-center justify-end gap-2">
                       {req.status === 'ACCEPTED' && (
                         <Button
                           variant="primary"
                           size="sm"
                           disabled={actionReqId === req.id}
                           onClick={() => handleUpdateStatus(req.id, 'IN_TRANSIT')}
-                          className="gap-2 text-xs bg-indigo-700 hover:bg-indigo-800 text-white"
+                          className="gap-2 text-xs bg-[#1B4332] hover:bg-[#1B4332]/90 text-white min-h-[36px]"
                         >
                           <Truck className="w-3.5 h-3.5" />
                           <span>{t.transport.markInTransitBtn}</span>
@@ -673,7 +649,7 @@ function TransporterHubContent() {
                           size="sm"
                           disabled={actionReqId === req.id}
                           onClick={() => handleUpdateStatus(req.id, 'DELIVERED')}
-                          className="gap-2 text-xs bg-emerald-700 hover:bg-emerald-800 text-white"
+                          className="gap-2 text-xs bg-emerald-700 hover:bg-emerald-800 text-white min-h-[36px]"
                         >
                           <CheckCircle2 className="w-3.5 h-3.5" />
                           <span>{t.transport.markDeliveredBtn}</span>
@@ -681,9 +657,9 @@ function TransporterHubContent() {
                       )}
 
                       {req.status === 'DELIVERED' && (
-                        <span className="text-xs font-bold text-emerald-700 flex items-center gap-1">
+                        <span className="text-xs font-bold text-[#1B4332] flex items-center gap-1">
                           <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                          <span>Transit Completed</span>
+                          <span>{t.transport.transitCompleted}</span>
                         </span>
                       )}
                     </div>
@@ -692,6 +668,14 @@ function TransporterHubContent() {
               })}
             </div>
           )}
+
+          {/* Honest Tracking Notice */}
+          <div className="p-3 bg-[#FDFBF7] border border-[#D8D2C4] rounded-lg text-xs text-[#5A5243] flex items-start gap-2">
+            <Info className="w-4 h-4 text-[#1B4332] shrink-0 mt-0.5" />
+            <p>
+              <strong>{t.transport.corridorMilestoneTracking}:</strong> Dispatches record status milestones confirmed by the transporter, driver, or receiving mandi gate receipt. No continuous GPS or simulated live vehicle maps are displayed.
+            </p>
+          </div>
         </div>
       )}
 
@@ -702,10 +686,10 @@ function TransporterHubContent() {
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h3 className="text-lg font-bold text-gray-900">
+              <h3 className="text-base sm:text-lg font-bold font-heading text-[#262320]">
                 {t.transport.fleetOverviewTitle}
               </h3>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-[#5A5243]">
                 {t.transport.fleetOverviewSubtitle}
               </p>
             </div>
@@ -713,7 +697,7 @@ function TransporterHubContent() {
             <Button
               variant="outline"
               size="sm"
-              className="gap-2 text-xs border-purple-300 text-purple-900 hover:bg-purple-50 self-start sm:self-center"
+              className="gap-2 text-xs border-[#D8D2C4] text-[#1B4332] hover:bg-[#F4F1EA] self-start sm:self-center"
               onClick={() => alert('Demo prototype fleet is pre-configured with RTO permits for testing.')}
             >
               <Truck className="w-3.5 h-3.5" />
@@ -723,15 +707,15 @@ function TransporterHubContent() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {(activeProfile?.vehicles || []).map((vehicle: TransporterVehicleItem) => (
-              <Card key={vehicle.id} className="border-gray-200 shadow-sm flex flex-col justify-between">
+              <Card key={vehicle.id} className="border-[#D8D2C4] shadow-none flex flex-col justify-between rounded-lg bg-white">
                 <div>
-                  <CardHeader className="pb-3 border-b border-gray-100">
+                  <CardHeader className="pb-3 border-b border-[#D8D2C4]/60">
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <span className="font-bold text-gray-900 text-sm block">
+                        <span className="font-bold text-[#262320] text-sm block font-heading">
                           {vehicle.vehicleName || vehicle.vehicleType}
                         </span>
-                        <span className="text-[11px] font-mono text-gray-500">
+                        <span className="text-[11px] font-mono text-[#8C827A]">
                           {vehicle.registrationNumber}
                         </span>
                       </div>
@@ -748,26 +732,27 @@ function TransporterHubContent() {
                   </CardHeader>
 
                   <CardContent className="pt-3 text-xs space-y-2.5">
-                    <div className="grid grid-cols-2 gap-2 text-[11px]">
+                    <div className="grid grid-cols-2 gap-2 text-[11px] bg-[#F4F1EA] p-2.5 rounded-lg border border-[#D8D2C4]/60">
                       <div>
-                        <span className="text-gray-400 block">{t.transport.capacityLabel}:</span>
-                        <span className="font-bold text-gray-800">
+                        <span className="text-[#5A5243] block">{t.transport.capacityLabel}:</span>
+                        <span className="font-bold text-[#262320]">
                           {vehicle.capacityQuintals || vehicle.capacityTonnes * 10} Qtl ({vehicle.capacityTonnes} Tonnes)
                         </span>
                       </div>
                       <div>
-                        <span className="text-gray-400 block">{t.transport.ratePerKmLabel}:</span>
-                        <span className="font-black text-purple-900 text-sm">
+                        <span className="text-[#5A5243] block">{t.transport.ratePerKmLabel}:</span>
+                        <span className="font-black text-[#1B4332] text-sm font-heading">
                           ₹{vehicle.ratePerKm || 35}/km
                         </span>
                       </div>
                     </div>
 
-                    <div className="pt-2 border-t border-gray-100 flex items-center justify-between">
-                      <span className="text-[11px] text-gray-500">{t.transport.coldChainLabel}:</span>
+                    <div className="pt-2 border-t border-[#D8D2C4]/60 flex items-center justify-between">
+                      <span className="text-[11px] text-[#5A5243]">{t.transport.coldChainLabel}:</span>
                       {vehicle.isRefrigerated ? (
-                        <Badge variant="blue" className="text-[10px]">
-                          {t.transport.refrigeratedBadge}
+                        <Badge variant="blue" className="text-[10px] flex items-center gap-1">
+                          <Snowflake className="w-3 h-3" />
+                          <span>{t.transport.refrigeratedBadge}</span>
                         </Badge>
                       ) : (
                         <Badge variant="gray" className="text-[10px]">
@@ -779,8 +764,8 @@ function TransporterHubContent() {
                 </div>
 
                 <div className="p-4 pt-0">
-                  <div className="p-2.5 bg-gray-50 rounded-xl border border-gray-100 text-[11px] text-gray-600">
-                    Calculated in Phase 5 Matching Engine • Feeds Phase 6 Net Realisation
+                  <div className="p-2.5 bg-[#FDFBF7] rounded-lg border border-[#D8D2C4] text-[11px] text-[#5A5243]">
+                    Corridor Rates: Dynamic lookup based on vehicle capacity & roundtrip economics
                   </div>
                 </div>
               </Card>
@@ -788,7 +773,7 @@ function TransporterHubContent() {
           </div>
         </div>
       )}
-    </div>
+    </PageContainer>
   );
 }
 
@@ -797,7 +782,7 @@ export default function TransporterNetworkPage() {
     <Suspense
       fallback={
         <div className="py-24 text-center">
-          <Loader2 className="w-10 h-10 text-purple-700 animate-spin mx-auto" />
+          <Loader2 className="w-10 h-10 text-[#1B4332] animate-spin mx-auto" />
         </div>
       }
     >
