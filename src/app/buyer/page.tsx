@@ -1,38 +1,42 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, Suspense } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useLanguage } from '@/i18n/LanguageContext';
+import { PageContainer } from '@/components/layout/PageContainer';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { MAHARASHTRA_DISTRICTS, ANDHRA_PRADESH_DISTRICTS } from '@/lib/constants';
+import { Input } from '@/components/ui/Input';
+import { Select } from '@/components/ui/Select';
+import { VerificationBadge } from '@/components/ui/VerificationBadge';
+import { ReputationCluster } from '@/components/ui/ReputationCluster';
+import { MAHARASHTRA_DISTRICTS, ANDHRA_PRADESH_DISTRICTS, KEY_CROPS } from '@/lib/constants';
+import { formatINR } from '@/lib/utils';
 import {
   Store,
   ShoppingCart,
   ShieldCheck,
   Building2,
-  BadgeCheck,
-  AlertCircle,
   PlusCircle,
   Package,
   Send,
-  Star,
-  CheckCircle2,
   MapPin,
-  TrendingUp,
   X,
   Loader2,
   Filter,
   ArrowRight,
-  Award,
-  Camera,
   Ban,
   CreditCard,
   Truck,
+  Scale,
+  Search,
+  CheckCircle2,
+  AlertCircle,
 } from 'lucide-react';
-import { ProduceLot } from '@/types';
+import { ProduceLot, DemandMatchResult } from '@/types';
 
 // Prototype Demo Buyers Configuration
 const DEMO_BUYERS = [
@@ -137,6 +141,12 @@ interface BuyerDemandItem {
   description?: string | null;
   status: string;
   createdAt: string;
+  reputation?: {
+    ratingScore: number;
+    completedTradesCount: number;
+    paymentPunctualityPercent: number;
+    reliabilityScore: number;
+  };
 }
 
 interface BuyerOfferItem {
@@ -164,7 +174,6 @@ interface LotWithQuality extends ProduceLot {
   officialGrade?: string;
   certificateNumber?: string;
   isPhysicallyVerified?: boolean;
-  matchScore?: number;
 }
 
 interface PurchaseTransactionItem {
@@ -196,7 +205,7 @@ function BuyerPortalContent() {
   const [selectedBuyerKey, setSelectedBuyerKey] = useState<DemoBuyerKey>('ABC_FOODS');
   const activeBuyer = DEMO_BUYERS.find((b) => b.key === selectedBuyerKey) || DEMO_BUYERS[0];
 
-  // Active Tab: 'demands' | 'create_demand' | 'browse_lots' | 'my_offers'
+  // Active Tab: 'demands' | 'create_demand' | 'browse_lots' | 'my_offers' | 'purchases'
   const initialTab = (searchParams?.get('tab') as string) || 'demands';
   const [activeTab, setActiveTab] = useState<'demands' | 'create_demand' | 'browse_lots' | 'my_offers' | 'purchases'>(
     initialTab === 'create'
@@ -215,13 +224,19 @@ function BuyerPortalContent() {
   const [lots, setLots] = useState<LotWithQuality[]>([]);
   const [offers, setOffers] = useState<BuyerOfferItem[]>([]);
   const [purchases, setPurchases] = useState<PurchaseTransactionItem[]>([]);
+  const [lotMatchesMap, setLotMatchesMap] = useState<Record<string, DemandMatchResult[]>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Demand Filter in Browse Lots
+  // Demands Filter Controls (Tab 1)
+  const [demandSearchQuery, setDemandSearchQuery] = useState('');
+  const [demandCropFilter, setDemandCropFilter] = useState('ALL');
+  const [demandDistrictFilter, setDemandDistrictFilter] = useState('ALL');
+
+  // Demand Filter in Browse Lots (Tab 3)
   const [selectedDemandFilter, setSelectedDemandFilter] = useState<string>('ALL');
 
-  // Create Demand Form State
+  // Create Demand Form State (Tab 2)
   const [demandForm, setDemandForm] = useState({
     commodity: 'Onion',
     variety: 'Nashik Red',
@@ -249,8 +264,8 @@ function BuyerPortalContent() {
     quantityQuintals: '',
     proposedPickupDate: '',
     deliveryTerms: 'Farm-gate pickup arranged by buyer',
-    paymentTerms: 'Bank escrow release within 24h of physical receipt',
-    notes: 'Binding offer backed by buyer escrow guarantee.',
+    paymentTerms: 'Payment tracking upon weighbridge delivery and physical inspection',
+    notes: 'Digital purchase offer subject to official quality inspection.',
     validityDays: 7,
   });
   const [offerSubmitting, setOfferSubmitting] = useState(false);
@@ -287,11 +302,11 @@ function BuyerPortalContent() {
         }
       }
 
+      let loadedLots: LotWithQuality[] = [];
       if (resLots.ok) {
         const data = await resLots.json();
         if (data.success && Array.isArray(data.data)) {
-          // For each lot, check if quality info is populated or augment
-          const mappedLots: LotWithQuality[] = data.data.map((l: ProduceLot) => {
+          loadedLots = data.data.map((l: ProduceLot) => {
             const hasPhys = l.physicalVerifications && l.physicalVerifications.length > 0;
             const latestPhys = hasPhys ? l.physicalVerifications![0] : null;
             const hasAi = l.aiAssessments && l.aiAssessments.length > 0;
@@ -309,7 +324,7 @@ function BuyerPortalContent() {
               certificateNumber: latestPhys?.certificateNumber || undefined,
             };
           });
-          setLots(mappedLots);
+          setLots(loadedLots);
         }
       }
 
@@ -318,6 +333,31 @@ function BuyerPortalContent() {
         if (data.success && Array.isArray(data.offers)) {
           setOffers(data.offers);
         }
+      }
+
+      // Fetch matches from existing matching engine for loaded lots
+      if (loadedLots.length > 0) {
+        const matchPromises = loadedLots.map(async (lot) => {
+          try {
+            const res = await fetch(`/api/lots/${encodeURIComponent(lot.id)}/matches`);
+            if (res.ok) {
+              const matchData = await res.json();
+              if (matchData.success && Array.isArray(matchData.matches)) {
+                return { lotId: lot.id, matches: matchData.matches as DemandMatchResult[] };
+              }
+            }
+          } catch {
+            // Non-blocking for individual lot matches
+          }
+          return { lotId: lot.id, matches: [] };
+        });
+
+        const results = await Promise.all(matchPromises);
+        const map: Record<string, DemandMatchResult[]> = {};
+        results.forEach((r) => {
+          map[r.lotId] = r.matches;
+        });
+        setLotMatchesMap(map);
       }
     } catch (err: unknown) {
       console.error('Failed to load buyer portal data:', err);
@@ -423,8 +463,8 @@ function BuyerPortalContent() {
         ? new Date(lot.readyForPickupDate).toISOString().split('T')[0]
         : '',
       deliveryTerms: 'Farm-gate pickup arranged by buyer',
-      paymentTerms: 'Bank escrow release within 24h of physical receipt',
-      notes: `Binding offer from ${activeBuyer.companyName}. Subject to official quality inspection.`,
+      paymentTerms: 'Payment tracking upon weighbridge delivery and physical inspection',
+      notes: `Digital offer from ${activeBuyer.companyName}. Subject to official quality inspection.`,
       validityDays: 7,
     });
     setIsMakeOfferOpen(true);
@@ -507,51 +547,68 @@ function BuyerPortalContent() {
     }
   };
 
-  // Filter lots based on selected demand or general criteria
+  // Filtered Demands for Tab 1
+  const filteredDemands = useMemo(() => {
+    return demands.filter((d) => {
+      if (demandCropFilter !== 'ALL' && !d.commodity.toLowerCase().includes(demandCropFilter.toLowerCase())) {
+        return false;
+      }
+      if (demandDistrictFilter !== 'ALL' && d.destinationDistrict !== demandDistrictFilter) {
+        return false;
+      }
+      if (demandSearchQuery.trim()) {
+        const q = demandSearchQuery.toLowerCase();
+        const matchesName = d.companyName.toLowerCase().includes(q);
+        const matchesCrop = d.commodity.toLowerCase().includes(q);
+        const matchesDistrict = d.destinationDistrict.toLowerCase().includes(q);
+        if (!matchesName && !matchesCrop && !matchesDistrict) return false;
+      }
+      return true;
+    });
+  }, [demands, demandCropFilter, demandDistrictFilter, demandSearchQuery]);
+
+  // Active Demands List for Tab 3 filter
   const activeDemandsList = demands.filter((d) => d.status === 'ACTIVE');
-  const filteredLots = lots.filter((lot) => {
-    if (selectedDemandFilter === 'ALL') return true;
-    const matchedDemand = demands.find((d) => d.id === selectedDemandFilter);
-    if (!matchedDemand) return true;
-    return (
-      lot.commodity.toLowerCase().includes(matchedDemand.commodity.toLowerCase()) ||
-      matchedDemand.commodity.toLowerCase().includes(lot.commodity.toLowerCase())
-    );
-  });
+
+  // Filtered Lots for Tab 3 (Matching Lots)
+  const filteredLots = useMemo(() => {
+    return lots.filter((lot) => {
+      if (selectedDemandFilter === 'ALL') return true;
+      const matchedDemand = demands.find((d) => d.id === selectedDemandFilter);
+      if (!matchedDemand) return true;
+      return (
+        lot.commodity.toLowerCase().includes(matchedDemand.commodity.toLowerCase()) ||
+        matchedDemand.commodity.toLowerCase().includes(lot.commodity.toLowerCase())
+      );
+    });
+  }, [lots, selectedDemandFilter, demands]);
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-6xl space-y-8 animate-fadeIn">
+    <PageContainer className="py-6 sm:py-8 space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-gray-200">
-        <div className="space-y-1">
+      <PageHeader
+        title={t.buyerMatching.hubTitle}
+        description={t.buyerMatching.hubSubtitle}
+        badge={
           <div className="flex items-center gap-2">
-            <Badge variant="amber">Buyer Procurement</Badge>
-            <span className="text-xs text-gray-500 font-mono font-bold">PROCUREMENT HUB</span>
-            {loading && <Loader2 className="w-4 h-4 animate-spin text-amber-600 ml-2" />}
+            <Badge variant="amber">Buyer Marketplace</Badge>
+            {loading && <Loader2 className="w-3.5 h-3.5 animate-spin text-[#1B4332]" />}
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight flex items-center gap-3">
-            <Store className="w-8 h-8 text-amber-700 shrink-0" />
-            <span>{t.buyerMatching.hubTitle}</span>
-          </h1>
-          <p className="text-gray-600 text-xs sm:text-sm max-w-3xl">
-            {t.buyerMatching.hubSubtitle}
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2">
+        }
+        action={
           <Button
             variant="primary"
             onClick={() => setActiveTab('create_demand')}
-            className="gap-2 text-xs shadow-sm bg-amber-700 hover:bg-amber-800 text-white"
+            className="gap-2 text-xs bg-[#1B4332] hover:bg-[#2D6A4F] text-white shadow-none"
           >
             <PlusCircle className="w-4 h-4" />
             <span>{t.buyerMatching.tabCreateDemand}</span>
           </Button>
-        </div>
-      </div>
+        }
+      />
 
       {error && (
-        <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 text-xs flex items-center gap-3">
+        <div className="p-4 rounded-[8px] bg-rose-50 border border-rose-200 text-rose-900 text-xs flex items-center gap-3">
           <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
           <span className="font-semibold">{error}</span>
         </div>
@@ -560,43 +617,39 @@ function BuyerPortalContent() {
       {/* ========================================================================= */}
       {/* DEMO BUYER SWITCHER & PROFILE CARD */}
       {/* ========================================================================= */}
-      <Card className="border-amber-200 bg-gradient-to-br from-amber-50/60 via-white to-amber-50/30 shadow-sm">
-        <CardHeader className="pb-3 border-b border-amber-100">
+      <Card className="border-[#D8D2C4] bg-[#F4F1EA] shadow-none">
+        <CardHeader className="pb-3 border-b border-[#D8D2C4]">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <span className="text-[11px] font-bold text-amber-900 uppercase tracking-wider block">
+              <span className="text-[11px] font-bold text-[#1B4332] uppercase tracking-wider block font-heading">
                 {t.buyerMatching.activeBuyerProfile}
               </span>
-              <div className="flex items-center gap-2 flex-wrap mt-0.5">
-                <h2 className="text-xl font-black text-gray-900">{activeBuyer.companyName}</h2>
+              <div className="flex items-center gap-2.5 flex-wrap mt-1">
+                <h2 className="text-xl font-heading font-black text-[#262320]">
+                  {activeBuyer.companyName}
+                </h2>
                 {activeBuyer.verified ? (
-                  <Badge variant="emerald" className="gap-1 text-xs py-0.5">
-                    <BadgeCheck className="w-3.5 h-3.5 text-emerald-700" />
-                    <span>{t.buyerMatching.verifiedCredentials}</span>
-                  </Badge>
+                  <VerificationBadge type="identity" customLabel={t.buyerMatching.verifiedCredentials} />
                 ) : (
-                  <Badge variant="amber" className="gap-1 text-xs py-0.5">
-                    <AlertCircle className="w-3.5 h-3.5 text-amber-700" />
-                    <span>{t.buyerMatching.unverifiedCredentials}</span>
-                  </Badge>
+                  <VerificationBadge type="provisional" customLabel={t.buyerMatching.unverifiedCredentials} />
                 )}
               </div>
-              <p className="text-xs text-gray-600 mt-0.5">
+              <p className="text-xs text-[#5A554E] mt-1 font-body">
                 Representative: <strong>{activeBuyer.name}</strong> • {activeBuyer.buyerType} • {activeBuyer.location}
               </p>
             </div>
 
             {/* Enterprise Switcher Dropdown */}
-            <div className="flex items-center gap-2 shrink-0 bg-white p-2 rounded-2xl border border-amber-200 shadow-sm">
-              <Building2 className="w-4 h-4 text-amber-700 shrink-0 ml-1" />
-              <label htmlFor="buyer-select" className="text-xs font-semibold text-gray-700 whitespace-nowrap">
+            <div className="flex items-center gap-2 shrink-0 bg-white p-2 rounded-[6px] border border-[#D8D2C4]">
+              <Building2 className="w-4 h-4 text-[#1B4332] shrink-0 ml-1" />
+              <label htmlFor="buyer-select" className="text-xs font-semibold text-[#262320] whitespace-nowrap">
                 {t.buyerMatching.switchBuyer}:
               </label>
               <select
                 id="buyer-select"
                 value={selectedBuyerKey}
                 onChange={(e) => handleSwitchBuyer(e.target.value as DemoBuyerKey)}
-                className="text-xs font-bold text-gray-900 bg-transparent border-0 focus:ring-0 cursor-pointer"
+                className="text-xs font-bold text-[#1B4332] bg-transparent border-0 focus:ring-0 cursor-pointer"
               >
                 {DEMO_BUYERS.map((b) => (
                   <option key={b.key} value={b.key}>
@@ -611,67 +664,50 @@ function BuyerPortalContent() {
         <CardContent className="pt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
             {/* Column 1: Credential Verification (Govt/Tax/APMC) */}
-            <div className="bg-white/80 p-3 rounded-2xl border border-gray-200 space-y-2">
+            <div className="bg-white p-3.5 rounded-[6px] border border-[#D8D2C4] space-y-2">
               <div className="flex items-center justify-between">
-                <span className="font-bold text-gray-900 text-xs flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-emerald-700" />
-                  <span>Credential & Identity Verification</span>
+                <span className="font-bold text-[#262320] text-xs flex items-center gap-1.5 font-heading">
+                  <ShieldCheck className="w-4 h-4 text-[#1B4332]" />
+                  <span>Credential & License Verification</span>
                 </span>
-                <span className="text-[10px] text-gray-400 font-mono">MSAMB / APMC</span>
+                <span className="text-[10px] text-[#5A554E] font-mono">MSAMB / APMC</span>
               </div>
-              <p className="text-gray-500 text-[11px] leading-relaxed">
+              <p className="text-[#5A554E] text-[11px] leading-relaxed">
                 {activeBuyer.verified
                   ? t.buyerMatching.credentialDetails
                   : 'Prototype testing entity with unverified documentation.'}
               </p>
               <div className="pt-1 grid grid-cols-2 gap-2 text-[11px]">
                 <div>
-                  <span className="text-gray-400 block">GSTIN:</span>
-                  <span className="font-mono font-bold text-gray-800">{activeBuyer.gstin}</span>
+                  <span className="text-[#5A554E] block">GSTIN:</span>
+                  <span className="font-mono font-bold text-[#262320]">{activeBuyer.gstin}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block">Trade License:</span>
-                  <span className="font-mono font-bold text-gray-800">{activeBuyer.tradeLicense}</span>
+                  <span className="text-[#5A554E] block">Trade License:</span>
+                  <span className="font-mono font-bold text-[#262320]">{activeBuyer.tradeLicense}</span>
                 </div>
               </div>
             </div>
 
             {/* Column 2: Commercial Trade Performance (Separate Reputation!) */}
-            <div className="bg-white/80 p-3 rounded-2xl border border-gray-200 space-y-2">
+            <div className="bg-white p-3.5 rounded-[6px] border border-[#D8D2C4] space-y-2">
               <div className="flex items-center justify-between">
-                <span className="font-bold text-gray-900 text-xs flex items-center gap-1.5">
-                  <TrendingUp className="w-4 h-4 text-sky-700" />
+                <span className="font-bold text-[#262320] text-xs flex items-center gap-1.5 font-heading">
+                  <Store className="w-4 h-4 text-[#B45309]" />
                   <span>{t.buyerMatching.reputationMetrics}</span>
                 </span>
-                <span className="text-[10px] text-gray-400 font-mono">COMMERCIAL AUDIT</span>
+                <span className="text-[10px] text-[#5A554E] font-mono">TRADE AUDIT</span>
               </div>
-              <div className="grid grid-cols-3 gap-2 text-center pt-1">
-                <div className="bg-gray-50 p-2 rounded-xl">
-                  <span className="text-[10px] text-gray-500 uppercase font-semibold block">
-                    {t.buyerMatching.rating}
-                  </span>
-                  <span className="font-black text-sm text-amber-600 flex items-center justify-center gap-0.5 mt-0.5">
-                    <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
-                    {activeBuyer.reputation.ratingScore}
-                  </span>
-                </div>
-                <div className="bg-gray-50 p-2 rounded-xl">
-                  <span className="text-[10px] text-gray-500 uppercase font-semibold block">
-                    {t.buyerMatching.tradesCompleted}
-                  </span>
-                  <span className="font-black text-sm text-gray-900 mt-0.5 block">
-                    {activeBuyer.reputation.completedTradesCount}
-                  </span>
-                </div>
-                <div className="bg-gray-50 p-2 rounded-xl">
-                  <span className="text-[10px] text-gray-500 uppercase font-semibold block">
-                    {t.buyerMatching.paymentPunctualityScore}
-                  </span>
-                  <span className="font-black text-sm text-emerald-700 mt-0.5 block">
-                    {activeBuyer.reputation.paymentPunctualityPercent}%
-                  </span>
-                </div>
+              <div className="pt-1">
+                <ReputationCluster
+                  ratingScore={activeBuyer.reputation.ratingScore}
+                  completedDealsCount={activeBuyer.reputation.completedTradesCount}
+                  onTimeDeliveryPercent={activeBuyer.reputation.paymentPunctualityPercent}
+                />
               </div>
+              <p className="text-[#5A554E] text-[11px] leading-relaxed pt-1">
+                Performance metrics track on-time order acceptance, weighbridge reconciliation, and payment execution.
+              </p>
             </div>
           </div>
         </CardContent>
@@ -680,20 +716,21 @@ function BuyerPortalContent() {
       {/* ========================================================================= */}
       {/* NAVIGATION TABS */}
       {/* ========================================================================= */}
-      <div className="flex items-center gap-2 border-b border-gray-200 overflow-x-auto pb-1 text-sm">
+      <div className="flex items-center gap-1.5 border-b border-[#D8D2C4] overflow-x-auto pb-1 text-xs">
         <button
+          type="button"
           onClick={() => setActiveTab('demands')}
-          className={`px-4 py-2.5 rounded-xl font-bold flex items-center gap-2 transition-all shrink-0 ${
+          className={`px-3.5 py-2.5 rounded-[4px] font-bold flex items-center gap-2 transition-all shrink-0 min-h-[44px] ${
             activeTab === 'demands'
-              ? 'bg-amber-700 text-white shadow-sm'
-              : 'text-gray-600 hover:bg-gray-100'
+              ? 'bg-[#1B4332] text-white'
+              : 'text-[#262320] bg-white border border-[#D8D2C4] hover:bg-[#F4F1EA]'
           }`}
         >
           <ShoppingCart className="w-4 h-4" />
           <span>{t.buyerMatching.tabActiveDemands}</span>
           <span
-            className={`text-xs px-2 py-0.5 rounded-full font-mono ${
-              activeTab === 'demands' ? 'bg-amber-800 text-amber-100' : 'bg-gray-200 text-gray-700'
+            className={`text-[11px] px-1.5 py-0.2 rounded-[3px] font-mono font-bold ${
+              activeTab === 'demands' ? 'bg-[#2D6A4F] text-white' : 'bg-[#EAE6DF] text-[#262320]'
             }`}
           >
             {demands.length}
@@ -701,11 +738,12 @@ function BuyerPortalContent() {
         </button>
 
         <button
+          type="button"
           onClick={() => setActiveTab('create_demand')}
-          className={`px-4 py-2.5 rounded-xl font-bold flex items-center gap-2 transition-all shrink-0 ${
+          className={`px-3.5 py-2.5 rounded-[4px] font-bold flex items-center gap-2 transition-all shrink-0 min-h-[44px] ${
             activeTab === 'create_demand'
-              ? 'bg-amber-700 text-white shadow-sm'
-              : 'text-gray-600 hover:bg-gray-100'
+              ? 'bg-[#1B4332] text-white'
+              : 'text-[#262320] bg-white border border-[#D8D2C4] hover:bg-[#F4F1EA]'
           }`}
         >
           <PlusCircle className="w-4 h-4" />
@@ -713,18 +751,19 @@ function BuyerPortalContent() {
         </button>
 
         <button
+          type="button"
           onClick={() => setActiveTab('browse_lots')}
-          className={`px-4 py-2.5 rounded-xl font-bold flex items-center gap-2 transition-all shrink-0 ${
+          className={`px-3.5 py-2.5 rounded-[4px] font-bold flex items-center gap-2 transition-all shrink-0 min-h-[44px] ${
             activeTab === 'browse_lots'
-              ? 'bg-amber-700 text-white shadow-sm'
-              : 'text-gray-600 hover:bg-gray-100'
+              ? 'bg-[#1B4332] text-white'
+              : 'text-[#262320] bg-white border border-[#D8D2C4] hover:bg-[#F4F1EA]'
           }`}
         >
           <Package className="w-4 h-4" />
           <span>{t.buyerMatching.tabBrowseLots}</span>
           <span
-            className={`text-xs px-2 py-0.5 rounded-full font-mono ${
-              activeTab === 'browse_lots' ? 'bg-amber-800 text-amber-100' : 'bg-gray-200 text-gray-700'
+            className={`text-[11px] px-1.5 py-0.2 rounded-[3px] font-mono font-bold ${
+              activeTab === 'browse_lots' ? 'bg-[#2D6A4F] text-white' : 'bg-[#EAE6DF] text-[#262320]'
             }`}
           >
             {lots.length}
@@ -732,18 +771,19 @@ function BuyerPortalContent() {
         </button>
 
         <button
+          type="button"
           onClick={() => setActiveTab('my_offers')}
-          className={`px-4 py-2.5 rounded-xl font-bold flex items-center gap-2 transition-all shrink-0 ${
+          className={`px-3.5 py-2.5 rounded-[4px] font-bold flex items-center gap-2 transition-all shrink-0 min-h-[44px] ${
             activeTab === 'my_offers'
-              ? 'bg-amber-700 text-white shadow-sm'
-              : 'text-gray-600 hover:bg-gray-100'
+              ? 'bg-[#1B4332] text-white'
+              : 'text-[#262320] bg-white border border-[#D8D2C4] hover:bg-[#F4F1EA]'
           }`}
         >
           <Send className="w-4 h-4" />
           <span>{t.buyerMatching.tabMyOffers}</span>
           <span
-            className={`text-xs px-2 py-0.5 rounded-full font-mono ${
-              activeTab === 'my_offers' ? 'bg-amber-800 text-amber-100' : 'bg-gray-200 text-gray-700'
+            className={`text-[11px] px-1.5 py-0.2 rounded-[3px] font-mono font-bold ${
+              activeTab === 'my_offers' ? 'bg-[#2D6A4F] text-white' : 'bg-[#EAE6DF] text-[#262320]'
             }`}
           >
             {offers.length}
@@ -751,18 +791,19 @@ function BuyerPortalContent() {
         </button>
 
         <button
+          type="button"
           onClick={() => setActiveTab('purchases')}
-          className={`px-4 py-2.5 rounded-xl font-bold flex items-center gap-2 transition-all shrink-0 ${
+          className={`px-3.5 py-2.5 rounded-[4px] font-bold flex items-center gap-2 transition-all shrink-0 min-h-[44px] ${
             activeTab === 'purchases'
-              ? 'bg-amber-700 text-white shadow-sm'
-              : 'text-gray-600 hover:bg-gray-100'
+              ? 'bg-[#1B4332] text-white'
+              : 'text-[#262320] bg-white border border-[#D8D2C4] hover:bg-[#F4F1EA]'
           }`}
         >
           <CreditCard className="w-4 h-4" />
           <span>{t.transactions.myTransactionsTitle}</span>
           <span
-            className={`text-xs px-2 py-0.5 rounded-full font-mono ${
-              activeTab === 'purchases' ? 'bg-amber-800 text-amber-100' : 'bg-gray-200 text-gray-700'
+            className={`text-[11px] px-1.5 py-0.2 rounded-[3px] font-mono font-bold ${
+              activeTab === 'purchases' ? 'bg-[#2D6A4F] text-white' : 'bg-[#EAE6DF] text-[#262320]'
             }`}
           >
             {purchases.length}
@@ -771,47 +812,106 @@ function BuyerPortalContent() {
       </div>
 
       {/* ========================================================================= */}
-      {/* TAB 1: ACTIVE DEMANDS LIST */}
+      {/* TAB 1: ACTIVE DEMANDS LIST / DEMAND DISCOVERY */}
       {/* ========================================================================= */}
       {activeTab === 'demands' && (
         <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h2 className="text-xl font-bold text-gray-900">
+              <h2 className="text-lg font-heading font-black text-[#262320]">
                 {t.buyerMatching.demandsCount}: {demands.length}
               </h2>
-              <p className="text-xs text-gray-600">
-                Open crop procurement requirements published across Maharashtra mandis.
+              <p className="text-xs text-[#5A554E]">
+                Open crop procurement requirements published by verified processors and wholesalers across Maharashtra.
               </p>
             </div>
             <Button
               variant="outline"
               size="sm"
               onClick={() => setActiveTab('create_demand')}
-              className="gap-1.5 text-xs self-start sm:self-auto"
+              className="gap-1.5 text-xs self-start sm:self-auto border-[#D8D2C4]"
             >
-              <PlusCircle className="w-3.5 h-3.5" />
+              <PlusCircle className="w-3.5 h-3.5 text-[#1B4332]" />
               <span>{t.buyerMatching.tabCreateDemand}</span>
             </Button>
           </div>
 
-          {demands.length === 0 ? (
-            <Card className="border-dashed border-gray-300 bg-gray-50/50">
+          {/* Filter Bar */}
+          <div className="p-3 bg-white rounded-[6px] border border-[#D8D2C4] flex flex-col md:flex-row gap-3 items-center justify-between">
+            <div className="flex-1 w-full relative">
+              <Search className="w-4 h-4 text-[#5A554E] absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={demandSearchQuery}
+                onChange={(e) => setDemandSearchQuery(e.target.value)}
+                placeholder="Search demands by buyer, crop, or district..."
+                className="w-full pl-9 pr-3 py-2 text-xs border border-[#D8D2C4] rounded-[4px] bg-[#FAFAF8] focus:outline-none focus:border-[#1B4332]"
+              />
+            </div>
+
+            <div className="flex items-center gap-2 w-full md:w-auto">
+              <Select
+                value={demandCropFilter}
+                onChange={(e) => setDemandCropFilter(e.target.value)}
+                className="text-xs min-w-[140px]"
+              >
+                <option value="ALL">All Commodities</option>
+                {KEY_CROPS.map((c) => (
+                  <option key={c.id} value={c.nameEn}>
+                    {c.icon} {c.nameEn}
+                  </option>
+                ))}
+              </Select>
+
+              <Select
+                value={demandDistrictFilter}
+                onChange={(e) => setDemandDistrictFilter(e.target.value)}
+                className="text-xs min-w-[140px]"
+              >
+                <option value="ALL">All Districts</option>
+                <optgroup label="Maharashtra">
+                  {MAHARASHTRA_DISTRICTS.map((d) => (
+                    <option key={d} value={d}>
+                      {d}
+                    </option>
+                  ))}
+                </optgroup>
+              </Select>
+
+              {(demandCropFilter !== 'ALL' || demandDistrictFilter !== 'ALL' || demandSearchQuery) && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setDemandCropFilter('ALL');
+                    setDemandDistrictFilter('ALL');
+                    setDemandSearchQuery('');
+                  }}
+                  className="text-xs text-[#B91C1C] shrink-0"
+                >
+                  Reset
+                </Button>
+              )}
+            </div>
+          </div>
+
+          {filteredDemands.length === 0 ? (
+            <Card className="border-dashed border-[#D8D2C4] bg-[#FAFAF8]">
               <CardContent className="py-12 text-center space-y-3">
-                <ShoppingCart className="w-10 h-10 text-gray-300 mx-auto" />
+                <ShoppingCart className="w-10 h-10 text-[#5A554E] mx-auto opacity-50" />
                 <div className="space-y-1">
-                  <p className="text-sm font-semibold text-gray-700">
+                  <p className="text-sm font-semibold text-[#262320]">
                     {t.buyerMatching.noActiveDemands}
                   </p>
-                  <p className="text-xs text-gray-500 max-w-sm mx-auto">
-                    Post your first crop demand to automatically match with certified produce lots across Maharashtra.
+                  <p className="text-xs text-[#5A554E] max-w-sm mx-auto">
+                    No active buyer demands match the selected criteria. Post a demand to start procurement.
                   </p>
                 </div>
                 <Button
                   variant="primary"
                   size="sm"
                   onClick={() => setActiveTab('create_demand')}
-                  className="gap-2 text-xs bg-amber-700 hover:bg-amber-800 text-white mt-2"
+                  className="gap-2 text-xs bg-[#1B4332] hover:bg-[#2D6A4F] text-white mt-2 shadow-none"
                 >
                   <PlusCircle className="w-3.5 h-3.5" />
                   <span>{t.buyerMatching.tabCreateDemand}</span>
@@ -820,21 +920,21 @@ function BuyerPortalContent() {
             </Card>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {demands.map((demand) => (
+              {filteredDemands.map((demand) => (
                 <Card
                   key={demand.id}
-                  className="shadow-sm hover:shadow-md transition-all border border-gray-200 flex flex-col justify-between"
+                  className="border border-[#D8D2C4] bg-white shadow-none hover:border-[#1B4332] transition-all flex flex-col justify-between"
                 >
                   <div>
-                    <CardHeader className="pb-3 border-b border-gray-100 bg-amber-50/20">
+                    <CardHeader className="pb-3 border-b border-[#D8D2C4] bg-[#FAFAF8]">
                       <div className="flex items-start justify-between gap-2">
                         <div>
                           <div className="flex items-center gap-2 flex-wrap">
-                            <span className="font-bold text-gray-900 text-base">
+                            <span className="font-heading font-black text-base text-[#1B4332]">
                               {demand.commodity}
                             </span>
                             {demand.variety && (
-                              <span className="text-xs text-gray-500 font-medium">
+                              <span className="text-xs text-[#5A554E] font-medium">
                                 ({demand.variety})
                               </span>
                             )}
@@ -845,46 +945,62 @@ function BuyerPortalContent() {
                               {demand.status}
                             </Badge>
                           </div>
-                          <span className="text-xs text-gray-500 block mt-0.5">
-                            Buyer: <strong>{demand.companyName}</strong>
-                          </span>
+                          <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                            <span className="text-xs text-[#262320] font-semibold">
+                              {demand.companyName}
+                            </span>
+                            <VerificationBadge
+                              type="identity"
+                              customLabel={demand.isBuyerVerified ? '✓ Verified' : 'Provisional'}
+                            />
+                          </div>
+                          {demand.reputation && (
+                            <div className="mt-1">
+                              <ReputationCluster
+                                ratingScore={demand.reputation.ratingScore}
+                                completedDealsCount={demand.reputation.completedTradesCount}
+                                onTimeDeliveryPercent={demand.reputation.paymentPunctualityPercent}
+                                size="sm"
+                              />
+                            </div>
+                          )}
                         </div>
 
-                        <div className="text-right">
-                          <span className="text-[10px] text-gray-500 block uppercase font-bold">
+                        <div className="text-right shrink-0">
+                          <span className="text-[10px] text-[#5A554E] block uppercase font-bold tracking-wider">
                             Target Price
                           </span>
-                          <span className="text-base font-black text-emerald-950">
+                          <span className="text-base font-heading font-black text-[#1B4332]">
                             ₹{demand.targetPricePerQtl}/Qtl
                           </span>
                         </div>
                       </div>
                     </CardHeader>
 
-                    <CardContent className="pt-3 pb-3 space-y-2.5 text-xs text-gray-700">
-                      <div className="grid grid-cols-2 gap-2 bg-gray-50 p-2.5 rounded-xl border border-gray-200">
+                    <CardContent className="pt-3 pb-3 space-y-2.5 text-xs text-[#262320]">
+                      <div className="grid grid-cols-2 gap-2 bg-[#FAFAF8] p-2.5 rounded-[4px] border border-[#D8D2C4]">
                         <div>
-                          <span className="text-gray-500 block text-[11px]">{t.buyerMatching.quantityLabel}:</span>
-                          <strong className="text-gray-900 font-bold text-sm">
+                          <span className="text-[#5A554E] block text-[11px]">{t.buyerMatching.quantityLabel}:</span>
+                          <strong className="text-[#262320] font-bold text-sm font-heading">
                             {demand.requiredQuantityQtl} {demand.unit || 'Quintals'}
                           </strong>
                         </div>
                         <div>
-                          <span className="text-gray-500 block text-[11px]">{t.buyerMatching.requiredGradeLabel}:</span>
-                          <strong className="text-gray-900 font-bold text-sm">
+                          <span className="text-[#5A554E] block text-[11px]">{t.buyerMatching.requiredGradeLabel}:</span>
+                          <strong className="text-[#262320] font-bold text-sm font-heading">
                             {demand.requiredGrade || 'Any Grade'}
                           </strong>
                         </div>
                         <div>
-                          <span className="text-gray-500 block text-[11px]">{t.buyerMatching.priceRange}:</span>
-                          <span className="font-semibold text-gray-800">
+                          <span className="text-[#5A554E] block text-[11px]">{t.buyerMatching.priceRange}:</span>
+                          <span className="font-semibold text-[#1B4332]">
                             ₹{demand.minPricePerQtl || demand.targetPricePerQtl} - ₹
-                            {demand.maxPricePerQtl || demand.targetPricePerQtl}
+                            {demand.maxPricePerQtl || demand.targetPricePerQtl}/Qtl
                           </span>
                         </div>
                         <div>
-                          <span className="text-gray-500 block text-[11px]">{t.buyerMatching.deadline}:</span>
-                          <span className="font-semibold text-gray-800">
+                          <span className="text-[#5A554E] block text-[11px]">{t.buyerMatching.deadline}:</span>
+                          <span className="font-semibold text-[#262320]">
                             {demand.deliveryDeadline
                               ? new Date(demand.deliveryDeadline).toLocaleDateString()
                               : 'Open'}
@@ -893,32 +1009,46 @@ function BuyerPortalContent() {
                       </div>
 
                       {demand.deliveryLocation && (
-                        <div className="flex items-start gap-1.5 text-gray-600">
-                          <MapPin className="w-3.5 h-3.5 text-gray-400 shrink-0 mt-0.5" />
-                          <span>Destination: {demand.deliveryLocation}</span>
+                        <div className="flex items-start gap-1.5 text-[#5A554E]">
+                          <MapPin className="w-3.5 h-3.5 text-[#1B4332] shrink-0 mt-0.5" />
+                          <span className="truncate">Destination: {demand.deliveryLocation}</span>
                         </div>
                       )}
 
                       {demand.description && (
-                        <p className="text-xs text-gray-600 bg-gray-50 p-2 rounded-lg border border-gray-100">
+                        <p className="text-xs text-[#5A554E] bg-[#FAFAF8] p-2 rounded-[4px] border border-[#D8D2C4]">
                           {demand.description}
                         </p>
                       )}
                     </CardContent>
                   </div>
 
-                  <div className="p-4 pt-0">
+                  <div className="p-3 bg-[#FAFAF8] border-t border-[#D8D2C4] flex items-center gap-2">
+                    <Link
+                      href={`/calculator?price=${demand.targetPricePerQtl}&crop=${encodeURIComponent(demand.commodity)}&quantity=${demand.requiredQuantityQtl}&market=${encodeURIComponent(demand.destinationDistrict)}&distance=50`}
+                      className="flex-1"
+                    >
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        fullWidth
+                        className="gap-1 text-xs border-[#D8D2C4] text-[#1B4332] hover:bg-white"
+                      >
+                        <Scale className="w-3.5 h-3.5 text-[#1B4332]" />
+                        <span>Check Net Realisation</span>
+                      </Button>
+                    </Link>
+
                     <Button
-                      variant="outline"
+                      variant="primary"
                       size="sm"
-                      fullWidth
                       onClick={() => {
                         setSelectedDemandFilter(demand.id);
                         setActiveTab('browse_lots');
                       }}
-                      className="gap-2 text-xs"
+                      className="gap-1.5 text-xs bg-[#1B4332] hover:bg-[#2D6A4F] text-white flex-1 shadow-none"
                     >
-                      <Package className="w-3.5 h-3.5 text-amber-700" />
+                      <Package className="w-3.5 h-3.5" />
                       <span>{t.buyerMatching.viewMatchesBtn}</span>
                     </Button>
                   </div>
@@ -933,29 +1063,31 @@ function BuyerPortalContent() {
       {/* TAB 2: POST NEW DEMAND FORM */}
       {/* ========================================================================= */}
       {activeTab === 'create_demand' && (
-        <Card className="max-w-3xl mx-auto shadow-sm">
-          <CardHeader className="border-b border-gray-100 pb-4">
+        <Card className="max-w-3xl mx-auto shadow-none border border-[#D8D2C4]">
+          <CardHeader className="border-b border-[#D8D2C4] pb-4 bg-[#FAFAF8]">
             <div className="flex items-center gap-2">
               <Badge variant="amber">Post Procurement Demand</Badge>
-              <span className="text-xs text-gray-500 font-mono">BUYER: {activeBuyer.companyName}</span>
+              <span className="text-xs text-[#5A554E] font-mono">BUYER: {activeBuyer.companyName}</span>
             </div>
-            <CardTitle className="text-xl text-gray-900 mt-1">
+            <CardTitle className="text-xl font-heading font-black text-[#262320] mt-1">
               {t.buyerMatching.createDemandTitle}
             </CardTitle>
-            <CardDescription>{t.buyerMatching.createDemandSubtitle}</CardDescription>
+            <CardDescription className="text-xs text-[#5A554E]">
+              {t.buyerMatching.createDemandSubtitle}
+            </CardDescription>
           </CardHeader>
 
           <CardContent className="pt-6">
             <form onSubmit={handleCreateDemand} className="space-y-5">
               {demandSuccess && (
-                <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-300 text-emerald-900 flex items-center gap-3">
+                <div className="p-4 rounded-[6px] bg-emerald-50 border border-emerald-300 text-emerald-900 flex items-center gap-3">
                   <CheckCircle2 className="w-6 h-6 text-emerald-700 shrink-0" />
                   <span className="text-sm font-semibold">{demandSuccess}</span>
                 </div>
               )}
 
               {demandErrors.general && (
-                <div className="p-4 rounded-2xl bg-rose-50 border border-rose-300 text-rose-900 flex items-center gap-3">
+                <div className="p-4 rounded-[6px] bg-rose-50 border border-rose-300 text-rose-900 flex items-center gap-3">
                   <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
                   <span className="text-sm font-semibold">{demandErrors.general}</span>
                 </div>
@@ -963,156 +1095,123 @@ function BuyerPortalContent() {
 
               {/* Crop and Variety */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label className="text-sm font-bold text-gray-900">
-                    {t.buyerMatching.commodityLabel} *
-                  </label>
-                  <input
-                    type="text"
+                <div>
+                  <Input
+                    label={`${t.buyerMatching.commodityLabel} *`}
                     required
                     value={demandForm.commodity}
                     onChange={(e) => setDemandForm({ ...demandForm, commodity: e.target.value })}
                     placeholder={t.buyerMatching.commodityPlaceholder}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm"
+                    error={demandErrors.commodity}
                   />
-                  {demandErrors.commodity && (
-                    <p className="text-xs text-rose-600">{demandErrors.commodity}</p>
-                  )}
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-sm font-bold text-gray-900">Variety / Type</label>
-                  <input
-                    type="text"
+                <div>
+                  <Input
+                    label="Variety / Type"
                     value={demandForm.variety}
                     onChange={(e) => setDemandForm({ ...demandForm, variety: e.target.value })}
                     placeholder="e.g. Nashik Red / Garva / Standard"
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm"
                   />
                 </div>
               </div>
 
               {/* Quantity and Unit */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label className="text-sm font-bold text-gray-900">
-                    {t.buyerMatching.quantityLabel} *
-                  </label>
-                  <input
+                <div>
+                  <Input
                     type="number"
                     required
                     min="1"
+                    label={`${t.buyerMatching.quantityLabel} *`}
                     value={demandForm.requiredQuantityQtl}
                     onChange={(e) =>
                       setDemandForm({ ...demandForm, requiredQuantityQtl: e.target.value })
                     }
                     placeholder="e.g. 100"
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm"
+                    error={demandErrors.requiredQuantityQtl}
                   />
-                  {demandErrors.requiredQuantityQtl && (
-                    <p className="text-xs text-rose-600">{demandErrors.requiredQuantityQtl}</p>
-                  )}
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-sm font-bold text-gray-900">
-                    {t.buyerMatching.unitLabel}
-                  </label>
-                  <select
+                <div>
+                  <Select
+                    label={t.buyerMatching.unitLabel}
                     value={demandForm.unit}
                     onChange={(e) => setDemandForm({ ...demandForm, unit: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm bg-white"
                   >
-                    <option value="Quintal">Quintal (100 Kg)</option>
-                    <option value="Tonnes">Tonnes (1000 Kg)</option>
-                    <option value="Kg">Kg</option>
-                  </select>
+                    <option value="Quintal">Quintals (क्विंटल - 100 Kg)</option>
+                    <option value="Tonnes">Tonnes (टन - 1000 Kg)</option>
+                    <option value="Kg">Kilograms (किलो)</option>
+                  </Select>
                 </div>
               </div>
 
               {/* Pricing Range */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="space-y-1.5">
-                  <label className="text-sm font-bold text-gray-900">
-                    Target Price (₹/Qtl) *
-                  </label>
-                  <input
+                <div>
+                  <Input
                     type="number"
                     required
                     min="1"
+                    label="Target Price (₹/Qtl) *"
                     value={demandForm.targetPricePerQtl}
                     onChange={(e) =>
                       setDemandForm({ ...demandForm, targetPricePerQtl: e.target.value })
                     }
                     placeholder="e.g. 2400"
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm"
+                    error={demandErrors.targetPricePerQtl}
                   />
-                  {demandErrors.targetPricePerQtl && (
-                    <p className="text-xs text-rose-600">{demandErrors.targetPricePerQtl}</p>
-                  )}
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-sm font-bold text-gray-900">
-                    {t.buyerMatching.minPriceLabel}
-                  </label>
-                  <input
+                <div>
+                  <Input
                     type="number"
+                    label={t.buyerMatching.minPriceLabel}
                     value={demandForm.minPricePerQtl}
                     onChange={(e) =>
                       setDemandForm({ ...demandForm, minPricePerQtl: e.target.value })
                     }
                     placeholder="e.g. 2100"
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm"
                   />
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-sm font-bold text-gray-900">
-                    {t.buyerMatching.maxPriceLabel}
-                  </label>
-                  <input
+                <div>
+                  <Input
                     type="number"
+                    label={t.buyerMatching.maxPriceLabel}
                     value={demandForm.maxPricePerQtl}
                     onChange={(e) =>
                       setDemandForm({ ...demandForm, maxPricePerQtl: e.target.value })
                     }
                     placeholder="e.g. 2600"
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm"
                   />
                 </div>
               </div>
 
               {/* Grade and Location */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label className="text-sm font-bold text-gray-900">
-                    {t.buyerMatching.requiredGradeLabel}
-                  </label>
-                  <select
+                <div>
+                  <Select
+                    label={t.buyerMatching.requiredGradeLabel}
                     value={demandForm.requiredGrade}
                     onChange={(e) =>
                       setDemandForm({ ...demandForm, requiredGrade: e.target.value })
                     }
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm bg-white"
                   >
                     <option value="Grade A">Grade A (Premium / Export Quality)</option>
                     <option value="Grade B">Grade B (Standard Market Quality)</option>
                     <option value="Grade C">Grade C (Fair Average Quality - FAQ)</option>
                     <option value="Any">Any Grade (Open Specification)</option>
-                  </select>
+                  </Select>
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-sm font-bold text-gray-900">
-                    {t.buyerMatching.locationLabel}
-                  </label>
-                  <select
+                <div>
+                  <Select
+                    label={t.buyerMatching.locationLabel}
                     value={demandForm.destinationDistrict}
                     onChange={(e) =>
                       setDemandForm({ ...demandForm, destinationDistrict: e.target.value })
                     }
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm bg-white"
                   >
                     <optgroup label="Maharashtra Districts">
                       {MAHARASHTRA_DISTRICTS.map((d) => (
@@ -1128,29 +1227,25 @@ function BuyerPortalContent() {
                         </option>
                       ))}
                     </optgroup>
-                  </select>
+                  </Select>
                 </div>
               </div>
 
               {/* Delivery Destination and Deadline */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label className="text-sm font-bold text-gray-900">
-                    {t.buyerMatching.deliveryLocationLabel}
-                  </label>
-                  <input
-                    type="text"
+                <div>
+                  <Input
+                    label={t.buyerMatching.deliveryLocationLabel}
                     value={demandForm.deliveryLocation}
                     onChange={(e) =>
                       setDemandForm({ ...demandForm, deliveryLocation: e.target.value })
                     }
                     placeholder={t.buyerMatching.deliveryLocationPlaceholder}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm"
                   />
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-sm font-bold text-gray-900">
+                <div>
+                  <label className="block text-xs font-semibold text-[#262320] mb-1.5">
                     {t.buyerMatching.deadlineLabel}
                   </label>
                   <input
@@ -1159,14 +1254,14 @@ function BuyerPortalContent() {
                     onChange={(e) =>
                       setDemandForm({ ...demandForm, deliveryDeadline: e.target.value })
                     }
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm"
+                    className="w-full px-3.5 py-2.5 text-sm text-[#262320] bg-white border border-[#D8D2C4] rounded-[4px] min-h-[44px] focus:outline-none focus:border-[#1B4332]"
                   />
                 </div>
               </div>
 
               {/* Description & Requirements */}
               <div className="space-y-1.5">
-                <label className="text-sm font-bold text-gray-900">
+                <label className="block text-xs font-semibold text-[#262320]">
                   {t.buyerMatching.descriptionLabel}
                 </label>
                 <textarea
@@ -1174,7 +1269,7 @@ function BuyerPortalContent() {
                   value={demandForm.description}
                   onChange={(e) => setDemandForm({ ...demandForm, description: e.target.value })}
                   placeholder={t.buyerMatching.descriptionPlaceholder}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm"
+                  className="w-full px-3.5 py-2.5 text-sm text-[#262320] bg-white border border-[#D8D2C4] rounded-[4px] focus:outline-none focus:border-[#1B4332]"
                 />
               </div>
 
@@ -1191,7 +1286,7 @@ function BuyerPortalContent() {
                   type="submit"
                   variant="primary"
                   disabled={demandSubmitting}
-                  className="gap-2 bg-amber-700 hover:bg-amber-800 text-white"
+                  className="gap-2 bg-[#1B4332] hover:bg-[#2D6A4F] text-white shadow-none"
                 >
                   {demandSubmitting ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -1217,21 +1312,21 @@ function BuyerPortalContent() {
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h2 className="text-xl font-bold text-gray-900">
+              <h2 className="text-lg font-heading font-black text-[#262320]">
                 {t.buyerMatching.browseLotsTitle}
               </h2>
-              <p className="text-xs text-gray-600">
+              <p className="text-xs text-[#5A554E]">
                 {t.buyerMatching.browseLotsSubtitle}
               </p>
             </div>
 
             {/* Filter by demand */}
             <div className="flex items-center gap-2 self-start sm:self-auto">
-              <Filter className="w-4 h-4 text-gray-500" />
+              <Filter className="w-4 h-4 text-[#5A554E]" />
               <select
                 value={selectedDemandFilter}
                 onChange={(e) => setSelectedDemandFilter(e.target.value)}
-                className="text-xs font-semibold text-gray-800 px-3 py-1.5 rounded-xl border border-gray-300 bg-white"
+                className="text-xs font-semibold text-[#262320] px-3 py-2 rounded-[4px] border border-[#D8D2C4] bg-white min-h-[44px]"
               >
                 <option value="ALL">{t.buyerMatching.allDemands}</option>
                 {activeDemandsList.map((d) => (
@@ -1244,14 +1339,14 @@ function BuyerPortalContent() {
           </div>
 
           {filteredLots.length === 0 ? (
-            <Card className="border-dashed border-gray-300 bg-gray-50/50">
+            <Card className="border-dashed border-[#D8D2C4] bg-[#FAFAF8]">
               <CardContent className="py-12 text-center space-y-3">
-                <Package className="w-10 h-10 text-gray-300 mx-auto" />
+                <Package className="w-10 h-10 text-[#5A554E] mx-auto opacity-50" />
                 <div className="space-y-1">
-                  <p className="text-sm font-semibold text-gray-700">
+                  <p className="text-sm font-semibold text-[#262320]">
                     {t.buyerMatching.noMatchingLots}
                   </p>
-                  <p className="text-xs text-gray-500 max-w-sm mx-auto">
+                  <p className="text-xs text-[#5A554E] max-w-sm mx-auto">
                     Try selecting &quot;All Active Demands&quot; or post a new procurement requirement.
                   </p>
                 </div>
@@ -1263,17 +1358,27 @@ function BuyerPortalContent() {
                 const isReserved = lot.status === 'RESERVED';
                 const isSold = lot.status === 'SOLD';
 
+                // Resolve Match Details from existing matching engine
+                const matches = lotMatchesMap[lot.id] || [];
+                const specificMatch = selectedDemandFilter !== 'ALL'
+                  ? matches.find((m) => m.demandId === selectedDemandFilter)
+                  : matches[0]; // Best match when ALL is selected
+
+                const matchScore = specificMatch ? specificMatch.matchScore : null;
+                const positiveReasons = specificMatch ? specificMatch.positiveReasons : [];
+                const warnings = specificMatch ? specificMatch.warnings : [];
+
                 return (
                   <Card
                     key={lot.id}
-                    className="shadow-sm hover:shadow-md transition-all border border-gray-200 flex flex-col justify-between"
+                    className="border border-[#D8D2C4] bg-white shadow-none hover:border-[#1B4332] transition-all flex flex-col justify-between"
                   >
                     <div>
-                      <CardHeader className="pb-3 border-b border-gray-100">
+                      <CardHeader className="pb-3 border-b border-[#D8D2C4] bg-[#FAFAF8]">
                         <div className="flex items-start justify-between gap-2">
                           <div>
-                            <div className="flex items-center gap-1.5">
-                              <span className="font-mono text-xs text-gray-500 font-bold">
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <span className="font-mono text-xs text-[#5A554E] font-bold">
                                 {lot.lotCode}
                               </span>
                               {isReserved && (
@@ -1287,94 +1392,145 @@ function BuyerPortalContent() {
                                 </Badge>
                               )}
                             </div>
-                            <h3 className="text-base font-bold text-gray-900 mt-1">
+                            <h3 className="text-base font-heading font-black text-[#1B4332] mt-1">
                               {lot.commodity}
                             </h3>
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-[#5A554E]">
                               {lot.variety || 'Standard Local'} • {lot.locationDistrict}
                             </span>
                           </div>
 
-                          <div className="text-right">
-                            <span className="text-[10px] text-gray-400 uppercase font-bold block">
+                          <div className="text-right shrink-0">
+                            <span className="text-[10px] text-[#5A554E] uppercase font-bold tracking-wider block">
                               Ask Price
                             </span>
-                            <span className="text-base font-black text-emerald-900">
+                            <span className="text-base font-heading font-black text-[#1B4332]">
                               ₹{lot.expectedPricePerQuintal || lot.expectedPrice}/Qtl
                             </span>
                           </div>
                         </div>
 
+                        {/* Match Score Strip (Rule-Based Matching Engine) */}
+                        {matchScore !== null && (
+                          <div className="mt-3 pt-2.5 border-t border-[#D8D2C4] space-y-1.5">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[11px] font-bold uppercase tracking-wider text-[#5A554E] font-heading">
+                                {t.buyerMatching.matchScore}
+                              </span>
+                              <span
+                                className={`text-xs font-bold px-2 py-0.5 rounded-[4px] font-heading border ${
+                                  matchScore >= 85
+                                    ? 'bg-[#EAF2ED] text-[#1B4332] border-[#B7D5C4]'
+                                    : matchScore >= 70
+                                    ? 'bg-[#EFF6FF] text-[#1D4ED8] border-[#BFDBFE]'
+                                    : 'bg-[#FEF3C7] text-[#92400E] border-[#FDE68A]'
+                                }`}
+                              >
+                                {matchScore >= 85 ? 'Strong Match' : matchScore >= 70 ? 'Good Match' : 'Fair Match'} {matchScore} / 100
+                              </span>
+                            </div>
+
+                            {/* Transparent Match Reasons from Engine */}
+                            {positiveReasons.length > 0 && (
+                              <div className="bg-[#FAFAF8] p-2 rounded-[4px] border border-[#D8D2C4] space-y-1 text-[11px] text-[#262320]">
+                                <span className="font-semibold text-[#1B4332] block">
+                                  Why this matches:
+                                </span>
+                                {positiveReasons.slice(0, 3).map((r, idx) => (
+                                  <p key={idx} className="leading-snug">
+                                    {r}
+                                  </p>
+                                ))}
+                                {warnings.length > 0 && (
+                                  <p className="text-[#B45309] font-medium leading-snug">
+                                    {warnings[0]}
+                                  </p>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        )}
+
                         {/* Two-Tier Quality Status Badges */}
-                        <div className="mt-3 pt-2 border-t border-gray-100">
+                        <div className="mt-2.5 pt-2 border-t border-[#D8D2C4]">
                           {lot.isPhysicallyVerified ? (
-                            <div className="flex items-center justify-between text-[11px] bg-emerald-50 text-emerald-900 p-2 rounded-xl border border-emerald-200">
-                              <span className="font-bold flex items-center gap-1">
-                                <Award className="w-3.5 h-3.5 text-emerald-700" />
-                                <span>Physically Verified ({lot.officialGrade})</span>
-                              </span>
-                              <span className="font-mono text-[10px] font-semibold text-emerald-800">
-                                {lot.certificateNumber || 'CERT-VERIFIED'}
-                              </span>
-                            </div>
+                            <VerificationBadge
+                              type="physical"
+                              customLabel={`Physically Verified (${lot.officialGrade})`}
+                              className="w-full justify-center"
+                            />
                           ) : lot.qualityStatus === 'AI_ASSESSMENT_NOT_VERIFIED' ? (
-                            <div className="flex items-center justify-between text-[11px] bg-amber-50 text-amber-900 p-2 rounded-xl border border-amber-200">
-                              <span className="font-bold flex items-center gap-1">
-                                <Camera className="w-3.5 h-3.5 text-amber-700" />
-                                <span>AI Assessment — Not Verified</span>
-                              </span>
-                              <span className="text-[10px] text-amber-700 font-medium">Visual Screening</span>
-                            </div>
+                            <VerificationBadge
+                              type="provisional"
+                              customLabel="AI Assessment — Not Verified"
+                              className="w-full justify-center"
+                            />
                           ) : (
-                            <div className="text-[11px] bg-gray-50 text-gray-500 p-1.5 rounded-lg text-center">
+                            <div className="text-[11px] bg-[#FAFAF8] text-[#5A554E] p-1.5 rounded-[4px] border border-[#D8D2C4] text-center">
                               Quality Inspection Pending
                             </div>
                           )}
                         </div>
                       </CardHeader>
 
-                      <CardContent className="pt-3 pb-3 space-y-2 text-xs">
-                        <div className="grid grid-cols-2 gap-2 bg-gray-50 p-2 rounded-xl text-gray-700">
+                      <CardContent className="pt-3 pb-3 space-y-2 text-xs text-[#262320]">
+                        <div className="grid grid-cols-2 gap-2 bg-[#FAFAF8] p-2 rounded-[4px] border border-[#D8D2C4]">
                           <div>
-                            <span className="text-gray-400 block text-[10px]">Quantity:</span>
-                            <strong className="text-gray-900 font-bold">
+                            <span className="text-[#5A554E] block text-[10px]">Quantity:</span>
+                            <strong className="text-[#262320] font-bold font-heading">
                               {lot.quantity} {lot.unit} ({lot.quantityQuintals} Qtl)
                             </strong>
                           </div>
                           <div>
-                            <span className="text-gray-400 block text-[10px]">Expected Grade:</span>
-                            <strong className="text-gray-900 font-bold">
+                            <span className="text-[#5A554E] block text-[10px]">Expected Grade:</span>
+                            <strong className="text-[#262320] font-bold font-heading">
                               {lot.expectedGrade}
                             </strong>
                           </div>
                         </div>
 
                         {lot.location && (
-                          <div className="flex items-center gap-1 text-gray-500 text-[11px]">
-                            <MapPin className="w-3 h-3 text-gray-400 shrink-0" />
+                          <div className="flex items-center gap-1 text-[#5A554E] text-[11px]">
+                            <MapPin className="w-3 h-3 text-[#1B4332] shrink-0" />
                             <span className="truncate">{lot.location}, {lot.locationDistrict}</span>
                           </div>
                         )}
                       </CardContent>
                     </div>
 
-                    <div className="p-4 pt-0 flex items-center gap-2">
-                      <Link href={`/lots/${lot.id}`} className="flex-1">
-                        <Button variant="outline" size="sm" fullWidth className="text-xs">
-                          {t.lots.viewDetails}
+                    <div className="p-3 bg-[#FAFAF8] border-t border-[#D8D2C4] space-y-2">
+                      <div className="flex items-center gap-2">
+                        <Link href={`/lots/${lot.id}`} className="flex-1">
+                          <Button variant="outline" size="sm" fullWidth className="text-xs border-[#D8D2C4]">
+                            {t.lots.viewDetails}
+                          </Button>
+                        </Link>
+
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          disabled={isReserved || isSold}
+                          onClick={() => openMakeOffer(lot)}
+                          className="gap-1.5 text-xs bg-[#1B4332] hover:bg-[#2D6A4F] text-white flex-1 shadow-none"
+                        >
+                          <Send className="w-3 h-3" />
+                          <span>{t.buyerMatching.makeOfferBtn}</span>
+                        </Button>
+                      </div>
+
+                      <Link
+                        href={`/calculator?price=${lot.expectedPricePerQuintal || lot.expectedPrice}&crop=${encodeURIComponent(lot.commodity)}&quantity=${lot.quantityQuintals || lot.quantity}&market=${encodeURIComponent(activeBuyer.district)}&distance=45`}
+                      >
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          fullWidth
+                          className="text-xs text-[#1B4332] hover:bg-white gap-1"
+                        >
+                          <Scale className="w-3 h-3 text-[#1B4332]" />
+                          <span>Check Net Realisation</span>
                         </Button>
                       </Link>
-
-                      <Button
-                        variant="primary"
-                        size="sm"
-                        disabled={isReserved || isSold}
-                        onClick={() => openMakeOffer(lot)}
-                        className="gap-1.5 text-xs bg-amber-700 hover:bg-amber-800 text-white flex-1"
-                      >
-                        <Send className="w-3 h-3" />
-                        <span>{t.buyerMatching.makeOfferBtn}</span>
-                      </Button>
                     </div>
                   </Card>
                 );
@@ -1391,10 +1547,10 @@ function BuyerPortalContent() {
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <h2 className="text-xl font-bold text-gray-900">
+              <h2 className="text-lg font-heading font-black text-[#262320]">
                 {t.buyerMatching.myOffersTitle}
               </h2>
-              <p className="text-xs text-gray-600">
+              <p className="text-xs text-[#5A554E]">
                 {t.buyerMatching.myOffersSubtitle} (Sent as {activeBuyer.companyName})
               </p>
             </div>
@@ -1405,22 +1561,22 @@ function BuyerPortalContent() {
           </div>
 
           {offers.length === 0 ? (
-            <Card className="border-dashed border-gray-300 bg-gray-50/50">
+            <Card className="border-dashed border-[#D8D2C4] bg-[#FAFAF8]">
               <CardContent className="py-12 text-center space-y-3">
-                <Send className="w-10 h-10 text-gray-300 mx-auto" />
+                <Send className="w-10 h-10 text-[#5A554E] mx-auto opacity-50" />
                 <div className="space-y-1">
-                  <p className="text-sm font-semibold text-gray-700">
+                  <p className="text-sm font-semibold text-[#262320]">
                     {t.buyerMatching.noSentOffers}
                   </p>
-                  <p className="text-xs text-gray-500 max-w-sm mx-auto">
-                    Browse farmer produce lots and dispatch binding digital purchase offers with guaranteed escrow release terms.
+                  <p className="text-xs text-[#5A554E] max-w-sm mx-auto">
+                    Browse farmer produce lots and dispatch transparent digital purchase offers with agreed payment terms.
                   </p>
                 </div>
                 <Button
                   variant="primary"
                   size="sm"
                   onClick={() => setActiveTab('browse_lots')}
-                  className="gap-2 text-xs bg-amber-700 hover:bg-amber-800 text-white mt-2"
+                  className="gap-2 text-xs bg-[#1B4332] hover:bg-[#2D6A4F] text-white mt-2 shadow-none"
                 >
                   <Package className="w-3.5 h-3.5" />
                   <span>{t.buyerMatching.tabBrowseLots}</span>
@@ -1445,19 +1601,19 @@ function BuyerPortalContent() {
                 return (
                   <Card
                     key={offer.id}
-                    className={`border transition-all ${
+                    className={`border transition-all bg-white shadow-none ${
                       isAccepted
-                        ? 'border-emerald-300 bg-emerald-50/10'
+                        ? 'border-emerald-300'
                         : isPending
-                        ? 'border-amber-200'
-                        : 'border-gray-200'
+                        ? 'border-[#D8D2C4]'
+                        : 'border-[#D8D2C4]'
                     }`}
                   >
-                    <CardHeader className="pb-3 border-b border-gray-100">
+                    <CardHeader className="pb-3 border-b border-[#D8D2C4] bg-[#FAFAF8]">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                         <div>
                           <div className="flex items-center gap-2 flex-wrap">
-                            <span className="font-bold text-gray-900 text-base">
+                            <span className="font-heading font-black text-[#1B4332] text-base">
                               {offer.commodity} ({offer.lotCode})
                             </span>
                             <Badge variant={statusVariant} className="text-[11px] font-bold px-2 py-0.5">
@@ -1472,66 +1628,76 @@ function BuyerPortalContent() {
                                 : offer.status}
                             </Badge>
                           </div>
-                          <span className="text-xs text-gray-500 block mt-0.5">
+                          <span className="text-xs text-[#5A554E] block mt-0.5">
                             District: {offer.lotDistrict || 'Maharashtra'} • Lot Status: {offer.lotStatus}
                           </span>
                         </div>
 
                         <div className="text-left sm:text-right">
-                          <span className="text-[10px] text-gray-400 uppercase font-bold block">
+                          <span className="text-[10px] text-[#5A554E] uppercase font-bold tracking-wider block">
                             Total Offer Value
                           </span>
-                          <span className="text-lg font-black text-emerald-950">
-                            ₹{offer.totalOfferValue.toLocaleString('en-IN')}
+                          <span className="text-lg font-heading font-black text-[#1B4332]">
+                            {formatINR(offer.totalOfferValue)}
                           </span>
                         </div>
                       </div>
                     </CardHeader>
 
-                    <CardContent className="pt-3 pb-3 space-y-3 text-xs">
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-gray-50 p-2.5 rounded-xl border border-gray-200">
+                    <CardContent className="pt-3 pb-3 space-y-3 text-xs text-[#262320]">
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-[#FAFAF8] p-2.5 rounded-[4px] border border-[#D8D2C4]">
                         <div>
-                          <span className="text-gray-400 block text-[10px]">Offered Rate:</span>
-                          <strong className="text-emerald-900 font-bold text-sm">
+                          <span className="text-[#5A554E] block text-[10px]">Offered Rate:</span>
+                          <strong className="text-[#1B4332] font-bold text-sm font-heading">
                             ₹{offer.offeredPricePerQtl}/Qtl
                           </strong>
                         </div>
                         <div>
-                          <span className="text-gray-400 block text-[10px]">Quantity:</span>
-                          <strong className="text-gray-900 font-bold text-sm">
+                          <span className="text-[#5A554E] block text-[10px]">Quantity:</span>
+                          <strong className="text-[#262320] font-bold text-sm font-heading">
                             {offer.quantityQuintals} Quintals
                           </strong>
                         </div>
                         <div>
-                          <span className="text-gray-400 block text-[10px]">Payment Terms:</span>
-                          <span className="text-gray-800 font-medium truncate block">
-                            {offer.paymentTerms || 'Bank Escrow'}
+                          <span className="text-[#5A554E] block text-[10px]">Payment Terms:</span>
+                          <span className="text-[#262320] font-medium truncate block">
+                            {offer.paymentTerms || 'Payment on Weighbridge Receipt'}
                           </span>
                         </div>
                         <div>
-                          <span className="text-gray-400 block text-[10px]">Valid Until:</span>
-                          <span className="text-gray-800 font-medium block">
+                          <span className="text-[#5A554E] block text-[10px]">Valid Until:</span>
+                          <span className="text-[#262320] font-medium block">
                             {offer.validUntil ? new Date(offer.validUntil).toLocaleDateString() : '7 Days'}
                           </span>
                         </div>
                       </div>
 
                       {offer.notes && (
-                        <p className="text-xs text-gray-600 bg-amber-50/40 p-2 rounded-lg border border-amber-100">
-                          <span className="font-semibold text-gray-900">Notes: </span>
+                        <p className="text-xs text-[#5A554E] bg-[#FAFAF8] p-2 rounded-[4px] border border-[#D8D2C4]">
+                          <span className="font-semibold text-[#262320]">Notes: </span>
                           {offer.notes}
                         </p>
                       )}
 
-                      {/* Cancel Action if Pending */}
+                      {/* Actions */}
                       <div className="flex items-center justify-between pt-1">
-                        <Link
-                          href={`/lots/${offer.lotId}`}
-                          className="text-xs text-sky-700 hover:text-sky-800 font-semibold flex items-center gap-1"
-                        >
-                          <span>View Target Lot</span>
-                          <ArrowRight className="w-3.5 h-3.5" />
-                        </Link>
+                        <div className="flex items-center gap-3">
+                          <Link
+                            href={`/lots/${offer.lotId}`}
+                            className="text-xs text-[#1B4332] hover:underline font-semibold flex items-center gap-1"
+                          >
+                            <span>View Target Lot</span>
+                            <ArrowRight className="w-3.5 h-3.5" />
+                          </Link>
+
+                          <Link
+                            href={`/calculator?price=${offer.offeredPricePerQtl}&crop=${encodeURIComponent(offer.commodity)}&quantity=${offer.quantityQuintals}`}
+                            className="text-xs text-[#5A554E] hover:underline flex items-center gap-1"
+                          >
+                            <Scale className="w-3 h-3 text-[#1B4332]" />
+                            <span>Check Net Realisation</span>
+                          </Link>
+                        </div>
 
                         {isPending && (
                           <Button
@@ -1566,16 +1732,16 @@ function BuyerPortalContent() {
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                <CreditCard className="w-5 h-5 text-amber-700" />
+              <h2 className="text-lg font-heading font-black text-[#262320] flex items-center gap-2">
+                <CreditCard className="w-5 h-5 text-[#1B4332]" />
                 <span>Commercial Purchases & Contracts: {purchases.length}</span>
               </h2>
-              <p className="text-xs text-gray-600">
+              <p className="text-xs text-[#5A554E]">
                 Track formal commercial procurement agreements, logistics transit, and milestone payment status.
               </p>
             </div>
             <Link href="/transactions">
-              <Button variant="outline" size="sm" className="text-xs gap-1">
+              <Button variant="outline" size="sm" className="text-xs gap-1 border-[#D8D2C4]">
                 <span>View Transactions Hub</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Button>
@@ -1583,9 +1749,9 @@ function BuyerPortalContent() {
           </div>
 
           {purchases.length === 0 ? (
-            <Card className="p-12 text-center text-xs text-gray-500 bg-gray-50 border-dashed space-y-2">
-              <CreditCard className="w-8 h-8 mx-auto text-gray-400" />
-              <p className="text-sm font-bold text-gray-700">No purchase contracts activated yet.</p>
+            <Card className="p-12 text-center text-xs text-[#5A554E] bg-[#FAFAF8] border-dashed border-[#D8D2C4] space-y-2">
+              <CreditCard className="w-8 h-8 mx-auto text-[#5A554E] opacity-50" />
+              <p className="text-sm font-bold text-[#262320]">No purchase contracts activated yet.</p>
               <p>When a farmer accepts your offer, an official trade transaction is automatically created here.</p>
             </Card>
           ) : (
@@ -1594,41 +1760,43 @@ function BuyerPortalContent() {
                 const latestPayment = txn.payments?.[0];
                 const activeTransport = txn.lot?.transportRequests?.[0];
                 return (
-                  <Card key={txn.id} className="hover:border-amber-400 hover:shadow-md transition-all border-gray-200">
-                    <CardHeader className="pb-3 border-b border-gray-100">
+                  <Card key={txn.id} className="border border-[#D8D2C4] bg-white shadow-none hover:border-[#1B4332] transition-all">
+                    <CardHeader className="pb-3 border-b border-[#D8D2C4] bg-[#FAFAF8]">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                         <div>
                           <div className="flex items-center gap-2 flex-wrap">
-                            <span className="font-mono text-xs font-bold text-amber-950 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                            <span className="font-mono text-xs font-bold text-[#1B4332] bg-[#EAF2ED] px-2 py-0.5 rounded-[4px] border border-[#B7D5C4]">
                               {txn.transactionCode}
                             </span>
                             <Badge
                               variant={
                                 txn.status === 'COMPLETED' || txn.status === 'PAYMENT_RECEIVED'
-                                  ? 'emerald'
-                                  : txn.status === 'DISPUTED'
-                                  ? 'red'
-                                  : 'blue'
+                                    ? 'emerald'
+                                    : txn.status === 'DISPUTED'
+                                    ? 'red'
+                                    : 'blue'
                               }
                             >
                               {txn.status}
                             </Badge>
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-[#5A554E]">
                               • Lot: {txn.lot?.lotCode}
                             </span>
                           </div>
-                          <span className="text-base font-black text-gray-900 block mt-1">
+                          <span className="text-base font-heading font-black text-[#262320] block mt-1">
                             {txn.lot?.commodity} ({txn.quantityQuintals} Quintals @ ₹{txn.agreedPricePerQuintal.toLocaleString('en-IN')}/Qtl)
                           </span>
                         </div>
 
                         <div className="text-left sm:text-right">
-                          <span className="text-[10px] text-gray-400 uppercase font-bold block">Gross Contract Sum</span>
-                          <div className="text-lg font-black text-amber-900">
-                            ₹{txn.grossSaleValue.toLocaleString('en-IN')}
+                          <span className="text-[10px] text-[#5A554E] uppercase font-bold tracking-wider block">
+                            Gross Contract Sum
+                          </span>
+                          <div className="text-lg font-heading font-black text-[#1B4332]">
+                            {formatINR(txn.grossSaleValue)}
                           </div>
                           {latestPayment && (
-                            <span className="text-[10px] text-gray-500 font-mono block">
+                            <span className="text-[10px] text-[#5A554E] font-mono block">
                               Payment: <strong>{latestPayment.paymentStatus}</strong>
                             </span>
                           )}
@@ -1637,31 +1805,31 @@ function BuyerPortalContent() {
                     </CardHeader>
 
                     <CardContent className="pt-3 text-xs space-y-3">
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] text-gray-700 bg-gray-50/70 p-2.5 rounded-xl">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] text-[#262320] bg-[#FAFAF8] p-2.5 rounded-[4px] border border-[#D8D2C4]">
                         <div>
-                          <span className="text-gray-400 block text-[10px]">Seller Farmer / FPO</span>
+                          <span className="text-[#5A554E] block text-[10px]">Seller Farmer / FPO</span>
                           <strong>{txn.farmer?.user?.fullName || 'Producer'}</strong>
-                          <span className="text-gray-500 text-[10px] block">{txn.farmer?.district}, Maharashtra</span>
+                          <span className="text-[#5A554E] text-[10px] block">{txn.farmer?.district}, Maharashtra</span>
                         </div>
                         <div>
-                          <span className="text-gray-400 block text-[10px]">Delivery Destination</span>
+                          <span className="text-[#5A554E] block text-[10px]">Delivery Destination</span>
                           <strong>{activeTransport?.dropLocation || txn.lot?.location || 'Buyer Facility'}</strong>
                         </div>
                         <div>
-                          <span className="text-gray-400 block text-[10px]">Logistics Status</span>
-                          <strong className="text-purple-800 flex items-center gap-1">
-                            <Truck className="w-3 h-3 text-purple-600" />
+                          <span className="text-[#5A554E] block text-[10px]">Logistics Status</span>
+                          <strong className="text-[#1B4332] flex items-center gap-1">
+                            <Truck className="w-3 h-3 text-[#1B4332]" />
                             <span>{activeTransport ? activeTransport.status : 'Pending Dispatch Booking'}</span>
                           </strong>
                         </div>
                       </div>
 
                       <div className="flex items-center justify-between pt-1">
-                        <span className="text-[11px] text-gray-500">
+                        <span className="text-[11px] text-[#5A554E]">
                           Executed on {new Date(txn.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                         </span>
                         <Link href={`/transactions/${txn.id}`}>
-                          <Button size="sm" variant="primary" className="text-xs gap-1.5 shadow-xs bg-amber-800 hover:bg-amber-900">
+                          <Button size="sm" variant="primary" className="text-xs gap-1.5 shadow-none bg-[#1B4332] hover:bg-[#2D6A4F] text-white">
                             <span>{t.transactions.viewTransactionBtn}</span>
                             <ArrowRight className="w-3.5 h-3.5" />
                           </Button>
@@ -1680,166 +1848,149 @@ function BuyerPortalContent() {
       {/* MAKE OFFER MODAL */}
       {/* ========================================================================= */}
       {isMakeOfferOpen && targetLot && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto animate-fadeIn">
-          <div className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-gray-200 overflow-hidden my-8">
-            <div className="px-6 py-5 bg-gradient-to-r from-amber-800 to-amber-900 text-white flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
+          <div className="relative w-full max-w-lg bg-white rounded-[8px] shadow-2xl border border-[#D8D2C4] overflow-hidden my-8">
+            <div className="px-6 py-4 bg-[#1B4332] text-white flex items-center justify-between">
               <div>
                 <div className="flex items-center gap-2">
                   <Badge variant="amber" className="text-[10px] uppercase font-bold">
-                    BINDING DIGITAL OFFER
+                    DIGITAL PURCHASE OFFER
                   </Badge>
-                  <span className="text-xs font-mono text-amber-200">{targetLot.lotCode}</span>
+                  <span className="text-xs font-mono text-[#D8D2C4]">{targetLot.lotCode}</span>
                 </div>
-                <h2 className="text-xl font-bold mt-1">{t.buyerMatching.makeOfferTitle}</h2>
-                <p className="text-xs text-amber-100">
+                <h2 className="text-lg font-heading font-bold mt-1">{t.buyerMatching.makeOfferTitle}</h2>
+                <p className="text-xs text-[#EAE6DF]">
                   Submitting as: <strong>{activeBuyer.companyName}</strong>
                 </p>
               </div>
               <button
+                type="button"
                 onClick={() => setIsMakeOfferOpen(false)}
-                className="p-2 rounded-full hover:bg-amber-700 text-amber-100 hover:text-white"
+                className="p-1.5 rounded-[4px] hover:bg-[#2D6A4F] text-[#EAE6DF] hover:text-white"
               >
-                <X className="w-6 h-6" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
             <div className="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
               {offerSuccess && (
-                <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-300 text-emerald-900 flex items-center gap-3">
-                  <CheckCircle2 className="w-6 h-6 text-emerald-700 shrink-0" />
-                  <span className="text-sm font-semibold">{offerSuccess}</span>
+                <div className="p-3.5 rounded-[6px] bg-emerald-50 border border-emerald-300 text-emerald-900 flex items-center gap-2.5">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0" />
+                  <span className="text-xs font-semibold">{offerSuccess}</span>
                 </div>
               )}
 
               {offerError && (
-                <div className="p-4 rounded-2xl bg-rose-50 border border-rose-300 text-rose-900 flex items-center gap-3">
+                <div className="p-3.5 rounded-[6px] bg-rose-50 border border-rose-300 text-rose-900 flex items-center gap-2.5">
                   <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
-                  <span className="text-sm font-semibold">{offerError}</span>
+                  <span className="text-xs font-semibold">{offerError}</span>
                 </div>
               )}
 
               {/* Price and Quantity */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label className="text-sm font-bold text-gray-900">
-                    {t.buyerMatching.offerPriceLabel} *
-                  </label>
-                  <input
+                <div>
+                  <Input
                     type="number"
+                    label={`${t.buyerMatching.offerPriceLabel} *`}
                     value={offerForm.offeredPricePerQtl}
                     onChange={(e) =>
                       setOfferForm({ ...offerForm, offeredPricePerQtl: e.target.value })
                     }
                     placeholder="e.g. 2400"
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm"
+                    helperText={`Farmer Ask: ₹${targetLot.expectedPricePerQuintal || targetLot.expectedPrice}/Qtl`}
                   />
-                  <span className="text-[11px] text-gray-500">
-                    Farmer Ask: ₹{targetLot.expectedPricePerQuintal || targetLot.expectedPrice}/Qtl
-                  </span>
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-sm font-bold text-gray-900">
-                    {t.buyerMatching.offerQtyLabel} *
-                  </label>
-                  <input
+                <div>
+                  <Input
                     type="number"
+                    label={`${t.buyerMatching.offerQtyLabel} *`}
                     value={offerForm.quantityQuintals}
                     onChange={(e) =>
                       setOfferForm({ ...offerForm, quantityQuintals: e.target.value })
                     }
                     placeholder="e.g. 100"
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm"
+                    helperText={`Available: ${targetLot.quantityQuintals || targetLot.quantity} Quintals`}
                   />
-                  <span className="text-[11px] text-gray-500">
-                    Available: {targetLot.quantityQuintals || targetLot.quantity} Quintals
-                  </span>
                 </div>
               </div>
 
               {/* Dynamic Value Calculation */}
               {parseFloat(offerForm.offeredPricePerQtl) > 0 &&
                 parseFloat(offerForm.quantityQuintals) > 0 && (
-                  <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 flex items-center justify-between text-xs">
-                    <span className="font-semibold text-amber-800 uppercase tracking-wider text-[11px]">
+                  <div className="p-3 bg-[#FAFAF8] rounded-[4px] border border-[#D8D2C4] flex items-center justify-between text-xs">
+                    <span className="font-semibold text-[#5A554E] uppercase tracking-wider text-[11px] font-heading">
                       {t.buyerMatching.totalOfferValue}
                     </span>
-                    <strong className="text-base font-black text-amber-950">
-                      ₹
-                      {(
+                    <strong className="text-base font-heading font-black text-[#1B4332]">
+                      {formatINR(
                         parseFloat(offerForm.offeredPricePerQtl) *
                         parseFloat(offerForm.quantityQuintals)
-                      ).toLocaleString('en-IN')}
+                      )}
                     </strong>
                   </div>
                 )}
 
               {/* Delivery Terms */}
-              <div className="space-y-1.5">
-                <label className="text-sm font-bold text-gray-900">
-                  {t.buyerMatching.deliveryTermsLabel}
-                </label>
-                <input
-                  type="text"
+              <div>
+                <Input
+                  label={t.buyerMatching.deliveryTermsLabel}
                   value={offerForm.deliveryTerms}
                   onChange={(e) =>
                     setOfferForm({ ...offerForm, deliveryTerms: e.target.value })
                   }
                   placeholder={t.buyerMatching.deliveryTermsPlaceholder}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm"
                 />
               </div>
 
               {/* Payment Terms */}
-              <div className="space-y-1.5">
-                <label className="text-sm font-bold text-gray-900">
-                  {t.buyerMatching.paymentTermsLabel}
-                </label>
-                <input
-                  type="text"
+              <div>
+                <Input
+                  label={t.buyerMatching.paymentTermsLabel}
                   value={offerForm.paymentTerms}
                   onChange={(e) =>
                     setOfferForm({ ...offerForm, paymentTerms: e.target.value })
                   }
                   placeholder={t.buyerMatching.paymentTermsPlaceholder}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm"
                 />
               </div>
 
               {/* Proposed Pickup and Expiry */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label className="text-sm font-bold text-gray-900">Proposed Pickup Date</label>
+                <div>
+                  <label className="block text-xs font-semibold text-[#262320] mb-1.5">
+                    Proposed Pickup Date
+                  </label>
                   <input
                     type="date"
                     value={offerForm.proposedPickupDate}
                     onChange={(e) =>
                       setOfferForm({ ...offerForm, proposedPickupDate: e.target.value })
                     }
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm"
+                    className="w-full px-3.5 py-2.5 text-sm text-[#262320] bg-white border border-[#D8D2C4] rounded-[4px] min-h-[44px] focus:outline-none focus:border-[#1B4332]"
                   />
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-sm font-bold text-gray-900">Validity (Days)</label>
-                  <select
-                    value={offerForm.validityDays}
+                <div>
+                  <Select
+                    label="Validity (Days)"
+                    value={String(offerForm.validityDays)}
                     onChange={(e) =>
                       setOfferForm({ ...offerForm, validityDays: parseInt(e.target.value, 10) })
                     }
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm bg-white"
                   >
-                    <option value={3}>3 Days</option>
-                    <option value={7}>7 Days (Standard)</option>
-                    <option value={14}>14 Days</option>
-                    <option value={30}>30 Days</option>
-                  </select>
+                    <option value="3">3 Days</option>
+                    <option value="7">7 Days (Standard)</option>
+                    <option value="14">14 Days</option>
+                    <option value="30">30 Days</option>
+                  </Select>
                 </div>
               </div>
 
               {/* Notes */}
               <div className="space-y-1.5">
-                <label className="text-sm font-bold text-gray-900">
+                <label className="block text-xs font-semibold text-[#262320]">
                   {t.buyerMatching.offerNotesLabel}
                 </label>
                 <textarea
@@ -1847,29 +1998,33 @@ function BuyerPortalContent() {
                   value={offerForm.notes}
                   onChange={(e) => setOfferForm({ ...offerForm, notes: e.target.value })}
                   placeholder={t.buyerMatching.offerNotesPlaceholder}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm"
+                  className="w-full px-3.5 py-2.5 text-sm text-[#262320] bg-white border border-[#D8D2C4] rounded-[4px] focus:outline-none focus:border-[#1B4332]"
                 />
               </div>
 
-              <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-amber-900 text-[11px]">
-                <span className="font-semibold block">{t.buyerMatching.offerPendingNotice}</span>
+              <div className="p-3 bg-[#FAFAF8] rounded-[4px] border border-[#D8D2C4] text-[#5A554E] text-[11px]">
+                <span className="font-semibold text-[#262320] block mb-0.5">{t.buyerMatching.offerPendingNotice}</span>
+                <span>Offers dispatched are subject to physical quality verification upon farmgate pickup or mandi arrival.</span>
               </div>
             </div>
 
-            <div className="p-5 bg-gray-50 border-t border-gray-200 flex items-center justify-end gap-3">
+            <div className="p-4 bg-[#F4F1EA] border-t border-[#D8D2C4] flex items-center justify-end gap-2.5">
               <Button
+                type="button"
                 variant="ghost"
                 onClick={() => setIsMakeOfferOpen(false)}
                 disabled={offerSubmitting}
+                className="text-xs"
               >
                 {t.lots.cancelBtn}
               </Button>
 
               <Button
+                type="button"
                 variant="primary"
                 onClick={handleDispatchOffer}
                 disabled={offerSubmitting}
-                className="gap-2 bg-amber-700 hover:bg-amber-800 text-white"
+                className="gap-2 bg-[#1B4332] hover:bg-[#2D6A4F] text-white text-xs shadow-none"
               >
                 {offerSubmitting ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -1890,21 +2045,21 @@ function BuyerPortalContent() {
       {/* ========================================================================= */}
       {/* TRUST & TRANSPARENCY ARCHITECTURE NOTICE */}
       {/* ========================================================================= */}
-      <Card className="border-gray-200 bg-gray-50/70">
-        <CardContent className="p-5 space-y-2 text-xs">
-          <div className="flex items-center gap-2 text-gray-900 font-bold">
-            <ShieldCheck className="w-4 h-4 text-emerald-700" />
+      <Card className="border-[#D8D2C4] bg-[#F4F1EA] shadow-none">
+        <CardContent className="p-4 space-y-2 text-xs">
+          <div className="flex items-center gap-2 text-[#262320] font-bold font-heading">
+            <ShieldCheck className="w-4 h-4 text-[#1B4332]" />
             <span>{t.buyerMatching.trustNoticeTitle}</span>
           </div>
-          <p className="text-gray-600 leading-relaxed">
+          <p className="text-[#5A554E] leading-relaxed">
             {t.buyerMatching.trustNoticeDesc}
           </p>
-          <p className="text-amber-800 font-medium text-[11px] pt-1">
+          <p className="text-[#1B4332] font-medium text-[11px] pt-0.5">
             {t.buyerMatching.demoNotice}
           </p>
         </CardContent>
       </Card>
-    </div>
+    </PageContainer>
   );
 }
 
@@ -1913,7 +2068,7 @@ export default function BuyerPortalPage() {
     <Suspense
       fallback={
         <div className="py-24 text-center">
-          <Loader2 className="w-10 h-10 text-amber-700 animate-spin mx-auto" />
+          <Loader2 className="w-8 h-8 text-[#1B4332] animate-spin mx-auto" />
         </div>
       }
     >
