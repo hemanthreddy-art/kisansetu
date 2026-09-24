@@ -27,7 +27,13 @@ export async function GET(request: NextRequest, { params }: RouteContext) {
             farmer: { include: { user: true } },
             buyer: { include: { user: true } },
             transporter: { include: { user: true } },
-            lot: true,
+            lot: {
+              include: {
+                physicalVerifications: true,
+                aiAssessments: true,
+                transportRequests: true,
+              },
+            },
             payments: true,
           },
         },
@@ -70,9 +76,9 @@ export async function PATCH(request: NextRequest, { params }: RouteContext) {
       );
     }
 
-    if (!status || !resolutionNotes) {
+    if (!status || !resolutionNotes || resolutionNotes.trim().length < 10) {
       return NextResponse.json(
-        { success: false, error: 'status and resolutionNotes are required for adjudication.' },
+        { success: false, error: 'status and detailed resolutionNotes (minimum 10 characters explaining the decision/reason) are required.' },
         { status: 400 }
       );
     }

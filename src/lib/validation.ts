@@ -13,6 +13,8 @@ export interface LotInputData {
   expectedGrade?: string;
   description?: string;
   status?: string;
+  photos?: string[] | string;
+  lotPhotosJson?: string | null;
 }
 
 export interface ValidationResult {
@@ -33,6 +35,7 @@ export interface ValidationResult {
     expectedGrade: string;
     description: string;
     status: 'DRAFT' | 'AVAILABLE' | 'RESERVED' | 'SOLD' | 'CANCELLED';
+    lotPhotosJson?: string | null;
   };
 }
 
@@ -135,6 +138,21 @@ export function validateLotInput(
 
   const description = (input.description || '').trim();
 
+  // Parse photos / lotPhotosJson
+  let lotPhotosJson: string | null = null;
+  if (Array.isArray(input.photos) && input.photos.length > 0) {
+    lotPhotosJson = JSON.stringify(input.photos);
+  } else if (typeof input.photos === 'string' && input.photos.trim()) {
+    try {
+      JSON.parse(input.photos);
+      lotPhotosJson = input.photos.trim();
+    } catch {
+      lotPhotosJson = JSON.stringify([input.photos.trim()]);
+    }
+  } else if (typeof input.lotPhotosJson === 'string' && input.lotPhotosJson.trim()) {
+    lotPhotosJson = input.lotPhotosJson.trim();
+  }
+
   const isValid = Object.keys(errors).length === 0;
 
   return {
@@ -156,6 +174,7 @@ export function validateLotInput(
           expectedGrade,
           description,
           status,
+          lotPhotosJson,
         }
       : undefined,
   };

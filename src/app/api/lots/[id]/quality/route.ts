@@ -57,13 +57,29 @@ export async function GET(request: NextRequest, { params }: RouteContext) {
     const latestAi = lot.aiAssessments[0] || null;
     const latestPhysical = lot.physicalVerifications[0] || null;
 
+    let parsedParams: {
+      maturityCuringStatus?: string;
+      foreignMatterPercent?: number;
+      nonObservableNotice?: string;
+      retakeRecommendations?: string[];
+      suggestedAction?: string;
+    } | null = null;
+    if (latestAi?.visualParameters) {
+      try {
+        parsedParams = JSON.parse(latestAi.visualParameters);
+      } catch {
+        // Fallback if not valid JSON
+      }
+    }
+
     const tier1 = {
       name: 'Tier 1: AI Visual Screening',
       status: latestAi ? 'AI_ASSESSMENT_NOT_VERIFIED' : 'NOT_ASSESSED',
       label: 'AI Assessment — Not Verified',
+      displayLabel: 'AI Visual Assessment — Preliminary',
       isOfficial: false,
       disclaimer:
-        'AI Assessment — Not Verified. Preliminary visual estimate only. An ordinary photograph cannot completely determine produce quality.',
+        'AI Visual Assessment — Preliminary. Preliminary non-binding visual estimate only. Ordinary photographs cannot determine moisture %, internal quality, or chemical residues. Physical measurement required.',
       details: latestAi
         ? {
             id: latestAi.id,
@@ -75,6 +91,14 @@ export async function GET(request: NextRequest, { params }: RouteContext) {
             visibleDefects: latestAi.visibleDefects ? `${latestAi.visibleDefects}%` : null,
             notes: latestAi.assessmentNotes,
             assessedAt: latestAi.assessedAt,
+            displayLabel: 'AI Visual Assessment — Preliminary',
+            label: 'AI Assessment — Not Verified',
+            maturityCuringStatus: parsedParams?.maturityCuringStatus || null,
+            foreignMatterPercent: parsedParams?.foreignMatterPercent ?? null,
+            nonObservableNotice: parsedParams?.nonObservableNotice || 'Physical measurement required: Moisture %, internal sugar/rot, and chemical residue cannot be determined from photos.',
+            retakeRecommendations: parsedParams?.retakeRecommendations || [],
+            suggestedAction: parsedParams?.suggestedAction || 'ROUTINE_FAST_TRACK',
+            visualParameters: latestAi.visualParameters,
           }
         : null,
     };

@@ -64,6 +64,9 @@ interface InspectorLotItem {
     verifiedAt: string;
   } | null;
   inspectionStatus: 'PENDING' | 'PHYSICALLY_VERIFIED' | 'REQUIRES_REINSPECTION' | 'REJECTED' | string;
+  escalationCategory?: 'HIGH_VALUE_TRADE' | 'LOW_AI_CONFIDENCE' | 'DISPUTED_TRADE' | 'REINSPECTION_REQUIRED' | 'CERTIFIED' | 'ROUTINE_FAST_TRACK';
+  escalationReason?: string;
+  isExceptionTriage?: boolean;
 }
 
 interface InspectorMetrics {
@@ -72,6 +75,10 @@ interface InspectorMetrics {
   completedVerifications: number;
   reinspectionRequired: number;
   rejected: number;
+  highValueEscalations?: number;
+  lowConfidenceEscalations?: number;
+  disputeEscalations?: number;
+  totalEscalations?: number;
 }
 
 interface InspectorProfile {
@@ -97,7 +104,7 @@ function InspectorDeskContent() {
   const [error, setError] = useState<string | null>(null);
 
   // Filter and search state
-  const [activeTab, setActiveTab] = useState<'ALL' | 'PENDING' | 'PHYSICALLY_VERIFIED' | 'REQUIRES_REINSPECTION' | 'REJECTED'>('ALL');
+  const [activeTab, setActiveTab] = useState<'ALL' | 'ESCALATED' | 'PENDING' | 'PHYSICALLY_VERIFIED' | 'REQUIRES_REINSPECTION' | 'REJECTED'>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
 
   // Physical Inspection Modal State
@@ -252,6 +259,10 @@ function InspectorDeskContent() {
   // Filtered lots
   const filteredLots = lots.filter((lot) => {
     // Tab filter
+    if (activeTab === 'ESCALATED') {
+      const isEsc = lot.isExceptionTriage || lot.inspectionStatus === 'REQUIRES_REINSPECTION' || (lot.escalationCategory && lot.escalationCategory !== 'ROUTINE_FAST_TRACK' && lot.escalationCategory !== 'CERTIFIED');
+      if (!isEsc) return false;
+    }
     if (activeTab === 'PENDING' && lot.inspectionStatus !== 'PENDING') return false;
     if (activeTab === 'PHYSICALLY_VERIFIED' && lot.inspectionStatus !== 'PHYSICALLY_VERIFIED') return false;
     if (activeTab === 'REQUIRES_REINSPECTION' && lot.inspectionStatus !== 'REQUIRES_REINSPECTION') return false;
@@ -330,14 +341,19 @@ function InspectorDeskContent() {
         </div>
       </div>
 
-      {/* Strict Quality Principle Banner (Stitch Styled) */}
+      {/* Strict Quality Principle & Exception Desk Banner (Stitch Styled) */}
       <div className="p-5 rounded-lg bg-[#FDFBF7] border border-[#D8D2C4] space-y-3 shadow-none">
-        <div className="flex items-center gap-2 text-[#262320] font-bold font-heading">
-          <ShieldAlert className="w-5 h-5 text-[#B45309] shrink-0" />
-          <span>{t.quality.trustPrincipleTitle}</span>
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <div className="flex items-center gap-2 text-[#262320] font-bold font-heading">
+            <ShieldAlert className="w-5 h-5 text-[#B45309] shrink-0" />
+            <span>{t.quality.trustPrincipleTitle}</span>
+          </div>
+          <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-[#EAF2ED] text-[#1B4332] border border-[#B7D5C4]">
+            Exception & Escalation Desk
+          </span>
         </div>
         <p className="text-xs sm:text-sm text-[#5A5243] leading-relaxed">
-          {t.quality.trustPrincipleDesc}
+          {t.quality.trustPrincipleDesc} Operating as an Exception & Escalation Desk, physical inspections are focused strictly on high-value consignments, low visual AI reliability, counterparty disputes, and statutory certification requests—eliminating delays and bias from routine listings.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
           <div className="bg-amber-50/40 p-3.5 rounded-lg border border-dashed border-amber-300 flex items-start gap-2.5">
@@ -418,6 +434,17 @@ function InspectorDeskContent() {
             }`}
           >
             All Lots ({metrics.totalLots})
+          </button>
+          <button
+            onClick={() => setActiveTab('ESCALATED')}
+            className={`px-3.5 py-2 rounded-lg text-xs font-bold transition-all shrink-0 min-h-[40px] flex items-center gap-1.5 ${
+              activeTab === 'ESCALATED'
+                ? 'bg-rose-700 text-white shadow-sm'
+                : 'bg-rose-50 text-rose-800 hover:bg-rose-100 border border-rose-200'
+            }`}
+          >
+            <ShieldAlert className="w-3.5 h-3.5" />
+            <span>Escalation Queue ({metrics.totalEscalations || (metrics.pendingInspections + metrics.reinspectionRequired)})</span>
           </button>
           <button
             onClick={() => setActiveTab('PENDING')}
@@ -525,6 +552,28 @@ function InspectorDeskContent() {
                         <MapPin className="w-3.5 h-3.5 text-[#8C827A]" />
                         <span>{lot.locationDistrict || 'Maharashtra'}, {lot.location || 'Farmgate'}</span>
                       </span>
+
+                      {/* Escalation Category Badges */}
+                      {lot.escalationCategory && lot.escalationCategory !== 'ROUTINE_FAST_TRACK' && lot.escalationCategory !== 'CERTIFIED' && (
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-rose-50 text-rose-800 border border-rose-200 flex items-center gap-1">
+                          <AlertCircle className="w-3 h-3 text-rose-600" />
+                          <span>
+                            {lot.escalationCategory === 'HIGH_VALUE_TRADE'
+                              ? 'Escalation: High-Value Trade'
+                              : lot.escalationCategory === 'LOW_AI_CONFIDENCE'
+                              ? 'Escalation: Low AI Reliability'
+                              : lot.escalationCategory === 'DISPUTED_TRADE'
+                              ? 'Escalation: Disputed Trade'
+                              : 'Escalation: Reinspection'}
+                          </span>
+                        </span>
+                      )}
+                      {lot.escalationCategory === 'ROUTINE_FAST_TRACK' && (
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-700" />
+                          <span>Routine AI Fast-Track</span>
+                        </span>
+                      )}
                     </div>
 
                     <div className="flex items-center gap-2">
@@ -576,6 +625,14 @@ function InspectorDeskContent() {
                       )}
                     </div>
                   </div>
+
+                  {/* Exception & Escalation Triage Note */}
+                  {lot.escalationReason && (
+                    <div className="p-2.5 bg-[#FAF8F5] rounded border border-[#D8D2C4] text-xs text-[#5A5243]">
+                      <strong className="text-[#262320]">Triage Status: </strong>
+                      <span>{lot.escalationReason}</span>
+                    </div>
+                  )}
 
                   {/* Two-Tier Quality Status Showcase */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">

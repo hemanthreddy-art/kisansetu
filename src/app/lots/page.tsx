@@ -25,8 +25,11 @@ import {
   Scale,
   Sparkles,
   FileText,
+  LayoutGrid,
+  List,
 } from 'lucide-react';
 import { ProduceLot } from '@/types';
+import { SellMyCropWizard } from '@/components/farmer/SellMyCropWizard';
 
 function LotsPageContent() {
   const { t, locale } = useLanguage();
@@ -37,6 +40,7 @@ function LotsPageContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string>('ALL');
+  const [viewMode, setViewMode] = useState<'GRID' | 'TABLE'>('GRID');
 
   // Metrics state
   const [metrics, setMetrics] = useState({
@@ -48,6 +52,7 @@ function LotsPageContent() {
 
   // Modal & Form state
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSellWizardOpen, setIsSellWizardOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formSuccessMessage, setFormSuccessMessage] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -70,10 +75,10 @@ function LotsPageContent() {
 
   const [formData, setFormData] = useState(initialFormData);
 
-  // Check URL query parameters to auto-open create modal if requested
+  // Check URL query parameters to auto-open Sell My Crop wizard if requested
   useEffect(() => {
     if (searchParams?.get('action') === 'create' || searchParams?.get('create') === 'true') {
-      setIsModalOpen(true);
+      setIsSellWizardOpen(true);
     }
   }, [searchParams]);
 
@@ -231,19 +236,18 @@ function LotsPageContent() {
         description={t.lots.subtitle}
         badge={<Badge variant="emerald">{t.lots.badge}</Badge>}
         action={
-          <Button
-            variant="primary"
-            size="md"
-            onClick={() => {
-              setFieldErrors({});
-              setFormSuccessMessage(null);
-              setIsModalOpen(true);
-            }}
-            className="gap-2"
-          >
-            <PlusCircle className="w-4 h-4" />
-            <span>{t.lots.createNew}</span>
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="primary"
+              size="md"
+              onClick={() => setIsSellWizardOpen(true)}
+              className="bg-[#1B4332] hover:bg-[#2D6A4F] text-white gap-2 font-bold shadow-sm"
+            >
+              <PlusCircle className="w-4 h-4" />
+              <span>{t.farmer.sellMyCropHero}</span>
+            </Button>
+            <span className="sr-only" aria-hidden="true">{t.lots.createNew}</span>
+          </div>
         }
       />
 
@@ -369,22 +373,18 @@ function LotsPageContent() {
             </div>
             <Button
               variant="primary"
-              onClick={() => {
-                setFieldErrors({});
-                setFormSuccessMessage(null);
-                setIsModalOpen(true);
-              }}
-              className="gap-2"
+              onClick={() => setIsSellWizardOpen(true)}
+              className="gap-2 bg-[#1B4332] hover:bg-[#2D6A4F] text-white"
             >
               <PlusCircle className="w-4 h-4" />
-              <span>{t.lots.createFirstLot}</span>
+              <span>{t.farmer.sellMyCropHero}</span>
             </Button>
           </div>
         </Card>
       ) : (
         <Card className="shadow-none border-[#D8D2C4]">
           <CardHeader className="border-b border-[#D8D2C4] pb-3 bg-[#F4F1EA]">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <CardTitle className="text-base font-heading font-bold text-[#262320]">
                   {t.lots.registeredLotsTitle} ({filteredLots.length})
@@ -393,14 +393,183 @@ function LotsPageContent() {
                   {t.lots.activeLotsSub}
                 </CardDescription>
               </div>
-              <span className="text-xs font-semibold text-[#5A554E] bg-white px-2.5 py-1 rounded-[4px] border border-[#D8D2C4]">
-                {t.lots.digitalApmcYard}
-              </span>
+
+              <div className="flex items-center gap-2">
+                {/* View Mode Toggle: Grid Marketplace Cards vs Compact Table */}
+                <div className="flex items-center rounded border border-[#D8D2C4] bg-white p-0.5 shadow-xs">
+                  <button
+                    type="button"
+                    onClick={() => setViewMode('GRID')}
+                    className={`px-2.5 py-1 rounded text-xs flex items-center gap-1.5 transition-colors ${
+                      viewMode === 'GRID'
+                        ? 'bg-[#1B4332] text-white font-semibold shadow-xs'
+                        : 'text-[#635E59] hover:text-[#262320]'
+                    }`}
+                    title="Produce Marketplace Grid"
+                  >
+                    <LayoutGrid className="w-3.5 h-3.5" />
+                    <span>Grid</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setViewMode('TABLE')}
+                    className={`px-2.5 py-1 rounded text-xs flex items-center gap-1.5 transition-colors ${
+                      viewMode === 'TABLE'
+                        ? 'bg-[#1B4332] text-white font-semibold shadow-xs'
+                        : 'text-[#635E59] hover:text-[#262320]'
+                    }`}
+                    title="Compact Table View"
+                  >
+                    <List className="w-3.5 h-3.5" />
+                    <span>Table</span>
+                  </button>
+                </div>
+
+                <span className="hidden sm:inline text-xs font-semibold text-[#5A554E] bg-white px-2.5 py-1 rounded-[4px] border border-[#D8D2C4]">
+                  {t.lots.digitalApmcYard}
+                </span>
+              </div>
             </div>
           </CardHeader>
 
           <CardContent className="p-0">
-            {/* Desktop Table View (md+) */}
+            {/* 1. PRODUCE MARKETPLACE GRID VIEW */}
+            {viewMode === 'GRID' && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 p-4 sm:p-5">
+                {filteredLots.map((lot) => {
+                  const price = lot.expectedPricePerQuintal || lot.expectedPrice || 0;
+                  const qty = lot.quantityQuintals || lot.quantity || 0;
+                  const grossVal = Math.round(qty * price);
+                  const estNetRealisation = Math.round(grossVal * 0.985);
+
+                  let photoUrl: string | null = null;
+                  if (lot.lotPhotosJson) {
+                    try {
+                      const parsed = JSON.parse(lot.lotPhotosJson);
+                      if (Array.isArray(parsed) && parsed.length > 0) photoUrl = parsed[0];
+                      else if (typeof parsed === 'string') photoUrl = parsed;
+                    } catch {
+                      if (typeof lot.lotPhotosJson === 'string' && lot.lotPhotosJson.startsWith('data:')) {
+                        photoUrl = lot.lotPhotosJson;
+                      }
+                    }
+                  }
+
+                  const cropMatch = KEY_CROPS.find(
+                    (c) => c.nameEn.toLowerCase() === (lot.commodity || '').toLowerCase()
+                  );
+                  const cropEmoji = cropMatch?.icon || '🌾';
+
+                  return (
+                    <div
+                      key={lot.id}
+                      className="bg-white rounded-[10px] border border-[#D8D2C4] hover:border-[#1B4332] shadow-xs hover:shadow-md transition-all flex flex-col justify-between overflow-hidden group"
+                    >
+                      <div>
+                        {/* Top Visual Banner */}
+                        <div className="relative h-44 bg-[#F4F1EA] overflow-hidden flex items-center justify-center border-b border-[#ECE7DE]">
+                          {photoUrl ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              src={photoUrl}
+                              alt={lot.commodity}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                          ) : (
+                            <div className="text-center p-4">
+                              <span className="text-6xl drop-shadow-xs select-none">{cropEmoji}</span>
+                              <span className="block text-xs font-semibold text-[#635E59] mt-2">
+                                {lot.commodity} {lot.variety ? `• ${lot.variety}` : ''}
+                              </span>
+                            </div>
+                          )}
+
+                          {/* Badges Overlay */}
+                          <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 flex-wrap">
+                            <span className="font-mono text-[11px] font-bold px-2 py-0.5 rounded bg-white/95 text-[#1B4332] shadow-xs border border-[#B7D5C4]">
+                              {lot.lotCode}
+                            </span>
+                            {getStatusBadge(lot.status)}
+                          </div>
+
+                          <div className="absolute bottom-2.5 right-2.5">
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#1B4332]/90 text-white backdrop-blur-xs">
+                              {lot.expectedGrade || 'Grade A'}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Content Body */}
+                        <div className="p-4 space-y-3">
+                          <div>
+                            <h4 className="font-heading font-bold text-lg text-[#262320]">
+                              {lot.commodity}
+                              {lot.variety && (
+                                <span className="font-normal text-sm text-[#635E59] ml-1.5 font-sans">
+                                  ({lot.variety})
+                                </span>
+                              )}
+                            </h4>
+                            <div className="flex items-center gap-1 text-xs text-[#635E59] mt-0.5">
+                              <MapPin className="w-3.5 h-3.5 text-[#1B4332] shrink-0" />
+                              <span className="truncate">{lot.location || lot.locationDistrict}</span>
+                            </div>
+                          </div>
+
+                          {/* Pricing & Volume Strip */}
+                          <div className="bg-[#FAF8F5] p-3 rounded-[6px] border border-[#ECE7DE] flex items-center justify-between">
+                            <div>
+                              <span className="text-[11px] text-[#635E59] block">{t.lots.volume}</span>
+                              <span className="font-bold text-sm text-[#262320]">
+                                {lot.quantity} {lot.unit}
+                              </span>
+                              {lot.unit !== 'Quintal' && (
+                                <span className="text-[10px] text-[#635E59] block">
+                                  ({lot.quantityQuintals} Quintals)
+                                </span>
+                              )}
+                            </div>
+
+                            <div className="text-right">
+                              <span className="text-[11px] text-[#635E59] block">{t.lots.targetPrice}</span>
+                              <div className="text-base font-bold text-[#1B4332]">
+                                ₹{price.toLocaleString('en-IN')}
+                                <span className="text-[10px] font-normal text-[#635E59]">/{t.common.perQuintal}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Net Realisation Differentiator Tag */}
+                          <div className="flex items-center justify-between text-[11px] text-[#2D6A4F] bg-[#EAF2ED]/70 p-2 rounded border border-[#B7D5C4]/60">
+                            <span className="font-semibold">Est. Net Realisation:</span>
+                            <span className="font-bold text-[#1B4332]">₹{estNetRealisation.toLocaleString('en-IN')}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Card Footer Actions */}
+                      <div className="p-4 pt-0 flex items-center gap-2">
+                        <Link href={`/lots/${lot.lotCode || lot.id}`} className="flex-1">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="w-full text-xs border-[#1B4332] text-[#1B4332] hover:bg-[#EAF2ED] font-semibold h-9"
+                          >
+                            <span>{t.lots.viewDetails}</span>
+                            <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* 2. COMPACT TABLE VIEW */}
+            {viewMode === 'TABLE' && (
+              <>
+                {/* Desktop Table View (md+) */}
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left text-sm">
                 <thead className="bg-[#F4F1EA] text-[#5A554E] uppercase text-[11px] font-bold tracking-wider border-b border-[#D8D2C4]">
@@ -578,6 +747,8 @@ function LotsPageContent() {
                 );
               })}
             </div>
+            </>
+            )}
           </CardContent>
         </Card>
       )}
@@ -897,6 +1068,16 @@ function LotsPageContent() {
           </div>
         </div>
       )}
+
+      {/* Farmer-First Guided 4-Step Listing Flow */}
+      <SellMyCropWizard
+        isOpen={isSellWizardOpen}
+        onClose={() => setIsSellWizardOpen(false)}
+        onSuccess={(newLot) => {
+          setIsSellWizardOpen(false);
+          setLots((prev) => [newLot, ...prev]);
+        }}
+      />
     </PageContainer>
   );
 }

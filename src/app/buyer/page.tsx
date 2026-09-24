@@ -35,7 +35,10 @@ import {
   Search,
   CheckCircle2,
   AlertCircle,
+  History,
+  Trash2,
 } from 'lucide-react';
+import { RoleHistoryView } from '@/components/shared/RoleHistoryView';
 import { ProduceLot, DemandMatchResult } from '@/types';
 
 // Prototype Demo Buyers Configuration
@@ -205,9 +208,9 @@ function BuyerPortalContent() {
   const [selectedBuyerKey, setSelectedBuyerKey] = useState<DemoBuyerKey>('ABC_FOODS');
   const activeBuyer = DEMO_BUYERS.find((b) => b.key === selectedBuyerKey) || DEMO_BUYERS[0];
 
-  // Active Tab: 'demands' | 'create_demand' | 'browse_lots' | 'my_offers' | 'purchases'
+  // Active Tab: 'demands' | 'create_demand' | 'browse_lots' | 'my_offers' | 'purchases' | 'history'
   const initialTab = (searchParams?.get('tab') as string) || 'demands';
-  const [activeTab, setActiveTab] = useState<'demands' | 'create_demand' | 'browse_lots' | 'my_offers' | 'purchases'>(
+  const [activeTab, setActiveTab] = useState<'demands' | 'create_demand' | 'browse_lots' | 'my_offers' | 'purchases' | 'history'>(
     initialTab === 'create'
       ? 'create_demand'
       : initialTab === 'lots'
@@ -216,8 +219,21 @@ function BuyerPortalContent() {
       ? 'my_offers'
       : initialTab === 'purchases'
       ? 'purchases'
+      : initialTab === 'history'
+      ? 'history'
       : 'demands'
   );
+
+  useEffect(() => {
+    const t = searchParams?.get('tab');
+    if (!t) return;
+    if (t === 'create' || t === 'create_demand') setActiveTab('create_demand');
+    else if (t === 'lots' || t === 'browse_lots') setActiveTab('browse_lots');
+    else if (t === 'offers' || t === 'my_offers') setActiveTab('my_offers');
+    else if (t === 'purchases') setActiveTab('purchases');
+    else if (t === 'history') setActiveTab('history');
+    else if (t === 'demands') setActiveTab('demands');
+  }, [searchParams]);
 
   // Data States
   const [demands, setDemands] = useState<BuyerDemandItem[]>([]);
@@ -227,6 +243,33 @@ function BuyerPortalContent() {
   const [lotMatchesMap, setLotMatchesMap] = useState<Record<string, DemandMatchResult[]>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Demand Deletion State
+  const [demandToDelete, setDemandToDelete] = useState<BuyerDemandItem | null>(null);
+  const [isRemovingDemand, setIsRemovingDemand] = useState(false);
+  const [removeDemandError, setRemoveDemandError] = useState<string | null>(null);
+
+  const handleRemoveDemand = async (demandId: string) => {
+    try {
+      setIsRemovingDemand(true);
+      setRemoveDemandError(null);
+      const res = await fetch(`/api/buyer-demands/${encodeURIComponent(demandId)}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setRemoveDemandError(data.error || 'Cannot remove while transaction is active');
+        return;
+      }
+      setDemandToDelete(null);
+      setDemands((prev) => prev.filter((d) => d.id !== demandId));
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Failed to remove buyer demand';
+      setRemoveDemandError(msg);
+    } finally {
+      setIsRemovingDemand(false);
+    }
+  };
 
   // Demands Filter Controls (Tab 1)
   const [demandSearchQuery, setDemandSearchQuery] = useState('');
@@ -668,7 +711,7 @@ function BuyerPortalContent() {
               <div className="flex items-center justify-between">
                 <span className="font-bold text-[#262320] text-xs flex items-center gap-1.5 font-heading">
                   <ShieldCheck className="w-4 h-4 text-[#1B4332]" />
-                  <span>Credential & License Verification</span>
+                  <span>{t.buyerMatching.verifiedCredentials}</span>
                 </span>
                 <span className="text-[10px] text-[#5A554E] font-mono">MSAMB / APMC</span>
               </div>
@@ -706,7 +749,7 @@ function BuyerPortalContent() {
                 />
               </div>
               <p className="text-[#5A554E] text-[11px] leading-relaxed pt-1">
-                Performance metrics track on-time order acceptance, weighbridge reconciliation, and payment execution.
+                {t.buyerMatching.tradeAudit}
               </p>
             </div>
           </div>
@@ -808,6 +851,19 @@ function BuyerPortalContent() {
           >
             {purchases.length}
           </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('history')}
+          className={`px-3.5 py-2.5 rounded-[4px] font-bold flex items-center gap-2 transition-all shrink-0 min-h-[44px] ${
+            activeTab === 'history'
+              ? 'bg-[#1B4332] text-white'
+              : 'text-[#262320] bg-white border border-[#D8D2C4] hover:bg-[#F4F1EA]'
+          }`}
+        >
+          <History className="w-4 h-4" />
+          <span>{t.buyerMatching.tabHistory || 'History'}</span>
         </button>
       </div>
 
@@ -1051,9 +1107,77 @@ function BuyerPortalContent() {
                       <Package className="w-3.5 h-3.5" />
                       <span>{t.buyerMatching.viewMatchesBtn}</span>
                     </Button>
+
+                    {demand.status === 'ACTIVE' && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setRemoveDemandError(null);
+                          setDemandToDelete(demand);
+                        }}
+                        className="text-xs border-red-200 text-red-700 hover:bg-red-50 px-2.5 shrink-0"
+                        title="Cancel and remove this buyer demand"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </Button>
+                    )}
                   </div>
                 </Card>
               ))}
+            </div>
+          )}
+
+          {/* Visual Confirmation Modal for Buyer Demand Removal */}
+          {demandToDelete && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+              <div className="bg-white rounded-[10px] border border-[#D8D2C4] max-w-md w-full p-6 shadow-xl space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center shrink-0">
+                    <Trash2 className="w-5 h-5 text-red-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-bold text-[#262320]">Cancel & Remove Demand</h3>
+                    <p className="text-xs text-[#5A554E]">Requires explicit buyer confirmation</p>
+                  </div>
+                </div>
+
+                <p className="text-xs text-[#262320] leading-relaxed">
+                  Are you sure you want to cancel and remove your demand for <strong>{demandToDelete.commodity}</strong> ({demandToDelete.requiredQuantityQtl} {demandToDelete.unit || 'Quintals'} @ ₹{demandToDelete.targetPricePerQtl}/Qtl)? This will remove your demand from the active marketplace.
+                </p>
+
+                {removeDemandError && (
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-[6px] text-xs text-red-700 flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
+                    <span>{removeDemandError}</span>
+                  </div>
+                )}
+
+                <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#D8D2C4]">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={isRemovingDemand}
+                    onClick={() => {
+                      setDemandToDelete(null);
+                      setRemoveDemandError(null);
+                    }}
+                    className="text-xs border-[#D8D2C4] text-[#262320]"
+                  >
+                    Keep Demand
+                  </Button>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    disabled={isRemovingDemand}
+                    onClick={() => handleRemoveDemand(demandToDelete.id)}
+                    className="text-xs bg-red-600 hover:bg-red-700 text-white gap-1"
+                  >
+                    {isRemovingDemand && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                    Confirm Remove
+                  </Button>
+                </div>
+              </div>
             </div>
           )}
         </div>
@@ -1498,7 +1622,7 @@ function BuyerPortalContent() {
                       </CardContent>
                     </div>
 
-                    <div className="p-3 bg-[#FAFAF8] border-t border-[#D8D2C4] space-y-2">
+                    <div className="p-3 bg-[#FAFAF8] border-t border-[#D8D2C4]">
                       <div className="flex items-center gap-2">
                         <Link href={`/lots/${lot.id}`} className="flex-1">
                           <Button variant="outline" size="sm" fullWidth className="text-xs border-[#D8D2C4]">
@@ -1517,20 +1641,6 @@ function BuyerPortalContent() {
                           <span>{t.buyerMatching.makeOfferBtn}</span>
                         </Button>
                       </div>
-
-                      <Link
-                        href={`/calculator?price=${lot.expectedPricePerQuintal || lot.expectedPrice}&crop=${encodeURIComponent(lot.commodity)}&quantity=${lot.quantityQuintals || lot.quantity}&market=${encodeURIComponent(activeBuyer.district)}&distance=45`}
-                      >
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          fullWidth
-                          className="text-xs text-[#1B4332] hover:bg-white gap-1"
-                        >
-                          <Scale className="w-3 h-3 text-[#1B4332]" />
-                          <span>Check Net Realisation</span>
-                        </Button>
-                      </Link>
                     </div>
                   </Card>
                 );
@@ -1695,7 +1805,7 @@ function BuyerPortalContent() {
                             className="text-xs text-[#5A554E] hover:underline flex items-center gap-1"
                           >
                             <Scale className="w-3 h-3 text-[#1B4332]" />
-                            <span>Check Net Realisation</span>
+                            <span>Estimated Landed Cost</span>
                           </Link>
                         </div>
 
@@ -1842,6 +1952,13 @@ function BuyerPortalContent() {
             </div>
           )}
         </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* TAB 6: FULFILLED PROCUREMENT HISTORY */}
+      {/* ========================================================================= */}
+      {activeTab === 'history' && (
+        <RoleHistoryView role="BUYER" />
       )}
 
       {/* ========================================================================= */}

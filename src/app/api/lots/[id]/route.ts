@@ -223,3 +223,73 @@ export async function PATCH(request: NextRequest, { params }: RouteContext) {
     );
   }
 }
+
+/**
+ * DELETE /api/lots/[id]
+ * Removes an active produce lot owned by the farmer.
+ * Strictly prevents deletion if involved in an active transaction/escrow/delivery.
+ * Sets status to 'CANCELLED' to preserve historical records and count integrity.
+ */
+export async function DELETE(request: NextRequest, { params }: RouteContext) {
+  try {
+    const { farmerProfile } = await getDemoFarmer();
+    const { id } = params;
+
+    const existingLot = await db.produceLot.findFirst({
+      where: {
+        farmerId: farmerProfile.id,
+        OR: [{ id }, { lotCode: id }],
+      },
+      include: {
+        transactions: true,
+        transportRequests: true,
+      },
+    });
+
+    if (!existingLot) {
+      return NextResponse.json(
+        { success: false, error: 'Produce lot not found or access denied.' },
+        { status: 404 }
+      );
+    }
+
+    // Prevent removal if involved in active transaction/escrow/delivery
+    const hasActiveTxn = existingLot.transactions.some(
+      (tx) => !['COMPLETED', 'CANCELLED', 'REFUNDED'].includes(tx.status)
+    );
+    const hasActiveTransport = existingLot.transportRequests.some(
+      (tr) => ['ACCEPTED', 'IN_TRANSIT'].includes(tr.status)
+    );
+
+    if (
+      hasActiveTxn ||
+      hasActiveTransport ||
+      existingLot.status === 'SOLD' ||
+      existingLot.status === 'RESERVED'
+    ) {
+      return NextResponse.json(
+        { success: false, error: 'Cannot remove while transaction is active' },
+        { status: 400 }
+      );
+    }
+
+    // Soft delete to CANCELLED to preserve audit trail and total count assertions
+    const updatedLot = await db.produceLot.update({
+      where: { id: existingLot.id },
+      data: { status: 'CANCELLED' },
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: `Produce lot ${updatedLot.lotCode} removed successfully.`,
+      data: updatedLot,
+    });
+  } catch (error) {
+    console.error('Error removing produce lot:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to remove produce lot.' },
+      { status: 500 }
+    );
+  }
+}
+

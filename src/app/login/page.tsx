@@ -30,7 +30,7 @@ function LoginFormContent() {
   const isSwitching = searchParams.get('switch') === 'true';
 
   const [selectedRole, setSelectedRole] = useState<DemoRole | null>(
-    roleParam && ['FARMER', 'BUYER', 'TRANSPORTER'].includes(roleParam)
+    roleParam && ['FARMER', 'BUYER', 'TRANSPORTER', 'INSPECTOR', 'ADMIN'].includes(roleParam)
       ? roleParam
       : isSwitching
       ? null
@@ -114,7 +114,7 @@ function LoginFormContent() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-xs font-bold uppercase tracking-wider text-[#1B4332] bg-[#FFFFFF] px-2 py-0.5 rounded-[2px] border border-[#B7D5C4]">
-                  {t.common.authCurrentRole}: {user.role === 'FARMER' ? t.common.authFarmerRole : user.role === 'BUYER' ? t.common.authBuyerRole : t.common.authTransporterRole}
+                  {t.common.authCurrentRole}: {user.role === 'FARMER' ? t.common.authFarmerRole : user.role === 'BUYER' ? t.common.authBuyerRole : user.role === 'TRANSPORTER' ? t.common.authTransporterRole : user.role === 'INSPECTOR' ? t.nav.inspector : t.nav.admin}
                 </span>
               </div>
               <p className="text-sm font-bold text-[#262320] mt-0.5">
@@ -164,7 +164,7 @@ function LoginFormContent() {
           </h2>
           {selectedRole && (
             <span className="text-xs text-[#1B4332] font-semibold bg-[#EAF2ED] px-2 py-0.5 rounded-[2px] border border-[#B7D5C4]">
-              {selectedRole === 'FARMER' ? t.common.authFarmerRole : selectedRole === 'BUYER' ? t.common.authBuyerRole : t.common.authTransporterRole}
+              {selectedRole === 'FARMER' ? t.common.authFarmerRole : selectedRole === 'BUYER' ? t.common.authBuyerRole : selectedRole === 'TRANSPORTER' ? t.common.authTransporterRole : selectedRole === 'INSPECTOR' ? t.nav.inspector : t.nav.admin}
             </span>
           )}
         </div>
@@ -232,6 +232,35 @@ function LoginFormContent() {
             );
           })}
         </div>
+
+        {/* Official & Regulatory Access Options */}
+        <div className="mt-4 flex flex-wrap items-center justify-center sm:justify-end gap-2 text-xs text-[#635E59]">
+          <span className="font-semibold text-[#262320]">Official & Regulatory Access:</span>
+          <button
+            type="button"
+            onClick={() => handleRoleSelect('INSPECTOR')}
+            className={`px-3 py-1.5 rounded-[4px] border text-xs font-semibold transition-colors min-h-[36px] flex items-center gap-1.5 ${
+              selectedRole === 'INSPECTOR'
+                ? 'bg-[#1B4332] text-white border-[#1B4332]'
+                : 'bg-[#FFFFFF] text-[#1B4332] border-[#D8D2C4] hover:bg-[#EAF2ED]'
+            }`}
+          >
+            <ShieldCheck className="w-3.5 h-3.5" />
+            <span>{t.nav.inspector}</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => handleRoleSelect('ADMIN')}
+            className={`px-3 py-1.5 rounded-[4px] border text-xs font-semibold transition-colors min-h-[36px] flex items-center gap-1.5 ${
+              selectedRole === 'ADMIN'
+                ? 'bg-[#1B4332] text-white border-[#1B4332]'
+                : 'bg-[#FFFFFF] text-[#1B4332] border-[#D8D2C4] hover:bg-[#EAF2ED]'
+            }`}
+          >
+            <Lock className="w-3.5 h-3.5" />
+            <span>{t.nav.admin}</span>
+          </button>
+        </div>
       </div>
 
       {/* Step 2: Login Form for Selected Role */}
@@ -245,8 +274,12 @@ function LoginFormContent() {
                   <Users className="w-4 h-4" />
                 ) : selectedRole === 'BUYER' ? (
                   <Store className="w-4 h-4" />
-                ) : (
+                ) : selectedRole === 'TRANSPORTER' ? (
                   <Truck className="w-4 h-4" />
+                ) : selectedRole === 'INSPECTOR' ? (
+                  <ShieldCheck className="w-4 h-4" />
+                ) : (
+                  <Lock className="w-4 h-4" />
                 )}
               </div>
               <div>
@@ -255,7 +288,11 @@ function LoginFormContent() {
                     ? t.common.authFarmerRole
                     : selectedRole === 'BUYER'
                     ? t.common.authBuyerRole
-                    : t.common.authTransporterRole} Portal Login
+                    : selectedRole === 'TRANSPORTER'
+                    ? t.common.authTransporterRole
+                    : selectedRole === 'INSPECTOR'
+                    ? t.nav.inspector
+                    : t.nav.admin} Portal Login
                 </h3>
                 <p className="text-xs font-body text-[#635E59]">
                   {DEMO_USERS[selectedRole].fullName} ({DEMO_USERS[selectedRole].location})

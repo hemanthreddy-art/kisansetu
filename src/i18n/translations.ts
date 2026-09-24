@@ -103,7 +103,18 @@ export interface TranslationDictionary {
     authRolePillTransporter: string;
     authCurrentRole: string;
     authLoggedOut: string;
-  };
+  
+    unitKg: string;
+    unitTonnes: string;
+    unitQuintal: string;
+    dismiss: string;
+    allPublicPortals: string;
+    mandiPricesNav: string;
+    storageNav: string;
+    fpoNav: string;
+    calculatorNav: string;
+    marketplaceNav: string;
+    };
   home: {
     transparentProcess: string;
     howItWorksTitle: string;
@@ -214,7 +225,23 @@ export interface TranslationDictionary {
     switchRole: string;
     myDashboard: string;
     account: string;
-  };
+  
+    storage: string;
+    fpo: string;
+  
+    sellCropBtn: string;
+    myCrops: string;
+    findBuyers: string;
+    myDeliveries: string;
+    history: string;
+    marketplace: string;
+    myPurchases: string;
+    demands: string;
+    availableRequests: string;
+    earnings: string;
+    switchRoleDemo: string;
+    moreServices: string;
+    };
   hero: {
     badge: string;
     titleMain: string;
@@ -334,7 +361,110 @@ export interface TranslationDictionary {
     qualityAction: string;
     noticeTitle: string;
     noticeDesc: string;
-  };
+  
+    sellMyCropHero: string;
+    viewOffers: string;
+    tabMyCrops: string;
+    tabFindBuyers: string;
+    tabMyDeliveries: string;
+    tabHistory: string;
+    tabComplaints: string;
+    wizardTitle: string;
+    wizardSubtitle: string;
+    step1Title: string;
+    step1Subtitle: string;
+    step2Title: string;
+    step2Subtitle: string;
+    step3Title: string;
+    step3Subtitle: string;
+    step4Title: string;
+    step4Subtitle: string;
+    takePhotoBtn: string;
+    uploadPhotoBtn: string;
+    cameraNotAvailable: string;
+    photoCount: string;
+    removePhoto: string;
+    retakePhoto: string;
+    aiScreeningNotice: string;
+    aiEstimatedGrade: string;
+    aiColorObservation: string;
+    aiDamageObservation: string;
+    publishBtn: string;
+    publishSuccess: string;
+    stageAvailable: string;
+    stageSold: string;
+    stageHandedOver: string;
+    stagePaymentProcessing: string;
+    stageCompleted: string;
+    chooseTransporterBtn: string;
+    ownTransportBtn: string;
+    transporterProximity: string;
+    routeDeliveryDistance: string;
+    freightEstimate: string;
+    noLotsTitle: string;
+    noLotsDesc: string;
+    historyTitle: string;
+    historyEmpty: string;
+    settlementReceipt: string;
+    netPaidToBank: string;
+    grossAmount: string;
+    transportDeduction: string;
+    mandiFeeDeduction: string;
+    platformFee: string;
+    freePromo: string;
+    stepNext: string;
+    stepBack: string;
+    closeWizard: string;
+  
+    fpoDeskTitle: string;
+    fpoDeskSubtitle: string;
+    fpoBadge: string;
+    fpoName: string;
+    fpoRegNo: string;
+    fpoEligibleLotsTitle: string;
+    fpoEligibleLotsSub: string;
+    fpoSelectedCount: string;
+    fpoTotalAggregatedQty: string;
+    fpoAvgPrice: string;
+    fpoTotalValuation: string;
+    fpoTargetBuyerDemandTitle: string;
+    fpoTargetBuyerDemandSub: string;
+    fpoPricePremium: string;
+    fpoCreateAggregatedLotBtn: string;
+    fpoAggregationSuccess: string;
+    fpoAggregatedLotCode: string;
+    fpoViewInMarketplace: string;
+  
+    clarityHarvestInventory: string;
+    clarityWhatCanSell: string;
+    clarityBuyerLinkages: string;
+    clarityWhoWantsBuy: string;
+    clarityDirectBids: string;
+    clarityOffersReceived: string;
+    clarityNextAction: string;
+    clarityWhatNext: string;
+    browseBuyerDemandsBtn: string;
+    inspectOffersBtn: string;
+    reviewPendingBidsBtn: string;
+    whyPhotosTitle: string;
+    whyPhotosDesc: string;
+    unitLabel: string;
+    districtLabel: string;
+    mandiBenchmark: string;
+    estGrossPayout: string;
+    uploadedPhotos: string;
+    transportArrangement: string;
+    selfTransport: string;
+    changeBtn: string;
+    availTransporters: string;
+    amountYouReceive: string;
+    estAmountYouReceive: string;
+    supplyThisCrop: string;
+    ownTransportOption: string;
+    bookTransporter: string;
+    bestNetRealisation: string;
+    estDeductionsNotice: string;
+    };
   lots: {
     badge: string;
     title: string;
@@ -368,6 +498,7 @@ export interface TranslationDictionary {
     cropLabel: string;
     selectCrop: string;
     cropCustomPlaceholder: string;
+    selectOrTypeCrop: string;
     varietyLabel: string;
     varietyPlaceholder: string;
     quantityLabel: string;
@@ -414,6 +545,29 @@ export interface TranslationDictionary {
     activeLotsSub: string;
     notGraded: string;
     offersCount: string;
+    readyForPickup: string;
+    actionRequiredBadge: string;
+    dealAgreedBadge: string;
+    inTransitBadge: string;
+    settledBadge: string;
+    marketplaceLiveBadge: string;
+    reviewOffersBtn: string;
+    viewMatchedBuyersBtn: string;
+    checkSaleWindowBtn: string;
+    viewDispatchStatusBtn: string;
+    viewSettlementReceiptBtn: string;
+    preliminaryRecorded: string;
+    physicalPending: string;
+    capturedByFarmer: string;
+    submittedCropPhoto: string;
+    representativeLabel: string;
+    buyerTargetPrice: string;
+    requiredQuantity: string;
+    targetGrade: string;
+    anyGrade: string;
+    distanceAndTrips: string;
+    vehicleLabel: string;
+    totalFreightLabel: string;
 
   };
   quality: {
@@ -598,6 +752,11 @@ export interface TranslationDictionary {
     tradeAudit: string;
     postProcurementDemand: string;
 
+  
+    tabDemands: string;
+    tabHistory: string;
+    historyTitle: string;
+    historyEmpty: string;
   };
   transport: {
     hubTitle: string;
@@ -682,6 +841,11 @@ export interface TranslationDictionary {
     corridorMilestoneTracking: string;
     transitCompleted: string;
 
+  
+    tabAvailableTrips: string;
+    tabHistory: string;
+    historyTitle: string;
+    historyEmpty: string;
   };
   netRealisation: {
     ledgerTitle: string;
@@ -740,6 +904,55 @@ export interface TranslationDictionary {
     mandiYardLabel: string;
     directBuyerLabel: string;
     storageProjectionLabel: string;
+  
+    storageTitle: string;
+    storageSubtitle: string;
+    storageBadge: string;
+    storageDemoNotice: string;
+    storageDryWarehouse: string;
+    storageColdStorage: string;
+    storageVentilatedChawl: string;
+    storageAvailableCapacity: string;
+    storageDistanceFromFarm: string;
+    storageSuitableCrops: string;
+    storageCalcTitle: string;
+    storageCalcSub: string;
+    storageCurrentValue: string;
+    storageEstimatedCost: string;
+    storageProjectedValue: string;
+    storageNetAdvantage: string;
+    storageReserveBtn: string;
+    storageReservationSuccess: string;
+    storageReceiptNumber: string;
+    storageCloseModal: string;
+    storageViewFacilities: string;
+    storageScientificChawl: string;
+    filterByCrop: string;
+    allDistricts: string;
+    environment: string;
+    recommendedDuration: string;
+    suitableForYourCrop: string;
+    sellNowOption: string;
+    holding15d: string;
+    holding30d: string;
+    holding60d: string;
+    holding90d: string;
+    highestEstimatedOption: string;
+    shrinkageLoss: string;
+    storageNotEconomic: string;
+    advisoryPriceNotice: string;
+    windowCardTitle: string;
+    windowBadge: string;
+    windowRecommendedAction: string;
+    windowSellSoon: string;
+    windowHoldAndStore: string;
+    windowWaitAndWatch: string;
+    windowSignalsTitle: string;
+    windowDemandSignal: string;
+    windowPriceTrendSignal: string;
+    windowArrivalsSignal: string;
+    windowHoldingUpsideSignal: string;
+    windowDisclaimer: string;
   };
   transactions: {
     hubTitle: string;
@@ -822,6 +1035,99 @@ export interface TranslationDictionary {
     closeDisputeBtn: string;
     grievanceRecordedNotice: string;
     noDisputesFound: string;
+    reportIssueBtn: string;
+    tabComplaints: string;
+    complaintsSub: string;
+    stepSelectProblem: string;
+    stepVerifyDetails: string;
+    stepAddEvidence: string;
+    stepReviewSubmit: string;
+    autoAttachedNotice: string;
+    categoryPaymentNotReceived: string;
+    categoryPaymentIncorrect: string;
+    categoryBuyerIssue: string;
+    categoryTransportIssue: string;
+    categoryProduceDamaged: string;
+    categoryDeliveryIssue: string;
+    categoryContractIssue: string;
+    evidenceOptional: string;
+    photoOrDocUpload: string;
+    voiceDictationBtn: string;
+    voiceDictationActive: string;
+    confirmSubmissionTitle: string;
+    confirmSubmissionDesc: string;
+    complaintSubmittedTitle: string;
+    complaintSubmittedDesc: string;
+    trackComplaintBtn: string;
+    decisionOutcomeLabel: string;
+    financialAdjustmentLabel: string;
+    resolvedOnLabel: string;
+    officialNotesLabel: string;
+    timelineSubmitted: string;
+    timelineReview: string;
+    timelineVerification: string;
+    timelineDecision: string;
+    timelineResolved: string;
+    statusOpenDesc: string;
+    statusReviewDesc: string;
+    statusResolvedDesc: string;
+    statusClosedDesc: string;
+    noComplaintsDesc: string;
+    // Buyer specific categories
+    categoryCropVarietyMismatch: string;
+    categoryQuantityShortfall: string;
+    categoryMoistureOrForeignMatter: string;
+    categoryProduceNotAsListed: string;
+    categoryFarmerFailedToDeliver: string;
+    categoryContractOrOfferIssue: string;
+    categoryFarmerCancellation: string;
+    categoryProduceDamagedInTransit: string;
+    categoryWrongDeliveryLocation: string;
+    // Transporter specific categories
+    categoryFarmerNotReady: string;
+    categoryPickupLocationIssue: string;
+    categoryLoadingIssue: string;
+    categoryBuyerDeliveryIssue: string;
+    categoryDeliveryInstructionChanged: string;
+    categoryFreightPaymentIssue: string;
+    categoryCancellationAfterConfirmation: string;
+    categoryUnsafeOrImpossiblePickup: string;
+    categoryTransporterNoShow: string;
+    categoryPickupDelayed: string;
+    categoryTransporterCancellation: string;
+    categoryFreightDiscrepancy: string;
+    categoryVehicleCapacityMismatch: string;
+    categoryTransporterMisconduct: string;
+    categoryDeliveryHandoverIssue: string;
+    // Promised vs Actual Comparison & Counterparty
+    promisedVsActualTitle: string;
+    promisedMetric: string;
+    promisedContracted: string;
+    promisedDelivered: string;
+    promisedShortfall: string;
+    promisedNotRecorded: string;
+    promisedScheduledPickup: string;
+    promisedActualArrival: string;
+    promisedScheduledDelivery: string;
+    promisedActualDelivery: string;
+    promisedAgreedFreight: string;
+    promisedClaimedFreight: string;
+    promisedAgreedPrice: string;
+    promisedBilledPrice: string;
+    promisedAgreedVariety: string;
+    promisedDeliveredVariety: string;
+    promisedAgreedGrade: string;
+    promisedVerifiedGrade: string;
+    counterpartyFarmer: string;
+    counterpartyBuyer: string;
+    counterpartyTransporter: string;
+    complaintAgainst: string;
+    complaintFrom: string;
+    waitingHoursLabel: string;
+    extraKmLabel: string;
+    excessWeightLabel: string;
+    deliveredWeightLabel: string;
+
   };
   calculator: {
     title: string;
@@ -878,6 +1184,22 @@ export interface TranslationDictionary {
     filterTitle: string;
     noMandisMatch: string;
 
+  
+    trendChartTitle: string;
+    trendChartSubtitle: string;
+    trendDemoNotice: string;
+    trendSevenDays: string;
+    trendFifteenDays: string;
+    trendThirtyDays: string;
+    trendModalPrice: string;
+    trendPriceRange: string;
+    trendPeriodChange: string;
+    trendArrivals: string;
+    trendSelectCrop: string;
+    trendSelectMandi: string;
+    trendBadgeRising: string;
+    trendBadgeSoftening: string;
+    trendBadgeSteady: string;
   };
   voice: {
     buttonLabel: string;
@@ -900,8 +1222,14 @@ export interface TranslationDictionary {
     queryTransport: string;
     queryOffers: string;
     queryTxns: string;
+    typeQueryPlaceholder: string;
+    askKisanSetu: string;
+    confirmActionTitle: string;
+    confirmActionPrompt: string;
+    confirmButton: string;
+    cancelButton: string;
+    unrecognizedHelp: string;
   };
-
 }
 
 export const translations: Record<Locale, TranslationDictionary> = {
@@ -980,8 +1308,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "summaryDiscrepancy": "Summary of Discrepancy:",
       "adjudicationNotes": "Adjudication Determination & Officer Notes",
       "noGrievancesFound": "No grievances matching current filter.",
-      "monitoredActiveTrades": "Monitored Active Trades"
-    ,
+      "monitoredActiveTrades": "Monitored Active Trades",
       authLoginTitle: "KisanSetu Portal Access",
       authLoginSubtitle: "Select your agricultural role to enter your dedicated marketplace workspace.",
       authChooseRole: "Choose how you are using KisanSetu",
@@ -1005,6 +1332,17 @@ export const translations: Record<Locale, TranslationDictionary> = {
       authRolePillTransporter: "Transporter",
       authCurrentRole: "Active Role",
       authLoggedOut: "Logged Out",
+    
+      unitKg: "Kilograms (Kg)",
+      unitTonnes: "Tonnes (MT)",
+      unitQuintal: "Quintal (Qtl)",
+      dismiss: "Dismiss",
+      allPublicPortals: "Public Portals",
+      mandiPricesNav: "Mandi Prices",
+      storageNav: "Storage Facilities",
+      fpoNav: "FPO Aggregator",
+      calculatorNav: "Net Realisation",
+      marketplaceNav: "Produce Marketplace",
     },
     home: {
       "transparentProcess": "Transparent Process",
@@ -1115,6 +1453,21 @@ export const translations: Record<Locale, TranslationDictionary> = {
     switchRole: 'Switch Role',
     myDashboard: 'My Dashboard',
     account: 'Account',
+      storage: "Storage & Warehousing",
+      fpo: "FPO Aggregator",
+    
+      sellCropBtn: "+ SELL MY CROP",
+      myCrops: "My Crops",
+      findBuyers: "Find Buyers",
+      myDeliveries: "My Deliveries",
+      history: "History",
+      marketplace: "Marketplace",
+      myPurchases: "My Purchases",
+      demands: "Demands",
+      availableRequests: "Available Requests",
+      earnings: "Earnings & History",
+      switchRoleDemo: "Switch Role",
+      moreServices: "More Services",
     },
     hero: {
       badge: 'Maharashtra & Coastal Agriculture Market Linkage',
@@ -1250,6 +1603,107 @@ export const translations: Record<Locale, TranslationDictionary> = {
       noticeTitle: 'Phase 2 Architecture Foundation',
       noticeDesc:
         'This route maps to FarmerProfile, FPO, ProduceLot, and Offer models in SQLite via Prisma Client with live persistence.',
+      fpoDeskTitle: "FPO Micro-Lot Aggregation Desk",
+      fpoDeskSubtitle: "Pool multiple smallholder harvests into standardized institutional bulk lots to command higher corporate prices.",
+      fpoBadge: "Smallholder Aggregation",
+      fpoName: "Nashik Agro Farmer Producer Co.",
+      fpoRegNo: "Reg: MH-NSK-FPO-2024-8841",
+      fpoEligibleLotsTitle: "Eligible Smallholder Micro-Lots",
+      fpoEligibleLotsSub: "Select produce lots (10–35 Qtl) to aggregate into a single container supply.",
+      fpoSelectedCount: "Selected Lots",
+      fpoTotalAggregatedQty: "Total Aggregated Quantity",
+      fpoAvgPrice: "Average Price",
+      fpoTotalValuation: "Total Consignment Value",
+      fpoTargetBuyerDemandTitle: "Target Institutional Buyer Demand",
+      fpoTargetBuyerDemandSub: "Matched corporate buyer procurement requirement fulfilled by this aggregation.",
+      fpoPricePremium: "FPO Bulk Premium",
+      fpoCreateAggregatedLotBtn: "Create Aggregated Bulk Lot",
+      fpoAggregationSuccess: "Bulk Lot Successfully Aggregated!",
+      fpoAggregatedLotCode: "Aggregated Lot Code",
+      fpoViewInMarketplace: "View in Marketplace",
+      sellMyCropHero: "+ SELL MY CROP",
+      viewOffers: "View Offers",
+      tabMyCrops: "My Crops",
+      tabFindBuyers: "Find Buyers",
+      tabMyDeliveries: "My Deliveries",
+      tabHistory: "History",
+      tabComplaints: "Complaints & Issues",
+      wizardTitle: "Sell My Crop",
+      wizardSubtitle: "Direct produce listing with instant AI visual screening",
+      step1Title: "Crop Details",
+      step1Subtitle: "Commodity, harvest quantity and target price",
+      step2Title: "Upload Photos",
+      step2Subtitle: "Capture directly with camera or upload produce photos",
+      step3Title: "AI Quality Screening",
+      step3Subtitle: "Instant visual screening — non-binding preliminary assessment",
+      step4Title: "Review & Publish",
+      step4Subtitle: "Verify details and publish directly to active buyers",
+      takePhotoBtn: "Take Photo with Camera",
+      uploadPhotoBtn: "Choose from Gallery / Files",
+      cameraNotAvailable: "Camera capture not accessible on this device. Please choose a file.",
+      photoCount: "Produce Photos ({count}/4)",
+      removePhoto: "Remove",
+      retakePhoto: "Retake",
+      aiScreeningNotice: "AI Screening — Not Verified. Official grading is confirmed upon delivery/inspection.",
+      aiEstimatedGrade: "Estimated Grade",
+      aiColorObservation: "Surface Color & Uniformity",
+      aiDamageObservation: "Visual Defects & Blemishes",
+      publishBtn: "PUBLISH MY CROP",
+      publishSuccess: "Produce lot successfully published! Buyers can now place offers.",
+      stageAvailable: "Available",
+      stageSold: "Sold — Handover Pending",
+      stageHandedOver: "Handed Over",
+      stagePaymentProcessing: "Payment Processing",
+      stageCompleted: "Completed",
+      chooseTransporterBtn: "Choose KisanSetu Transporter",
+      ownTransportBtn: "I'll arrange my own transport",
+      transporterProximity: "away from farm",
+      routeDeliveryDistance: "delivery corridor distance",
+      freightEstimate: "Estimated Freight",
+      noLotsTitle: "No Active Crops Listed",
+      noLotsDesc: "Click '+ SELL MY CROP' to list your harvested produce directly for verified buyers.",
+      historyTitle: "Completed Sales History",
+      historyEmpty: "No completed sales yet. Finalized transactions are archived here with full settlement receipts.",
+      settlementReceipt: "Settlement Receipt",
+      netPaidToBank: "Net Cash Transferred to Bank/UPI",
+      grossAmount: "Gross Sale Value",
+      transportDeduction: "Transport Freight Deduction",
+      mandiFeeDeduction: "Mandi Cess / User Fee",
+      platformFee: "Platform Convenience Fee",
+      freePromo: "₹0 (Free Govt Promo)",
+      stepNext: "Next Step",
+      stepBack: "Back",
+      closeWizard: "Close",
+    
+      clarityHarvestInventory: "1. Harvest Inventory",
+      clarityWhatCanSell: "What can I sell?",
+      clarityBuyerLinkages: "2. Buyer Linkages",
+      clarityWhoWantsBuy: "Who wants to buy it?",
+      clarityDirectBids: "3. Direct Bids",
+      clarityOffersReceived: "What offers have I received?",
+      clarityNextAction: "4. Next Action Step",
+      clarityWhatNext: "What should I do next?",
+      browseBuyerDemandsBtn: "Browse Buyer Demands →",
+      inspectOffersBtn: "Inspect Offers",
+      reviewPendingBidsBtn: "Review Pending Bids",
+      whyPhotosTitle: "Why upload produce photos?",
+      whyPhotosDesc: "Photos are used for instant visual screening (color, grain size, uniformity) so buyers can make verified pre-dispatch bids.",
+      unitLabel: "Unit",
+      districtLabel: "District",
+      mandiBenchmark: "Mandi Benchmark",
+      estGrossPayout: "Est. Gross Payout",
+      uploadedPhotos: "Uploaded Photos",
+      transportArrangement: "Transport Arrangement",
+      selfTransport: "Self-Arranged Transport",
+      changeBtn: "Change",
+      availTransporters: "Available Verified Transporters",
+      amountYouReceive: "Amount You Receive",
+      estAmountYouReceive: "Estimated Amount You Receive",
+      supplyThisCrop: "Supply This Crop",
+      ownTransportOption: "Deliver myself / Arrange own vehicle (₹0 Transport)",
+      bookTransporter: "Book KisanSetu Transporter",
+      bestNetRealisation: "Best Net Realisation",
+      estDeductionsNotice: "Estimated amount after expected transport and applicable deductions. Not a guaranteed payout until an offer is accepted.",
     },
     lots: {
       "totalRegisteredLots": "Total registered lots",
@@ -1261,6 +1715,29 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "activeLotsSub": "Active lots published for buyer matching and transport dispatch",
       "notGraded": "Not Graded",
       "offersCount": "offers",
+      "readyForPickup": "Ready for pickup",
+      "actionRequiredBadge": "Action Required",
+      "dealAgreedBadge": "Deal Agreed",
+      "inTransitBadge": "In Transit",
+      "settledBadge": "Trade Settled",
+      "marketplaceLiveBadge": "Marketplace Live",
+      "reviewOffersBtn": "Review Offers",
+      "viewMatchedBuyersBtn": "View Matched Buyers",
+      "checkSaleWindowBtn": "Check Sale Window",
+      "viewDispatchStatusBtn": "View Dispatch Status",
+      "viewSettlementReceiptBtn": "View Settlement Receipt",
+      "preliminaryRecorded": "Preliminary Screening Recorded",
+      "physicalPending": "Physical verification pending. Certified quality inspectors will conduct in-person physical assaying.",
+      "capturedByFarmer": "Captured by farmer during listing",
+      "submittedCropPhoto": "Submitted Produce Photo",
+      "representativeLabel": "Representative",
+      "buyerTargetPrice": "Buyer Target Price",
+      "requiredQuantity": "Required Quantity",
+      "targetGrade": "Target Grade",
+      "anyGrade": "Any Grade",
+      "distanceAndTrips": "Distance & Trips",
+      "vehicleLabel": "Vehicle",
+      "totalFreightLabel": "Total Freight",
       badge: 'DIGITAL PRODUCE LOTS',
       title: 'Digital Produce Lots',
       subtitle:
@@ -1294,6 +1771,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       cropLabel: 'Commodity / Crop',
       selectCrop: 'Select a crop',
       cropCustomPlaceholder: 'Or type custom crop name',
+      selectOrTypeCrop: 'Select below or type custom crop',
       varietyLabel: 'Variety / Cultivar',
       varietyPlaceholder: 'e.g. Nashik Red Garva, JS-335, Shirdi Safed',
       quantityLabel: 'Harvest Quantity',
@@ -1512,6 +1990,10 @@ export const translations: Record<Locale, TranslationDictionary> = {
       trustNoticeTitle: 'KisanSetu Transparency & Trust Architecture',
       trustNoticeDesc: 'Credential verification (GSTIN / APMC compliance) and commercial trade performance are kept strictly independent. Real inspection certificates are verified independently from AI screening.',
       demoNotice: 'DEMO NOTICE: Buyer profiles and offers are simulated demonstrations for agricultural market linkages.',
+      tabDemands: "Active Buyer Demands",
+      tabHistory: "Purchase History",
+      historyTitle: "Fulfilled Procurement History",
+      historyEmpty: "No past completed purchases. Fulfilled contracts will appear here.",
     },
     transport: {
       "refreshNetwork": "Refresh Network",
@@ -1595,6 +2077,10 @@ export const translations: Record<Locale, TranslationDictionary> = {
       activeBookingsTitle: 'Transport Bookings for this Lot',
       noBookingsYet: 'No transport booked yet. Select an option below to request dispatch.',
       demoNotice: 'DEMO NOTICE: Logistics simulation for agricultural corridors. Does not initiate real vehicular dispatch or payment processing.',
+      tabAvailableTrips: "Available Freight Orders",
+      tabHistory: "Trip History",
+      historyTitle: "Completed Transport Hauls",
+      historyEmpty: "No completed deliveries yet. Settled freight trips will be logged here.",
     },
     netRealisation: {
       ledgerTitle: "Net Realisation Ledger",
@@ -1653,6 +2139,54 @@ export const translations: Record<Locale, TranslationDictionary> = {
       mandiYardLabel: 'APMC Regulated Mandi',
       directBuyerLabel: 'Direct Commercial Buyer',
       storageProjectionLabel: 'Warehouse Storage Projection',
+      storageTitle: "Nearby Agri Warehousing & Cold Storage",
+      storageSubtitle: "Discover MSWC and WDRA-accredited dry warehouses and cold storages to prevent post-harvest distress selling.",
+      storageBadge: "Govt MSWC Network",
+      storageDemoNotice: "Storage discovery & tariff simulator (Demo Prototype — MSWC / WDRA Network)",
+      storageDryWarehouse: "Dry Warehouse",
+      storageColdStorage: "Cold Storage",
+      storageVentilatedChawl: "Ventilated Onion Chawl",
+      storageAvailableCapacity: "Available Capacity",
+      storageDistanceFromFarm: "Distance from your farm",
+      storageSuitableCrops: "Suitable Crops",
+      storageCalcTitle: "Store & Sell Later Calculator",
+      storageCalcSub: "Compare selling today versus storing for 30 days to see if projected market price recovery exceeds warehouse rent.",
+      storageCurrentValue: "Today's Immediate Sale Value",
+      storageEstimatedCost: "Warehouse Tariff (30 Days)",
+      storageProjectedValue: "Projected Sale Value After 30 Days",
+      storageNetAdvantage: "Net Storage Advantage",
+      storageReserveBtn: "Book Storage Space",
+      storageReservationSuccess: "Storage Inward Pass Generated!",
+      storageReceiptNumber: "Inward Pass No.",
+      storageCloseModal: "Close",
+      storageViewFacilities: "Explore Warehouses",
+      storageScientificChawl: "Scientific Onion Storage",
+      filterByCrop: "Filter by Crop",
+      allDistricts: "All Districts",
+      environment: "Storage Atmosphere",
+      recommendedDuration: "Recommended Duration",
+      suitableForYourCrop: "Suitable for Selected Crop",
+      sellNowOption: "Sell Now (Immediate Mandi Sale)",
+      holding15d: "Store 15 Days",
+      holding30d: "Store 30 Days",
+      holding60d: "Store 60 Days",
+      holding90d: "Store 90 Days",
+      highestEstimatedOption: "★ Highest Estimated Return",
+      shrinkageLoss: "Estimated Moisture/Spoilage Loss",
+      storageNotEconomic: "Storage Not Economic — Sell Now",
+      advisoryPriceNotice: "Future price projections are seasonal market estimates, not financial guarantees. Actual prices and shrinkage depend on crop moisture and mandi dynamics.",
+      windowCardTitle: "Recommended Selling Window",
+      windowBadge: "Market Intelligence",
+      windowRecommendedAction: "Recommended Action",
+      windowSellSoon: "Sell Soon",
+      windowHoldAndStore: "Hold & Store",
+      windowWaitAndWatch: "Wait & Watch",
+      windowSignalsTitle: "Why? (Key Market Signals)",
+      windowDemandSignal: "Institutional Demand",
+      windowPriceTrendSignal: "Mandi Price Trend",
+      windowArrivalsSignal: "Nearby APMC Arrivals",
+      windowHoldingUpsideSignal: "Holding Net Upside",
+      windowDisclaimer: "Recommendation based on current/demo market indicators. Transparent rule-based assessment — not speculative financial advice.",
     },
     transactions: {
       "activeContracts": "Active Contracts",
@@ -1734,6 +2268,99 @@ export const translations: Record<Locale, TranslationDictionary> = {
       closeDisputeBtn: 'Close Grievance',
       grievanceRecordedNotice: 'Your grievance has been formally registered with digital transaction evidence.',
       noDisputesFound: 'No active grievances recorded.',
+      reportIssueBtn: 'Report an Issue',
+      tabComplaints: 'Complaints & Issues',
+      complaintsSub: 'Track active disputes, inspection reviews, and official resolution settlements.',
+      stepSelectProblem: 'Select Problem',
+      stepVerifyDetails: 'Verify Trade Details',
+      stepAddEvidence: 'Add Details & Evidence',
+      stepReviewSubmit: 'Review & Submit',
+      autoAttachedNotice: 'Transaction, lot, buyer, transporter, and escrow records were automatically attached.',
+      categoryPaymentNotReceived: 'Payment Not Received',
+      categoryPaymentIncorrect: 'Payment Amount Incorrect',
+      categoryBuyerIssue: 'Buyer Issue / Non-Responsiveness',
+      categoryTransportIssue: 'Transport / Vehicle Issue',
+      categoryProduceDamaged: 'Produce Damaged in Transit',
+      categoryDeliveryIssue: 'Delivery Handover Issue',
+      categoryContractIssue: 'Contract Terms Breached',
+      evidenceOptional: 'Add Supporting Evidence (Optional)',
+      photoOrDocUpload: 'Upload Photo / Weighbridge Slip / Receipt',
+      voiceDictationBtn: 'Voice Dictate Details',
+      voiceDictationActive: 'Listening... speak clearly',
+      confirmSubmissionTitle: 'Confirm Dispute Submission',
+      confirmSubmissionDesc: 'An authorized officer will examine digital contract records and attached evidence.',
+      complaintSubmittedTitle: 'Grievance Formally Registered',
+      complaintSubmittedDesc: 'Your complaint has been logged. An adjudication officer will review the evidence.',
+      trackComplaintBtn: 'Track Complaint Status',
+      decisionOutcomeLabel: 'Official Decision Outcome',
+      financialAdjustmentLabel: 'Financial / Escrow Adjustment',
+      resolvedOnLabel: 'Resolution Date',
+      officialNotesLabel: 'Reviewer Adjudication Notes',
+      timelineSubmitted: 'Submitted',
+      timelineReview: 'Under Review',
+      timelineVerification: 'Evidence Examined',
+      timelineDecision: 'Decision',
+      timelineResolved: 'Resolved',
+      statusOpenDesc: 'Your grievance has been safely received and queued for review.',
+      statusReviewDesc: 'An authorized officer is reviewing transaction records and weighbridge receipts.',
+      statusResolvedDesc: 'Adjudication complete with recorded notes and settlement adjustment.',
+      statusClosedDesc: 'Case closed with administrative supervisor notes.',
+      noComplaintsDesc: 'All transactions are running smoothly. No active grievances filed.',
+      // Buyer specific categories
+      categoryCropVarietyMismatch: 'Crop Variety Mismatch',
+      categoryQuantityShortfall: 'Quantity Shortfall / Weight Missing',
+      categoryMoistureOrForeignMatter: 'High Moisture or Foreign Matter',
+      categoryProduceNotAsListed: 'Produce Not as Listed (Damaged / Decayed)',
+      categoryFarmerFailedToDeliver: 'Farmer Failed to Deliver / No-Show',
+      categoryContractOrOfferIssue: 'Contract Terms Not Honored',
+      categoryFarmerCancellation: 'Farmer Unilateral Cancellation',
+      categoryProduceDamagedInTransit: 'Produce Damaged in Transit',
+      categoryWrongDeliveryLocation: 'Delivered at Wrong Location',
+      // Transporter specific categories
+      categoryFarmerNotReady: 'Farmer Not Ready at Scheduled Pickup',
+      categoryPickupLocationIssue: 'Pickup Location Inaccessible / Bad Roads',
+      categoryLoadingIssue: 'Loading Delay / Refusal to Load',
+      categoryBuyerDeliveryIssue: 'Buyer Unloading Issue / Gate Closed',
+      categoryDeliveryInstructionChanged: 'Delivery Route Changed Mid-Transit',
+      categoryFreightPaymentIssue: 'Freight Payment Unpaid or Delayed',
+      categoryCancellationAfterConfirmation: 'Cancelled After Dispatch / Dead Mileage',
+      categoryUnsafeOrImpossiblePickup: 'Unsafe or Impossible Pickup Condition',
+      categoryTransporterNoShow: 'Transporter No-Show at Scheduled Time',
+      categoryPickupDelayed: 'Pickup Delayed Beyond Agreed Window',
+      categoryTransporterCancellation: 'Transporter Cancelled Trip',
+      categoryFreightDiscrepancy: 'Demanding Extra Cash / Freight Discrepancy',
+      categoryVehicleCapacityMismatch: 'Vehicle Capacity Mismatch',
+      categoryTransporterMisconduct: 'Driver Misconduct or Unloading Refusal',
+      categoryDeliveryHandoverIssue: 'Delivery Handover Discrepancy',
+      // Promised vs Actual Comparison & Counterparty
+      promisedVsActualTitle: 'Promised vs Actual Verification',
+      promisedMetric: 'Parameter / Metric',
+      promisedContracted: 'Contracted / Promised',
+      promisedDelivered: 'Delivered / Recorded',
+      promisedShortfall: 'Discrepancy / Shortfall',
+      promisedNotRecorded: 'Not recorded',
+      promisedScheduledPickup: 'Scheduled Pickup Time',
+      promisedActualArrival: 'Actual Arrival Time',
+      promisedScheduledDelivery: 'Scheduled Delivery Window',
+      promisedActualDelivery: 'Actual Delivery Time',
+      promisedAgreedFreight: 'Agreed Freight Amount',
+      promisedClaimedFreight: 'Claimed / Disputed Freight',
+      promisedAgreedPrice: 'Agreed Price / Quintal',
+      promisedBilledPrice: 'Billed Price / Quintal',
+      promisedAgreedVariety: 'Agreed Crop Variety',
+      promisedDeliveredVariety: 'Delivered Variety',
+      promisedAgreedGrade: 'Agreed Quality Grade',
+      promisedVerifiedGrade: 'Verified Quality Grade',
+      counterpartyFarmer: 'Farmer',
+      counterpartyBuyer: 'Buyer',
+      counterpartyTransporter: 'Transporter',
+      complaintAgainst: 'Complaint Against',
+      complaintFrom: 'Complaint Received From',
+      waitingHoursLabel: 'Extra Waiting Hours',
+      extraKmLabel: 'Extra Kilometers Travelled',
+      excessWeightLabel: 'Excess Weight / Bags (qtl)',
+      deliveredWeightLabel: 'Actual Delivered Weight (qtl)',
+
     },
     calculator: {
       title: 'Net Realisation Discovery Engine',
@@ -1789,6 +2416,21 @@ export const translations: Record<Locale, TranslationDictionary> = {
       calculateNetRealisation: 'Calculate Net Realisation',
       archTitle: 'Phase 1 Architecture Foundation',
       archDesc: 'This data links to the Market, MarketPrice, and MarketArrival tables in the database schema.',
+      trendChartTitle: "Mandi Historical Price Trends",
+      trendChartSubtitle: "Track modal price movements, arrival volume correlations and directional percentage changes across Maharashtra & AP mandis.",
+      trendDemoNotice: "Historical trend — demo/seeded market data (Agmarknet simulation)",
+      trendSevenDays: "7 Days",
+      trendFifteenDays: "15 Days",
+      trendThirtyDays: "30 Days",
+      trendModalPrice: "Modal Price",
+      trendPriceRange: "Price Range (Min - Max)",
+      trendPeriodChange: "Period Change",
+      trendArrivals: "Daily Arrivals",
+      trendSelectCrop: "Select Commodity",
+      trendSelectMandi: "Select Mandi",
+      trendBadgeRising: "Rising Trend",
+      trendBadgeSoftening: "Softening Trend",
+      trendBadgeSteady: "Stable Trend",
     },
     voice: {
       buttonLabel: 'Speak',
@@ -1811,6 +2453,13 @@ export const translations: Record<Locale, TranslationDictionary> = {
       queryTransport: 'Find transport for my lot.',
       queryOffers: 'Show my offers.',
       queryTxns: 'Show my transactions.',
+    typeQueryPlaceholder: "Or type your question here (e.g. 'Show my crops', 'Find buyers')...",
+    askKisanSetu: "Ask KisanSetu",
+    confirmActionTitle: "Confirmation Required",
+    confirmActionPrompt: "You are about to execute a consequential action. Please confirm to proceed:",
+    confirmButton: "Confirm Action",
+    cancelButton: "Cancel",
+    unrecognizedHelp: "I didn't understand that. You can say or type:",
     },
   },
 
@@ -1889,8 +2538,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "summaryDiscrepancy": "तफावतीचा सारांश:",
       "adjudicationNotes": "अधिकारी निर्णय व पडताळणी नोंदी",
       "noGrievancesFound": "सध्याच्या फिल्टरनुसार कोणतीही तक्रार आढळली नाही.",
-      "monitoredActiveTrades": "निरीक्षणाखालील सक्रिय सौदे"
-    ,
+      "monitoredActiveTrades": "निरीक्षणाखालील सक्रिय सौदे",
       authLoginTitle: "किसानसेतू पोर्टल प्रवेश",
       authLoginSubtitle: "आपल्या समर्पित बाजारपेठ कार्यक्षेत्रात प्रवेश करण्यासाठी आपली कृषी भूमिका निवडा.",
       authChooseRole: "तुम्ही किसानसेतू कसे वापरत आहात ते निवडा",
@@ -1914,6 +2562,17 @@ export const translations: Record<Locale, TranslationDictionary> = {
       authRolePillTransporter: "वाहतूकदार",
       authCurrentRole: "सक्रिय भूमिका",
       authLoggedOut: "लॉगआउट केले",
+    
+      unitKg: "किलोग्रॅम (किग्रॅ)",
+      unitTonnes: "टन (मेट्रिक टन)",
+      unitQuintal: "क्विंटल",
+      dismiss: "बंद करा",
+      allPublicPortals: "सार्वजनिक सेवा",
+      mandiPricesNav: "बाजार भाव",
+      storageNav: "गोदाम सुविधा",
+      fpoNav: "एफपीओ संकलन केंद्र",
+      calculatorNav: "निव्वळ परतावा",
+      marketplaceNav: "शेतमाल बाजारपेठ",
     },
     home: {
       "transparentProcess": "पारदर्शक प्रक्रिया",
@@ -2024,6 +2683,21 @@ export const translations: Record<Locale, TranslationDictionary> = {
     switchRole: 'भूमिका बदला',
     myDashboard: 'माझा डॅशबोर्ड',
     account: 'खाते',
+      storage: "गोदाम आणि साठवणूक",
+      fpo: "शेतकरी गट संकलन (FPO)",
+    
+      sellCropBtn: "+ माझे पीक विका",
+      myCrops: "माझी पिके",
+      findBuyers: "खरेदीदार शोधा",
+      myDeliveries: "माझी डिलिव्हरी",
+      history: "इतिहास",
+      marketplace: "बाजारपेठ",
+      myPurchases: "माझी खरेदी",
+      demands: "मागणी",
+      availableRequests: "उपलब्ध मागण्या",
+      earnings: "कमाई व इतिहास",
+      switchRoleDemo: "भूमिका बदला",
+      moreServices: "इतर सेवा",
     },
     hero: {
       badge: 'महाराष्ट्र आणि किनारी कृषी बाजार जोडणी',
@@ -2159,6 +2833,107 @@ export const translations: Record<Locale, TranslationDictionary> = {
       noticeTitle: 'टप्पा २ पायाभूत रचना',
       noticeDesc:
         'हा मार्ग थेट SQLite डेटाबेस मधील FarmerProfile, FPO, ProduceLot आणि Offer मॉडेल्सशी जोडलेला आहे.',
+      sellMyCropHero: "+ माझे पीक विका",
+      viewOffers: "ऑफर पहा",
+      tabMyCrops: "माझी पिके",
+      tabFindBuyers: "खरेदीदार शोधा",
+      tabMyDeliveries: "माझी वाहतूक",
+      tabHistory: "इतिहास",
+      tabComplaints: "तक्रारी व वाद",
+      wizardTitle: "माझे पीक विका",
+      wizardSubtitle: "थेट बाजारपेठ जोडणी आणि तत्काळ एआय दृश्य तपासणीसह पीक नोंदणी",
+      step1Title: "पिकाचा तपशील",
+      step1Subtitle: "मालाचे नाव, काढणीचे प्रमाण आणि अपेक्षित भाव",
+      step2Title: "छायाचित्रे जोडा",
+      step2Subtitle: "थेट कॅमेऱ्याने फोटो काढा किंवा गॅलरीतून निवडा",
+      step3Title: "एआय गुणवत्ता तपासणी",
+      step3Subtitle: "तात्काळ प्राथमिक व्हिज्युअल स्क्रिनिंग — गैर-बंधनकारक अंदाज",
+      step4Title: "तपासा आणि प्रसिद्ध करा",
+      step4Subtitle: "तपशील तपासा आणि थेट सक्रिय खरेदीदारांसाठी प्रसिद्ध करा",
+      takePhotoBtn: "कॅमेऱ्याने फोटो काढा",
+      uploadPhotoBtn: "गॅलरी / फाईलमधून निवडा",
+      cameraNotAvailable: "या डिव्हाइसवर कॅमेरा उपलब्ध नाही. कृपया फाईल निवडा.",
+      photoCount: "पिकाचे फोटो ({count}/4)",
+      removePhoto: "काढून टाका",
+      retakePhoto: "पुन्हा काढा",
+      aiScreeningNotice: "एआय तपासणी — अप्रमाणित. डिलिव्हरी किंवा तपासणीच्या वेळी अधिकधिक प्रतवारी निश्चित केली जाते.",
+      aiEstimatedGrade: "अपेक्षित प्रत (ग्रेड)",
+      aiColorObservation: "पृष्ठभागाचा रंग आणि एकसारखेपणा",
+      aiDamageObservation: "दृश्यमान डाग व त्रुटी",
+      publishBtn: "माझे पीक प्रसिद्ध करा",
+      publishSuccess: "पीक यशस्वीरित्या प्रसिद्ध केले गेले! आता खरेदीदार ऑफर देऊ शकतात.",
+      stageAvailable: "उपलब्ध",
+      stageSold: "विक्री झाले — हस्तांतरण प्रलंबित",
+      stageHandedOver: "हस्तांतरित केले",
+      stagePaymentProcessing: "पैसे देणे प्रक्रियेत",
+      stageCompleted: "पूर्ण झाले",
+      chooseTransporterBtn: "किसानसेतू वाहतूकदार निवडा",
+      ownTransportBtn: "मी स्वतः वाहतूक व्यवस्था करेन",
+      transporterProximity: "शेतापासून अंतर",
+      routeDeliveryDistance: "डिलिव्हरी मार्ग अंतर",
+      freightEstimate: "अंदाजे वाहतूक भाडे",
+      noLotsTitle: "कोणतीही सक्रिय पिके नोंदवलेली नाहीत",
+      noLotsDesc: "थेट खरेदीदारांना विक्रीसाठी '+ माझे पीक विका' वर क्लिक करा.",
+      historyTitle: "पूर्ण झालेल्या विक्रीचा इतिहास",
+      historyEmpty: "अद्याप कोणतीही विक्री पूर्ण झालेली नाही. पूर्ण झालेले व्यवहार येथे जमा होतील.",
+      settlementReceipt: "अंतिम जमा पावती",
+      netPaidToBank: "बँक/यूपीआय खात्यात जमा झालेली रक्कम",
+      grossAmount: "एकूण विक्री मूल्य",
+      transportDeduction: "वाहतूक भाडे कपात",
+      mandiFeeDeduction: "मंडी उपकर / शुल्क",
+      platformFee: "प्लॅटफॉर्म सेवा शुल्क",
+      freePromo: "₹0 (शासकीय मोफत सवलत)",
+      stepNext: "पुढील टप्पा",
+      stepBack: "मागे",
+      closeWizard: "बंद करा",
+      fpoDeskTitle: "शेतकरी उत्पादक कंपनी (FPO) गट संकलन",
+      fpoDeskSubtitle: "लहान शेतकऱ्यांचा शेतमाल एकत्र करून मोठ्या कंपन्यांना अधिक भावात विकण्यासाठी गट संकलन करा.",
+      fpoBadge: "शेतकरी गट एकत्रीकरण",
+      fpoName: "नाशिक ॲग्रो शेतकरी उत्पादक कंपनी",
+      fpoRegNo: "नोंदणी: MH-NSK-FPO-2024-8841",
+      fpoEligibleLotsTitle: "संकलनासाठी उपलब्ध लहान शेतकऱ्यांचे लॉट्स",
+      fpoEligibleLotsSub: "मोठ्या खरेदीदारासाठी एकत्र करण्यासाठी लहान लॉट निवडा.",
+      fpoSelectedCount: "निवडलेले लॉट्स",
+      fpoTotalAggregatedQty: "एकूण संकलित परिमाण",
+      fpoAvgPrice: "सरासरी भाव",
+      fpoTotalValuation: "एकूण मालाचे मूल्य",
+      fpoTargetBuyerDemandTitle: "लक्ष्य संस्थात्मक खरेदीदार मागणी",
+      fpoTargetBuyerDemandSub: "या संकलनाद्वारे पूर्ण होणारी कंपनीची मोठी खरेदी मागणी.",
+      fpoPricePremium: "गट संकलन अतिरिक्त नफा",
+      fpoCreateAggregatedLotBtn: "संकलित बल्क लॉट तयार करा",
+      fpoAggregationSuccess: "बल्क लॉट यशस्वीरित्या संकलित झाला!",
+      fpoAggregatedLotCode: "संकलित लॉट कोड",
+      fpoViewInMarketplace: "मार्केटप्लेसमध्ये पहा",
+    
+      clarityHarvestInventory: "१. शेतमाल साठा",
+      clarityWhatCanSell: "मी काय विकू शकतो?",
+      clarityBuyerLinkages: "२. खरेदीदार संपर्क",
+      clarityWhoWantsBuy: "कोण खरेदी करू इच्छित आहे?",
+      clarityDirectBids: "३. थेट खरेदी ऑफर्स",
+      clarityOffersReceived: "मला कोणत्या ऑफर्स मिळाल्या आहेत?",
+      clarityNextAction: "४. पुढील कृती",
+      clarityWhatNext: "मी पुढे काय करावे?",
+      browseBuyerDemandsBtn: "खरेदीदारांची मागणी पहा →",
+      inspectOffersBtn: "ऑफर तपासा",
+      reviewPendingBidsBtn: "प्रलंबित ऑफर्स तपासा",
+      whyPhotosTitle: "शेतमालाचे फोटो का अपलोड करावेत?",
+      whyPhotosDesc: "रंग, दाण्याचा आकार व प्रतवारीच्या तात्काळ तपासणीसाठी फोटो उपयुक्त ठरतात, ज्यामुळे खरेदीदार थेट खात्रीशीर बोली लावू शकतात.",
+      unitLabel: "एकक",
+      districtLabel: "जिल्हा",
+      mandiBenchmark: "बाजार समिती सरासरी",
+      estGrossPayout: "अंदाजे एकूण रक्कम",
+      uploadedPhotos: "अपलोड केलेले फोटो",
+      transportArrangement: "वाहतूक व्यवस्था",
+      selfTransport: "स्वतःची वाहतूक व्यवस्था",
+      changeBtn: "बदला",
+      availTransporters: "उपलब्ध प्रमाणित वाहतूकदार",
+      amountYouReceive: "तुम्हाला मिळणारी निव्वळ रक्कम",
+      estAmountYouReceive: "अंदाजे मिळणारी रक्कम",
+      supplyThisCrop: "हा शेतमाल पुरवा",
+      ownTransportOption: "स्वतःची वाहतूक व्यवस्था / फार्म-गेट डिलिव्हरी (₹0 वाहतूक खर्च)",
+      bookTransporter: "किसानसेतू प्रमाणित वाहतूकदार निवडा",
+      bestNetRealisation: "सर्वोत्तम निव्वळ प्राप्ती",
+      estDeductionsNotice: "अपेक्षित वाहतूक आणि इतर कपातीनंतरची अंदाजे रक्कम. खरेदीदाराची बोली स्वीकारल्यानंतर अंतिम देयक निश्चित होईल.",
     },
     lots: {
       "totalRegisteredLots": "एकूण नोंदणीकृत लॉट्स",
@@ -2170,6 +2945,29 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "activeLotsSub": "खरेदीदार जुळवणी आणि वाहतुकीसाठी सक्रिय लॉट्स",
       "notGraded": "प्रतवारी बाकी",
       "offersCount": "ऑफर",
+      "readyForPickup": "उचलण्यासाठी तयार",
+      "actionRequiredBadge": "कृती आवश्यक",
+      "dealAgreedBadge": "करार निश्चित",
+      "inTransitBadge": "मार्गावर आहे",
+      "settledBadge": "व्यापार पूर्ण",
+      "marketplaceLiveBadge": "बाजारपेठ थेट",
+      "reviewOffersBtn": "मागण्या तपासा",
+      "viewMatchedBuyersBtn": "जुळणारे खरेदीदार पहा",
+      "checkSaleWindowBtn": "विक्री कालावधी सल्ला तपासा",
+      "viewDispatchStatusBtn": "वाहतूक स्थिती पहा",
+      "viewSettlementReceiptBtn": "पावती पहा",
+      "preliminaryRecorded": "प्राथमिक चाचणी नोंदवली",
+      "physicalPending": "प्रत्यक्ष तपासणी प्रलंबित आहे. प्रमाणित गुणवत्ता निरीक्षक वैयक्तिकरीत्या प्रत्यक्ष तपासणी करतील.",
+      "capturedByFarmer": "नोंदणीदरम्यान शेतकऱ्याने काढलेले फोटो",
+      "submittedCropPhoto": "सादर केलेला शेतमाल फोटो",
+      "representativeLabel": "प्रतिनिधी",
+      "buyerTargetPrice": "खरेदीदाराचा अपेक्षित भाव",
+      "requiredQuantity": "आवश्यक प्रमाण",
+      "targetGrade": "अपेक्षित प्रतवारी",
+      "anyGrade": "कोणतीही प्रत",
+      "distanceAndTrips": "अंतर व फेऱ्या",
+      "vehicleLabel": "वाहन",
+      "totalFreightLabel": "एकूण वाहतूक खर्च",
       badge: 'डिजिटल शेतमाल लॉट्स',
       title: 'डिजिटल शेतमाल लॉट्स',
       subtitle:
@@ -2203,6 +3001,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       cropLabel: 'शेतमाल / पीक निवडा',
       selectCrop: 'पीक निवडा',
       cropCustomPlaceholder: 'किंवा इतर पिकाचे नाव लिहा',
+      selectOrTypeCrop: 'खालील निवडा किंवा इतर शेतमाल लिहा',
       varietyLabel: 'वाण / जात',
       varietyPlaceholder: 'उदा. नाशिक लाल गरवा, जेएस-३३५, शिर्डी सफेद',
       quantityLabel: 'उत्पादन परिमाण (वजन)',
@@ -2421,6 +3220,10 @@ export const translations: Record<Locale, TranslationDictionary> = {
       trustNoticeTitle: 'पारदर्शकता आणि विश्वास तत्त्वे',
       trustNoticeDesc: 'व्यावसायिक क्रेडेन्शियल पडताळणी आणि प्रत्यक्ष व्यापार कामगिरी या दोन्ही स्वतंत्रपणे दर्शविल्या जातात. कोणतीही खोटी रेटिंग चालत नाही.',
       demoNotice: 'डेमो मोड: हे केवळ प्रात्यक्षिकासाठी तयार केलेले सिम्युलेशन आहे. येथे कोणतेही प्रत्यक्ष आर्थिक व्यवहार किंवा करार होत नाहीत.',
+      tabDemands: "सक्रिय खरेदी मागण्या",
+      tabHistory: "खरेदी इतिहास",
+      historyTitle: "पूर्ण झालेल्या खरेदीचा इतिहास",
+      historyEmpty: "अद्याप कोणतीही पूर्ण खरेदी नाही. पूर्ण झालेले व्यवहार येथे दिसतील.",
     },
     transport: {
       "refreshNetwork": "नेटवर्क रिफ्रेश करा",
@@ -2504,6 +3307,10 @@ export const translations: Record<Locale, TranslationDictionary> = {
       activeBookingsTitle: 'या लॉटसाठी नोंदवलेली वाहतूक',
       noBookingsYet: 'अद्याप वाहतूक बुक केलेली नाही. खालील पर्यायांमधून वाहतूकदार निवडा.',
       demoNotice: 'डेमो सूचना: कृषी कॉरिडॉरसाठी लॉजिस्टिक्स सिम्युलेशन. प्रत्यक्षात कोणतेही वाहन पाठवले जात नाही.',
+      tabAvailableTrips: "उपलब्ध मालवाहतूक फेऱ्या",
+      tabHistory: "फेरी इतिहास",
+      historyTitle: "पूर्ण झालेल्या वाहतूक फेऱ्या",
+      historyEmpty: "अद्याप कोणत्याही फेऱ्या पूर्ण झालेल्या नाहीत. पूर्ण फेऱ्या येथे नोंदवल्या जातील.",
     },
     netRealisation: {
       ledgerTitle: "शुद्ध प्राप्ती खातेवही",
@@ -2562,6 +3369,54 @@ export const translations: Record<Locale, TranslationDictionary> = {
       mandiYardLabel: 'नियमित कृषी उत्पन्न बाजार समिती',
       directBuyerLabel: 'थेट व्यावसायिक खरेदीदार',
       storageProjectionLabel: 'गोदाम साठवणूक अंदाज',
+      storageTitle: "जवळची शासकीय व खाजगी कृषी गोदाामे",
+      storageSubtitle: "शेतमालाची पडत्या भावात विक्री टाळण्यासाठी जवळची मान्यताप्राप्त गोदाामे आणि कोल्ड स्टोरेज शोधा.",
+      storageBadge: "महाराष्ट्र राज्य वखार महामंडळ नेटवर्क",
+      storageDemoNotice: "गोदाम शोध व दर गणक (डेमो प्रोटोटाइप — एमएसडब्ल्यूसी नेटवर्क)",
+      storageDryWarehouse: "कोरडे धान्य गोदाम",
+      storageColdStorage: "शीतगृह (कोल्ड स्टोरेज)",
+      storageVentilatedChawl: "हवेशीर कांदा चाळ",
+      storageAvailableCapacity: "उपलब्ध क्षमता",
+      storageDistanceFromFarm: "तुमच्या शेतापासून अंतर",
+      storageSuitableCrops: "योग्य पिके",
+      storageCalcTitle: "साठवणूक वि. तात्काळ विक्री तुलना गणक",
+      storageCalcSub: "आज विक्री केल्यास मिळणारे पैसे आणि ३० दिवस गोदामात ठेवून मिळणारा नफा यांची थेट तुलना करा.",
+      storageCurrentValue: "आजची तात्काळ विक्री किंमत",
+      storageEstimatedCost: "गोदाम भाडे (३० दिवस)",
+      storageProjectedValue: "३० दिवसांनंतरचा अंदाजित भाव",
+      storageNetAdvantage: "साठवणुकीचा निव्वळ फायदा",
+      storageReserveBtn: "गोदाम जागा आरक्षित करा",
+      storageReservationSuccess: "गोदाम प्रवेश पावती तयार झाली!",
+      storageReceiptNumber: "प्रवेश पावती क्र.",
+      storageCloseModal: "बंद करा",
+      storageViewFacilities: "गोदामे पहा",
+      storageScientificChawl: "वैज्ञानिक कांदा चाळ",
+      filterByCrop: "पिकानुसार फिल्टर",
+      allDistricts: "सर्व जिल्हे",
+      environment: "साठवणूक वातावरण",
+      recommendedDuration: "शिफारस केलेला कालावधी",
+      suitableForYourCrop: "निवडलेल्या पिकासाठी योग्य",
+      sellNowOption: "आत्ताच विक्री (थेट बाजार समिती भाव)",
+      holding15d: "१५ दिवस साठवणूक",
+      holding30d: "३० दिवस साठवणूक",
+      holding60d: "६० दिवस साठवणूक",
+      holding90d: "९० दिवस साठवणूक",
+      highestEstimatedOption: "★ सर्वाधिक अंदाजित नफा",
+      shrinkageLoss: "अंदाजित घट व नासाडी",
+      storageNotEconomic: "साठवणूक फायदेशीर नाही — आत्ताच विका",
+      advisoryPriceNotice: "भविष्यातील भावांचे अंदाज हे हंगामी बाजार स्थितीवर आधारित आहेत, हमी नाही. प्रत्यक्ष भाव व घट ही पिकाची प्रत व बाजारावर अवलंबून असते.",
+      windowCardTitle: "शिफारस केलेली विक्रीची वेळ (विंडो)",
+      windowBadge: "बाजार अभिसूचना",
+      windowRecommendedAction: "शिफारस केलेली कृती",
+      windowSellSoon: "लवकर विका",
+      windowHoldAndStore: "गोदामात ठेवा",
+      windowWaitAndWatch: "थांबा आणि पहा",
+      windowSignalsTitle: "का? (महत्त्वाचे बाजार संकेत)",
+      windowDemandSignal: "संस्थात्मक मागणी",
+      windowPriceTrendSignal: "मंडी भाव कल",
+      windowArrivalsSignal: "जवळच्या एपीएमसी आवक",
+      windowHoldingUpsideSignal: "साठवणुकीचा निव्वळ फायदा",
+      windowDisclaimer: "सध्याच्या बाजार संकेतांवर आधारित पारदर्शक नियम-आधारित शिफारस. हा कोणताही सट्टेबाजीचा आर्थिक सल्ला नाही.",
     },
     transactions: {
       "activeContracts": "सक्रिय सौदे",
@@ -2643,6 +3498,99 @@ export const translations: Record<Locale, TranslationDictionary> = {
       closeDisputeBtn: 'तक्रार बंद करा',
       grievanceRecordedNotice: 'तुमची तक्रार डिजिटल व्यवहाराच्या पुराव्यासह अधिकृतपणे नोंदवली गेली आहे.',
       noDisputesFound: 'कोणतीही प्रलंबित तक्रार नाही.',
+      reportIssueBtn: 'तक्रार नोंदवा',
+      tabComplaints: 'तक्रारी व वाद निवारण',
+      complaintsSub: 'सक्रिय वाद, तपासणी आढावा आणि अधिकृत तोडगा स्थिती ट्रॅक करा.',
+      stepSelectProblem: 'समस्या निवडा',
+      stepVerifyDetails: 'व्यवहार तपशील तपासा',
+      stepAddEvidence: 'तपशील व पुरावे जोडा',
+      stepReviewSubmit: 'पुनरावलोकन व सबमिट करा',
+      autoAttachedNotice: 'व्यवहार, लॉट, खरेदीदार, वाहतूक आणि एस्क्रो नोंदी आपोआप जोडल्या गेल्या आहेत.',
+      categoryPaymentNotReceived: 'पैसे मिळाले नाहीत',
+      categoryPaymentIncorrect: 'पेमेंट रक्कम चुकीची आहे',
+      categoryBuyerIssue: 'खरेदीदार समस्या / प्रतिसाद नाही',
+      categoryTransportIssue: 'वाहतूक / वाहन समस्या',
+      categoryProduceDamaged: 'वाहतुकीदरम्यान मालाचे नुकसान',
+      categoryDeliveryIssue: 'डिलिव्हरी सुपूर्द समस्या',
+      categoryContractIssue: 'कराराच्या अटींचे उल्लंघन',
+      evidenceOptional: 'पुरावे जोडा (पर्यायी)',
+      photoOrDocUpload: 'फोटो / वजनकाटा पावती अपलोड करा',
+      voiceDictationBtn: 'आवाजाने तपशील सांगा',
+      voiceDictationActive: 'ऐकत आहे... स्पष्ट बोला',
+      confirmSubmissionTitle: 'तक्रार सबमिशन पुष्टी',
+      confirmSubmissionDesc: 'अधिकृत अधिकारी डिजिटल करारासह पुरावे तपासतील.',
+      complaintSubmittedTitle: 'तक्रार यशस्वीरित्या नोंदवली गेली',
+      complaintSubmittedDesc: 'तुमची तक्रार नोंदवली गेली आहे. अधिकारी पुरावे तपासतील.',
+      trackComplaintBtn: 'तक्रार स्थिती ट्रॅक करा',
+      decisionOutcomeLabel: 'अधिकृत निर्णय',
+      financialAdjustmentLabel: 'आर्थिक / एस्क्रो समायोजन',
+      resolvedOnLabel: 'निकालाची तारीख',
+      officialNotesLabel: 'अधिकाऱ्याच्या अधिकृत नोंदी',
+      timelineSubmitted: 'दाखल केली',
+      timelineReview: 'पुनरावलोकनात',
+      timelineVerification: 'पुरावे तपासले',
+      timelineDecision: 'निर्णय',
+      timelineResolved: 'निकाली काढली',
+      statusOpenDesc: 'तुमची तक्रार प्राप्त झाली असून अधिकारी वाटपाच्या प्रतीक्षेत आहे.',
+      statusReviewDesc: 'अधिकारी वजन पावती आणि डिजिटल कराराची तपासणी करत आहेत.',
+      statusResolvedDesc: 'अधिकृत नोंदीसह तक्रार निकाली काढण्यात आली आहे.',
+      statusClosedDesc: 'प्रशासकीय नोंदीसह प्रकरण बंद केले आहे.',
+      noComplaintsDesc: 'सर्व व्यवहार सुरळीत सुरू आहेत. कोणतीही प्रलंबित तक्रार नाही.',
+      // Buyer specific categories
+      categoryCropVarietyMismatch: 'पिकाच्या वाणात तफावत',
+      categoryQuantityShortfall: 'वजन / पोत्यांमध्ये घट (कमी माल)',
+      categoryMoistureOrForeignMatter: 'जास्त ओलावा किंवा कचरा',
+      categoryProduceNotAsListed: 'माल वर्णनानुसार नाही (सडलेला / खराब)',
+      categoryFarmerFailedToDeliver: 'शेतकऱ्याकडून माल न मिळणे / अनुपस्थिती',
+      categoryContractOrOfferIssue: 'करार किंवा अटींचे उल्लंघन',
+      categoryFarmerCancellation: 'शेतकऱ्याकडून अचानक सौदा रद्द',
+      categoryProduceDamagedInTransit: 'वाहतुकीदरम्यान मालाचे नुकसान',
+      categoryWrongDeliveryLocation: 'चुकीच्या ठिकाणी माल उतरवला',
+      // Transporter specific categories
+      categoryFarmerNotReady: 'ठरलेल्या वेळी शेतकरी / माल तयार नाही',
+      categoryPickupLocationIssue: 'मालाचे ठिकाण दुर्गम / रस्ता खराब',
+      categoryLoadingIssue: 'माल भरण्यास विलंब / नकार',
+      categoryBuyerDeliveryIssue: 'खरेदीदाराकडून माल न उतरवणे / गोदाम बंद',
+      categoryDeliveryInstructionChanged: 'वाटेत डिलिव्हरीचे ठिकाण बदलले',
+      categoryFreightPaymentIssue: 'भाडे थकबाकी किंवा विलंबाने पेमेंट',
+      categoryCancellationAfterConfirmation: 'गाडी निघाल्यावर रद्द / रिकामी धाव',
+      categoryUnsafeOrImpossiblePickup: 'धोकादायक किंवा अशक्य उचल परिस्थिती',
+      categoryTransporterNoShow: 'वाहतूकदार ठरलेल्या वेळी हजर नाही',
+      categoryPickupDelayed: 'माल उचलण्यास अवाजवी विलंब',
+      categoryTransporterCancellation: 'वाहतूकदाराने गाडी रद्द केली',
+      categoryFreightDiscrepancy: 'जादा रोख रकमेची मागणी / भाड्यात तफावत',
+      categoryVehicleCapacityMismatch: 'वाहनाची क्षमता अपुरी',
+      categoryTransporterMisconduct: 'चालकाचे गैरवर्तन / माल उतरवण्यास नकार',
+      categoryDeliveryHandoverIssue: 'माल पोहोचवताना हँडओव्हर समस्या',
+      // Promised vs Actual Comparison & Counterparty
+      promisedVsActualTitle: 'वचनबद्ध विरुद्ध प्रत्यक्ष पडताळणी',
+      promisedMetric: 'तपशील / निकष',
+      promisedContracted: 'ठरलेले / वचनबद्ध',
+      promisedDelivered: 'प्रत्यक्ष नोंदवलेले',
+      promisedShortfall: 'तफावत / घट',
+      promisedNotRecorded: 'नोंद नाही',
+      promisedScheduledPickup: 'ठरलेली माल उचलण्याची वेळ',
+      promisedActualArrival: 'प्रत्यक्ष पोहोच वेळ',
+      promisedScheduledDelivery: 'ठरलेली पोहोच वेळ',
+      promisedActualDelivery: 'प्रत्यक्ष पोहोच वेळ',
+      promisedAgreedFreight: 'ठरलेले वाहतूक भाडे',
+      promisedClaimedFreight: 'मागितलेले / वादग्रस्त भाडे',
+      promisedAgreedPrice: 'ठरलेला भाव / क्विंटल',
+      promisedBilledPrice: 'बिल केलेला भाव / क्विंटल',
+      promisedAgreedVariety: 'ठरलेला पिकाचा वाण',
+      promisedDeliveredVariety: 'प्रत्यक्ष मिळालेला वाण',
+      promisedAgreedGrade: 'ठरलेला दर्जा / ग्रेड',
+      promisedVerifiedGrade: 'तपासलेला प्रत्यक्ष दर्जा',
+      counterpartyFarmer: 'शेतकरी',
+      counterpartyBuyer: 'खरेदीदार',
+      counterpartyTransporter: 'वाहतूकदार',
+      complaintAgainst: 'विरुद्ध तक्रार',
+      complaintFrom: 'कडून आलेली तक्रार',
+      waitingHoursLabel: 'अतिरिक्त प्रतिक्षा तास',
+      extraKmLabel: 'अतिरिक्त किलोमीटर प्रवास',
+      excessWeightLabel: 'अतिरिक्त वजन / पोती (क्विंटल)',
+      deliveredWeightLabel: 'प्रत्यक्ष मिळालेले वजन (क्विंटल)',
+
     },
     calculator: {
       title: 'निव्वळ प्राप्ती शोध इंजिन',
@@ -2698,6 +3646,21 @@ export const translations: Record<Locale, TranslationDictionary> = {
       calculateNetRealisation: 'निव्वळ प्राप्ती गणना करा',
       archTitle: 'टप्पा १ आर्किटेक्चर पाया',
       archDesc: 'हा डेटा डेटाबेस स्कीमामधील मार्केट, मार्केट प्राईस आणि मार्केट आवक सारण्यांशी जोडला आहे.',
+      trendChartTitle: "मंडी ऐतिहासिक भाव कल (ट्रेंड)",
+      trendChartSubtitle: "महाराष्ट्र आणि आंध्र प्रदेशातील मंड्यांमधील मॉडेल भाव, आवक आणि टक्केवारीतील बदल पहा.",
+      trendDemoNotice: "ऐतिहासिक कल — डेमो/सीडेड बाजार डेटा (एगमार्कनेट सिम्युलेशन)",
+      trendSevenDays: "७ दिवस",
+      trendFifteenDays: "१५ दिवस",
+      trendThirtyDays: "३० दिवस",
+      trendModalPrice: "मॉडेल भाव",
+      trendPriceRange: "किमान - कमाल भाव श्रेणी",
+      trendPeriodChange: "कालावधीतील बदल",
+      trendArrivals: "दैनिक आवक",
+      trendSelectCrop: "पीक निवडा",
+      trendSelectMandi: "मंडी निवडा",
+      trendBadgeRising: "वाढता कल",
+      trendBadgeSoftening: "घसरता कल",
+      trendBadgeSteady: "स्थिर कल",
     },
     voice: {
       buttonLabel: 'बोला',
@@ -2720,6 +3683,13 @@ export const translations: Record<Locale, TranslationDictionary> = {
       queryTransport: 'माझ्या मालासाठी वाहतूक शोधा.',
       queryOffers: 'माझ्या ऑफर्स दाखवा.',
       queryTxns: 'माझे व्यवहार दाखवा.',
+    typeQueryPlaceholder: "किंवा आपला प्रश्न येथे टाईप करा (उदा. 'माझी पिके दाखवा', 'खरेदीदार शोधा')...",
+    askKisanSetu: "किसानसेतूला विचारा",
+    confirmActionTitle: "पुष्टीकरण आवश्यक आहे",
+    confirmActionPrompt: "आपण एक महत्त्वपूर्ण कृती करणार आहात. कृपया पुढे जाण्यासाठी पुष्टी करा:",
+    confirmButton: "पुष्टी करा",
+    cancelButton: "रद्द करा",
+    unrecognizedHelp: "मला हे समजले नाही. आपण पुढीलप्रमाणे विचारू किंवा टाईप करू शकता:",
     },
   },
 
@@ -2798,8 +3768,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "summaryDiscrepancy": "వ్యత్యాసం సారాంశం:",
       "adjudicationNotes": "అధికారి నిర్ణయం మరియు గమనికలు",
       "noGrievancesFound": "ఎంచుకున్న ఫిల్టర్‌కు సరిపోలే ఫిర్యాదులు లేవు.",
-      "monitoredActiveTrades": "పర్యవేక్షించబడుతున్న వాణిజ్యాలు"
-    ,
+      "monitoredActiveTrades": "పర్యవేక్షించబడుతున్న వాణిజ్యాలు",
       authLoginTitle: "కిసాన్ సేతు పోర్టల్ లాగిన్",
       authLoginSubtitle: "మీ అంకితమైన మార్కెట్‌ప్లేస్ వర్క్‌స్పేస్‌లోకి ప్రవేశించడానికి మీ వ్యవసాయ పాత్రను ఎంచుకోండి.",
       authChooseRole: "మీరు కిసాన్ సేతును ఎలా ఉపయోగిస్తున్నారో ఎంచుకోండి",
@@ -2823,6 +3792,17 @@ export const translations: Record<Locale, TranslationDictionary> = {
       authRolePillTransporter: "రవాణాదారు",
       authCurrentRole: "క్రియాశీల పాత్ర",
       authLoggedOut: "లాగౌట్ అయ్యారు",
+    
+      unitKg: "కిలోగ్రాములు (కిలో)",
+      unitTonnes: "టన్నులు (MT)",
+      unitQuintal: "క్వింటాల్",
+      dismiss: "తీసివేయండి",
+      allPublicPortals: "పబ్లిక్ పోర్టల్స్",
+      mandiPricesNav: "మండి ధరలు",
+      storageNav: "నిల్వ సౌకర్యాలు",
+      fpoNav: "ఎఫ్‌పిఓ కేంద్రం",
+      calculatorNav: "నికర రాబడి",
+      marketplaceNav: "ఉత్పత్తి మార్కెట్",
     },
     home: {
       "transparentProcess": "పారదర్శక విధానం",
@@ -2933,6 +3913,21 @@ export const translations: Record<Locale, TranslationDictionary> = {
     switchRole: 'పాత్రను మార్చండి',
     myDashboard: 'నా డాష్‌బోర్డ్',
     account: 'ఖాతా',
+      storage: "గోదాములు & నిల్వ",
+      fpo: "ఎఫ్.పి.ఓ సమీకరణ (FPO)",
+    
+      sellCropBtn: "+ నా పంటను అమ్మండి",
+      myCrops: "నా పంటలు",
+      findBuyers: "కొనుగోలుదారులను కనుగొనండి",
+      myDeliveries: "నా డెలివరీలు",
+      history: "చరిత్ర",
+      marketplace: "మార్కెట్ ప్లేస్",
+      myPurchases: "నా కొనుగోళ్లు",
+      demands: "డిమాండ్లు",
+      availableRequests: "అందుబాటులో ఉన్న అభ్యర్థనలు",
+      earnings: "ఆదాయాలు & చరిత్ర",
+      switchRoleDemo: "పాత్రను మార్చండి",
+      moreServices: "మరిన్ని సేవలు",
     },
     hero: {
       badge: 'వ్యవసాయ మార్కెట్ లింకేజ్ మరియు ధరల గుర్తింపు',
@@ -3068,6 +4063,107 @@ export const translations: Record<Locale, TranslationDictionary> = {
       noticeTitle: 'దశ 2 ఫౌండేషన్ ఆర్కిటెక్చర్',
       noticeDesc:
         'ఈ రూట్ FarmerProfile, FPO, ProduceLot మరియు Offer మోడల్‌లతో Prisma Client ద్వారా SQLite డేటాబేస్‌కు అనుసంధానించబడింది.',
+      sellMyCropHero: "+ నా పంటను అమ్మండి",
+      viewOffers: "ఆఫర్‌లను చూడండి",
+      tabMyCrops: "నా పంటలు",
+      tabFindBuyers: "కొనుగోలుదారులను కనుగొనండి",
+      tabMyDeliveries: "నా రవాణా",
+      tabHistory: "చరిత్ర",
+      tabComplaints: "ఫిర్యాదులు మరియు సమస్యలు",
+      wizardTitle: "నా పంటను అమ్మండి",
+      wizardSubtitle: "ప్రత్యక్ష మార్కెట్ అనుసంధానం మరియు తక్షణ AI విజువల్ స్క్రీనింగ్‌తో పంట జాబితా",
+      step1Title: "పంట వివరాలు",
+      step1Subtitle: "సరుకు, దిగుబడి పరిమాణం మరియు ఆశించిన ధర",
+      step2Title: "ఫోటోలు అప్‌లోడ్ చేయండి",
+      step2Subtitle: "కెమెరాతో నేరుగా ఫోటో తీయండి లేదా గ్యాలరీ నుండి ఎంచుకోండి",
+      step3Title: "AI నాణ్యత స్క్రీనింగ్",
+      step3Subtitle: "తక్షణ విజువల్ స్క్రీనింగ్ — ప్రాథమిక అంచనా మాత్రమే",
+      step4Title: "సమీక్షించండి & ప్రచురించండి",
+      step4Subtitle: "వివరాలు ధృవీకరించి కొనుగోలుదారుల కోసం నేరుగా మార్కెట్‌లో ప్రచురించండి",
+      takePhotoBtn: "కెమెరాతో ఫోటో తీయండి",
+      uploadPhotoBtn: "గ్యాలరీ / ఫైల్స్ నుండి ఎంచుకోండి",
+      cameraNotAvailable: "ఈ పరికరంలో కెమెరా అందుబాటులో లేదు. దయచేసి ఫైల్‌ను ఎంచుకోండి.",
+      photoCount: "పంట ఫోటోలు ({count}/4)",
+      removePhoto: "తొలగించు",
+      retakePhoto: "మళ్ళీ తీయండి",
+      aiScreeningNotice: "AI స్క్రీనింగ్ — ధృవీకరించబడలేదు. డెలివరీ లేదా తనిఖీ సమయంలో అధికారిక గ్రేడింగ్ ఖరారు చేయబడుతుంది.",
+      aiEstimatedGrade: "అంచనా వేసిన గ్రేడ్",
+      aiColorObservation: "రంగు మరియు సమానత",
+      aiDamageObservation: "దోషాలు మరియు లోపాలు",
+      publishBtn: "నా పంటను ప్రచురించండి",
+      publishSuccess: "పంట విజయవంతంగా ప్రచురించబడింది! ఇప్పుడు కొనుగోలుదారులు ఆఫర్లు ఇవ్వవచ్చు.",
+      stageAvailable: "అందుబాటులో ఉంది",
+      stageSold: "అమ్మబడింది — అప్పగింత పెండింగ్‌లో ఉంది",
+      stageHandedOver: "అప్పగించబడింది",
+      stagePaymentProcessing: "చెల్లింపు ప్రక్రియలో ఉంది",
+      stageCompleted: "పూర్తయింది",
+      chooseTransporterBtn: "కిసాన్ సేతు రవాణాదారుని ఎంచుకోండి",
+      ownTransportBtn: "నేను స్వంత రవాణా ఏర్పాటు చేసుకుంటాను",
+      transporterProximity: "పొలం నుండి దూరం",
+      routeDeliveryDistance: "డెలివరీ మార్గం దూరం",
+      freightEstimate: "అంచనా వేసిన రవాణా ఛార్జీ",
+      noLotsTitle: "క్రియాశీల పంటలు లేవు",
+      noLotsDesc: "మీ దిగుబడిని నేరుగా అమ్మడానికి '+ నా పంటను అమ్మండి' పై క్లిక్ చేయండి.",
+      historyTitle: "పూర్తయిన అమ్మకాల చరిత్ర",
+      historyEmpty: "ఇంకా పూర్తయిన అమ్మకాలు లేవు. పూర్తయిన లావాదేవీలు ఇక్కడ సేవ్ చేయబడతాయి.",
+      settlementReceipt: "తుది పరిష్కార రసీదు",
+      netPaidToBank: "బ్యాంక్/యూపీఐ ఖాతాకు బదిలీ చేయబడిన మొత్తం",
+      grossAmount: "మొత్తం అమ్మకం విలువ",
+      transportDeduction: "రవాణా ఖర్చు మినహాయింపు",
+      mandiFeeDeduction: "మార్కెట్ రుసుము",
+      platformFee: "ప్లాట్‌ఫారమ్ రుసుము",
+      freePromo: "₹0 (ప్రభుత్వ ఉచిత ప్రోమో)",
+      stepNext: "తదుపరి దశ",
+      stepBack: "వెనుకకు",
+      closeWizard: "మూసివేయి",
+      fpoDeskTitle: "ఎఫ్.పి.ఓ చిన్న లాట్ల సమీకరణ డెస్క్",
+      fpoDeskSubtitle: "ఎక్కువ ధర పొందడానికి చిన్న రైతుల పంటలను ఒకే బల్క్ లాట్‌గా చేర్చండి.",
+      fpoBadge: "రైతుల సమీకరణ",
+      fpoName: "నాసిక్ ఆగ్రో ఫార్మర్ ప్రొడ్యూసర్ కంపెనీ",
+      fpoRegNo: "రిజిస్ట్రేషన్: MH-NSK-FPO-2024-8841",
+      fpoEligibleLotsTitle: "సమీకరణకు అందుబాటులో ఉన్న చిన్న లాట్లు",
+      fpoEligibleLotsSub: "బల్క్ సప్లై కోసం చిన్న లాట్లను ఎంచుకోండి.",
+      fpoSelectedCount: "ఎంచుకున్న లాట్లు",
+      fpoTotalAggregatedQty: "మొత్తం సమీకరించిన పరిమాణం",
+      fpoAvgPrice: "సగటు ధర",
+      fpoTotalValuation: "మొత్తం సరుకు విలువ",
+      fpoTargetBuyerDemandTitle: "లక్ష్య సంస్థాగత కొనుగోలుదారు డిమాండ్",
+      fpoTargetBuyerDemandSub: "ఈ సమీకరణ ద్వారా తీర్చబడే కార్పొరేట్ డిమాండ్.",
+      fpoPricePremium: "ఎఫ్.పి.ఓ బల్క్ ప్రీమియం",
+      fpoCreateAggregatedLotBtn: "సమీకరించిన బల్క్ లాట్‌ను సృష్టించండి",
+      fpoAggregationSuccess: "బల్క్ లాట్ విజయవంతంగా సమీకరించబడింది!",
+      fpoAggregatedLotCode: "సమీకరించిన లాట్ कोड",
+      fpoViewInMarketplace: "మార్కెట్ ప్లేస్‌లో చూడండి",
+    
+      clarityHarvestInventory: "1. పంట నిల్వ",
+      clarityWhatCanSell: "నేను ఏమి అమ్మగలను?",
+      clarityBuyerLinkages: "2. కొనుగోలుదారుల లింకేజీలు",
+      clarityWhoWantsBuy: "దీన్ని ఎవరు కొనాలనుకుంటున్నారు?",
+      clarityDirectBids: "3. ప్రత్యక్ష బిడ్లు",
+      clarityOffersReceived: "నాకు ఎలాంటి ఆఫర్లు వచ్చాయి?",
+      clarityNextAction: "4. తదుపరి చర్య",
+      clarityWhatNext: "నేను తర్వాత ఏమి చేయాలి?",
+      browseBuyerDemandsBtn: "కొనుగోలుదారుల డిమాండ్లను బ్రౌజ్ చేయండి →",
+      inspectOffersBtn: "ఆఫర్‌లను పరిశీలించండి",
+      reviewPendingBidsBtn: "పెండింగ్ బిడ్లను సమీక్షించండి",
+      whyPhotosTitle: "ఉత్పత్తి ఫోటోలను ఎందుకు అప్‌లోడ్ చేయాలి?",
+      whyPhotosDesc: "రంగు, పరిమాణం మరియు ఏకరూపతను తక్షణమే దృశ్య తనిఖీ చేయడానికి ఫోటోలు ఉపయోగపడతాయి, తద్వారా కొనుగోలుదారులు ధృవీకరించిన బిడ్లను చేయవచ్చు.",
+      unitLabel: "యూనిట్",
+      districtLabel: "జిల్లా",
+      mandiBenchmark: "మండి ప్రామాణికం",
+      estGrossPayout: "అంచనా వేసిన స్థూల చెల్లింపు",
+      uploadedPhotos: "అప్‌లోడ్ చేసిన ఫోటోలు",
+      transportArrangement: "రవాణా ఏర్పాట్లు",
+      selfTransport: "స్వంత రవాణా ఏర్పాట్లు",
+      changeBtn: "మార్చండి",
+      availTransporters: "అందుబాటులో ఉన్న ధృవీకరించబడిన రవాణాదారులు",
+      amountYouReceive: "మీకు అందే నికర మొత్తం",
+      estAmountYouReceive: "అంచనా వేసిన రాబడి మొత్తం",
+      supplyThisCrop: "ఈ పంటను సరఫరా చేయండి",
+      ownTransportOption: "సొంత రవాణా / ఫారమ్-గేట్ డెలివరీ (₹0 రవాణా ఖర్చు)",
+      bookTransporter: "కిసాన్‌సేతు రవాణాదారుని ఎంచుకోండి",
+      bestNetRealisation: "ఉత్తమ నికర రాబడి",
+      estDeductionsNotice: "రవాణా మరియు తగ్గింపుల తర్వాత అంచనా వేసిన మొత్తం. ఆఫర్ ఆమోదించబడే వరకు ఇది హామీ ఇవ్వబడిన మొత్తం కాదు.",
     },
     lots: {
       "totalRegisteredLots": "మొత్తం నమోదిత లాట్లు",
@@ -3079,6 +4175,29 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "activeLotsSub": "కొనుగోలుదారు మరియు రవాణా కోసం క్రియాశీల లాట్లు",
       "notGraded": "గ్రేడింగ్ చేయలేదు",
       "offersCount": "ఆఫర్లు",
+      "readyForPickup": "పికప్ కోసం సిద్ధంగా ఉంది",
+      "actionRequiredBadge": "చర్య అవసరం",
+      "dealAgreedBadge": "ఒప్పందం ఖరారైంది",
+      "inTransitBadge": "రవాణాలో ఉంది",
+      "settledBadge": "వ్యాపారం పరిష్కరించబడింది",
+      "marketplaceLiveBadge": "మార్కెట్‌ప్లేస్ లైవ్",
+      "reviewOffersBtn": "ఆఫర్‌లను సమీక్షించండి",
+      "viewMatchedBuyersBtn": "సరిపోలిన కొనుగోలుదారులను చూడండి",
+      "checkSaleWindowBtn": "అమ్మకపు విండోను తనిఖీ చేయండి",
+      "viewDispatchStatusBtn": "రవాణా స్థితిని చూడండి",
+      "viewSettlementReceiptBtn": "సెటిల్‌మెంట్ రసీదు చూడండి",
+      "preliminaryRecorded": "ప్రాథమిక పరిశీలన నమోదు చేయబడింది",
+      "physicalPending": "భౌతిక ధృవీకరణ పెండింగ్‌లో ఉంది. సర్టిఫైడ్ ఇన్‌స్పెక్టర్లు వ్యక్తిగతంగా భౌతిక పరీక్షలు నిర్వహిస్తారు.",
+      "capturedByFarmer": "జాబితా సమయంలో రైతు తీసిన ఫోటోలు",
+      "submittedCropPhoto": "సమర్పించిన పంట ఫోటో",
+      "representativeLabel": "ప్రతినిధి",
+      "buyerTargetPrice": "కొనుగోలుదారు లక్ష్య ధర",
+      "requiredQuantity": "అవసరమైన పరిమాణం",
+      "targetGrade": "లక్ష్య గ్రేడ్",
+      "anyGrade": "ఏదైనా గ్రేడ్",
+      "distanceAndTrips": "దూరం & ట్రిప్పులు",
+      "vehicleLabel": "వాహనం",
+      "totalFreightLabel": "మొత్తం రవాణా ఛార్జీ",
       badge: 'డిజిటల్ పంట లాట్లు',
       title: 'డిజిటల్ పంట లాట్లు',
       subtitle:
@@ -3112,6 +4231,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       cropLabel: 'పంటను ఎంచుకోండి',
       selectCrop: 'పంటను ఎంచుకోండి',
       cropCustomPlaceholder: 'లేదా పంట పేరు నమోదు చేయండి',
+      selectOrTypeCrop: 'క్రింద ఎంచుకోండి లేదా అనుకూల పంటను టైప్ చేయండి',
       varietyLabel: 'రకం / రకం పేరు',
       varietyPlaceholder: 'ఉదా. నాసిక్ రెడ్ గార్వా, JS-335, షిర్డీ వైట్',
       quantityLabel: 'పంట పరిమాణం (వాల్యూమ్)',
@@ -3330,6 +4450,10 @@ export const translations: Record<Locale, TranslationDictionary> = {
       trustNoticeTitle: 'పారదర్శకత మరియు విశ్వసనీయత సూత్రాలు',
       trustNoticeDesc: 'వ్యాపార గుర్తింపు ధృవీకరణ మరియు వాణిజ్య రికార్డు రెండూ విడివిడిగా పారదర్శకంగా చూపబడతాయి. కృత్రిమ రేటింగ్‌లు అనుమతించబడవు.',
       demoNotice: 'డెమో మోడ్: ఇది ప్రోటోటైప్ ప్రదర్శన కోసం మాత్రమే. ఎటువంటి వాస్తవ ఆర్థిక లావాదేవీలు లేదా ఒప్పందాలు జరగవు.',
+      tabDemands: "క్రియాశీల కొనుగోలుదారు డిమాండ్లు",
+      tabHistory: "కొనుగోలు చరిత్ర",
+      historyTitle: "పూర్తయిన కొనుగోళ్ల చరిత్ర",
+      historyEmpty: "గతంలో పూర్తయిన కొనుగోళ్లు లేవు. పూర్తయిన ఆర్డర్లు ఇక్కడ నమోదు చేయబడతాయి.",
     },
     transport: {
       "refreshNetwork": "నెట్‌వర్క్ రీఫ్రెష్ చేయండి",
@@ -3413,6 +4537,10 @@ export const translations: Record<Locale, TranslationDictionary> = {
       activeBookingsTitle: 'ఈ లాట్ కోసం నమోదు చేసిన రవాణా',
       noBookingsYet: 'ఇంకా రవాణా బుక్ చేయలేదు. కింద ఉన్న ఎంపికల నుండి ఎంచుకోండి.',
       demoNotice: 'డెమో నోటీసు: వ్యవసాయ కారిడార్ కోసం లాజిస్టిక్స్ అనుకరణ. నిజమైన వాహన రవాణా ప్రారంభించబడదు.',
+      tabAvailableTrips: "అందుబాటులో ఉన్న రవాణా ఆర్డర్లు",
+      tabHistory: "ట్రిప్ చరిత్ర",
+      historyTitle: "పూర్తయిన రవాణా ట్రిప్పులు",
+      historyEmpty: "ఇంకా పూర్తయిన డెలివరీలు లేవు. పూర్తయిన ట్రిప్పులు ఇక్కడ నమోదు చేయబడతాయి.",
     },
     netRealisation: {
       ledgerTitle: "నికర రాబడి లెడ్జర్",
@@ -3471,6 +4599,54 @@ export const translations: Record<Locale, TranslationDictionary> = {
       mandiYardLabel: 'నియంత్రిత వ్యవసాయ మార్కెట్ యార్డ్',
       directBuyerLabel: 'ప్రత్యక్ష వాణిజ్య కొనుగోలుదారు',
       storageProjectionLabel: 'గోదాము నిల్వ అంచనా',
+      storageTitle: "సమీప వ్యవసాయ గిడ్డంగులు & కోల్డ్ స్టోరేజ్",
+      storageSubtitle: "రైతులు తక్కువ ధరకు అమ్ముకోకుండా నివారించడానికి గుర్తింపు పొందిన గిడ్డంగులు మరియు కోల్డ్ స్టోరేజీలను కనుగొనండి.",
+      storageBadge: "ప్రభుత్వ ఎంఎస్‌డబ్ల్యుసి నెట్‌వర్క్",
+      storageDemoNotice: "గిడ్డంగుల శోధన & ధరల సిమ్యులేటర్ (డెమో ప్రోటోటైప్)",
+      storageDryWarehouse: "డ్రై వేర్‌హౌస్",
+      storageColdStorage: "కోల్డ్ స్టోరేజ్",
+      storageVentilatedChawl: "ఉల్లిపాయ నిల్వ చావ్ల్",
+      storageAvailableCapacity: "అందుబాటులో ఉన్న సామర్థ్యం",
+      storageDistanceFromFarm: "మీ పొలం నుండి దూరం",
+      storageSuitableCrops: "అనుకూలమైన పంటలు",
+      storageCalcTitle: "నిల్వ vs తక్షణ అమ్మకం కాలిక్యులేటర్",
+      storageCalcSub: "ఈ రోజు అమ్మడం మరియు 30 రోజులు నిల్వ చేయడం ద్వారా వచ్చే లాభాలను సరిపోల్చండి.",
+      storageCurrentValue: "ఈ రోజు తక్షణ అమ్మకపు విలువ",
+      storageEstimatedCost: "గిడ్డంగి అద్దె (30 రోజులు)",
+      storageProjectedValue: "30 రోజుల తర్వాత అంచనా విలువ",
+      storageNetAdvantage: "నిల్వ చేయడం ద్వారా నికర లాభం",
+      storageReserveBtn: "నిల్వ స్థలాన్ని బుక్ చేయండి",
+      storageReservationSuccess: "గిడ్డంగి ఇన్వర్డ్ పాస్ జారీ చేయబడింది!",
+      storageReceiptNumber: "పాస్ సంఖ్య",
+      storageCloseModal: "మూసివేయి",
+      storageViewFacilities: "గిడ్డంగులను చూడండి",
+      storageScientificChawl: "శాస్త్రీయ ఉల్లిపాయ నిల్వ",
+      filterByCrop: "పంట ద్వారా ఫిల్టర్",
+      allDistricts: "అన్ని జిల్లాలు",
+      environment: "నిల్వ వాతావరణం",
+      recommendedDuration: "సిఫార్సు చేయబడిన వ్యవధి",
+      suitableForYourCrop: "ఎంచుకున్న పంటకు అనుకూలం",
+      sellNowOption: "ఇప్పుడే అమ్మండి (తక్షణ మార్కెట్ అమ్మకం)",
+      holding15d: "15 రోజులు నిల్వ",
+      holding30d: "30 రోజులు నిల్వ",
+      holding60d: "60 రోజులు నిల్వ",
+      holding90d: "90 రోజులు నిల్వ",
+      highestEstimatedOption: "★ అత్యధిక అంచనా రాబడి",
+      shrinkageLoss: "అంచనా తేమ/పాడైపోయే నష్టం",
+      storageNotEconomic: "నిల్వ చేయడం లాభదాయకం కాదు — ఇప్పుడే అమ్మండి",
+      advisoryPriceNotice: "భవిష్యత్ ధరల అంచనాలు మార్కెట్ సీజన్ ఆధారంగా ఉంటాయి, గ్యారెంటీ కాదు. వాస్తవ ధరలు పంట తేమ మరియు మార్కెట్‌పై ఆధారపడి ఉంటాయి.",
+      windowCardTitle: "సిఫార్సు చేయబడిన అమ్మకపు సమయం",
+      windowBadge: "మార్కెట్ సమాచారం",
+      windowRecommendedAction: "సిఫార్సు చేయబడిన చర్య",
+      windowSellSoon: "త్వరగా అమ్మండి",
+      windowHoldAndStore: "నిల్వ చేయండి",
+      windowWaitAndWatch: "వేచి చూడండి",
+      windowSignalsTitle: "ఎందుకు? (కీలక మార్కెట్ సంకేతాలు)",
+      windowDemandSignal: "సంస్థాగత డిమాండ్",
+      windowPriceTrendSignal: "మండీ ధరల ధోరణి",
+      windowArrivalsSignal: "సమీప మార్కెట్ రాకలు",
+      windowHoldingUpsideSignal: "నిల్వ చేయడం వల్ల ప్రయోజనం",
+      windowDisclaimer: "ప్రస్తుత మార్కెట్ సంకేతాలపై ఆధారపడిన పారదర్శక నియమ-ఆధారిత సిఫార్సు. ఇది ఊహాజనిత ఆర్థిక సలహా కాదు.",
     },
     transactions: {
       "activeContracts": "క్రియాశీల ఒప్పందాలు",
@@ -3552,6 +4728,99 @@ export const translations: Record<Locale, TranslationDictionary> = {
       closeDisputeBtn: 'ఫిర్యాదును ముగించండి',
       grievanceRecordedNotice: 'మీ ఫిర్యాదు డిజిటల్ లావాదేవీ సాక్ష్యాలతో నమోదు చేయబడింది.',
       noDisputesFound: 'సక్రియ వివాదాలు ఏవీ లేవు.',
+      reportIssueBtn: 'సమస్యను నివేదించండి',
+      tabComplaints: 'ఫిర్యాదులు & వివాదాలు',
+      complaintsSub: 'క్రియాశీల వివాదాలు, తనిఖీ సమీక్షలు మరియు పరిష్కారాలను ట్రాక్ చేయండి.',
+      stepSelectProblem: 'సమస్యను ఎంచుకోండి',
+      stepVerifyDetails: 'వాణిజ్య వివరాలను ధృవీకరించండి',
+      stepAddEvidence: 'వివరాలు & సాక్ష్యాలను జోడించండి',
+      stepReviewSubmit: 'సమీక్షించి సమర్పించండి',
+      autoAttachedNotice: 'లావాదేవీ, లాట్, కొనుగోలుదారు, రవాణా మరియు ఎస్క్రో రికార్డులు ఆటోమేటిక్‌గా జతచేయబడ్డాయి.',
+      categoryPaymentNotReceived: 'చెల్లింపు అందలేదు',
+      categoryPaymentIncorrect: 'చెల్లింపు మొత్తం తప్పుగా ఉంది',
+      categoryBuyerIssue: 'కొనుగోలుదారు సమస్య / ప్రతిస్పందన లేకపోవడం',
+      categoryTransportIssue: 'రవాణా / వాహన సమస్య',
+      categoryProduceDamaged: 'రవాణాలో సరుకు దెబ్బతింది',
+      categoryDeliveryIssue: 'డెలివరీ సమస్య',
+      categoryContractIssue: 'ఒప్పంద నిబంధనల ఉల్లంఘన',
+      evidenceOptional: 'సాక్ష్యాలను జోడించండి (ఐచ్ఛికం)',
+      photoOrDocUpload: 'ఫోటో / వేబ్రిడ్జ్ స్లిప్ / రసీదు అప్‌లోడ్ చేయండి',
+      voiceDictationBtn: 'వాయిస్ ద్వారా వివరాలు చెప్పండి',
+      voiceDictationActive: 'వింటున్నాము... స్పష్టంగా మాట్లాడండి',
+      confirmSubmissionTitle: 'ఫిర్యాదు సమర్పణ నిర్ధారణ',
+      confirmSubmissionDesc: 'అధికారిక అధికారి డిజిటల్ ఒప్పందంతో పాటు మీ సాక్ష్యాలను పరిశీలిస్తారు.',
+      complaintSubmittedTitle: 'ఫిర్యాదు విజయవంతంగా నమోదైంది',
+      complaintSubmittedDesc: 'మీ ఫిర్యాదు సమర్పించబడింది. అధికారి సాక్ష్యాలను తనిఖీ చేస్తారు.',
+      trackComplaintBtn: 'ఫిర్యాదు స్థితిని ట్రాక్ చేయండి',
+      decisionOutcomeLabel: 'పరిష్కార నిర్ణయం',
+      financialAdjustmentLabel: 'ఆర్థిక / ఎస్క్రో సర్దుబాటు',
+      resolvedOnLabel: 'పరిష్కరించబడిన తేదీ',
+      officialNotesLabel: 'అధికారిక సమీక్షకుని గమనికలు',
+      timelineSubmitted: 'సమర్పించబడింది',
+      timelineReview: 'సమీక్షలో ఉంది',
+      timelineVerification: 'సాక్ష్యం ధృవీకరించబడింది',
+      timelineDecision: 'నిర్ణయం',
+      timelineResolved: 'పరిష్కరించబడింది',
+      statusOpenDesc: 'మీ ఫిర్యాదు స్వీకరించబడింది మరియు అధికారి కేటాయింపు కోసం ఉంది.',
+      statusReviewDesc: 'అధికారి ప్రస్తుతం లావాదేవీ సాక్ష్యాలను మరియు వేబ్రిడ్జ్ రికార్డులను సమీక్షిస్తున్నారు.',
+      statusResolvedDesc: 'అధికారిక గమనికలతో పరిష్కార నిర్ణయం నమోదు చేయబడింది.',
+      statusClosedDesc: 'అధికారిక గమనికలతో కేసు ముగిసింది.',
+      noComplaintsDesc: 'అన్ని లావాదేవీలు సాధారణంగా సాగుతున్నాయి. ఎటువంటి ఫిర్యాదులు లేవు.',
+      // Buyer specific categories
+      categoryCropVarietyMismatch: 'పంట రకంలో తేడా',
+      categoryQuantityShortfall: 'పరిమాణం తక్కువగా ఉండటం / తూకం లోటు',
+      categoryMoistureOrForeignMatter: 'తేమ లేదా వ్యర్థాలు ఎక్కువగా ఉండటం',
+      categoryProduceNotAsListed: 'సరుకు వివరణ ప్రకారం లేదు (దెబ్బతిన్నది)',
+      categoryFarmerFailedToDeliver: 'రైతు సరుకు డెలివరీ చేయకపోవడం',
+      categoryContractOrOfferIssue: 'ఒప్పంద నిబంధనలు పాటించకపోవడం',
+      categoryFarmerCancellation: 'రైతు ఏకపక్షంగా రద్దు చేయడం',
+      categoryProduceDamagedInTransit: 'రవాణాలో సరుకు దెబ్బతిన్నది',
+      categoryWrongDeliveryLocation: 'తప్పుడు ప్రదేశంలో డెలివరీ చేయడం',
+      // Transporter specific categories
+      categoryFarmerNotReady: 'రైతు నిర్ణీత సమయానికి సిద్ధంగా లేరు',
+      categoryPickupLocationIssue: 'రవాణా ప్రదేశం సరైన మార్గంలో లేదు',
+      categoryLoadingIssue: 'లోడింగ్ ఆలస్యం / సరుకు ఎక్కించకపోవడం',
+      categoryBuyerDeliveryIssue: 'కొనుగోలుదారు అన్‌లోడింగ్ సమస్య / గేటు మూసివేత',
+      categoryDeliveryInstructionChanged: 'రవాణా మధ్యలో గమ్యస్థానం మార్పు',
+      categoryFreightPaymentIssue: 'రవాణా ఛార్జీల చెల్లింపు ఆలస్యం',
+      categoryCancellationAfterConfirmation: 'నిర్ధారణ తర్వాత రద్దు / ఖాళీ ప్రయాణం',
+      categoryUnsafeOrImpossiblePickup: 'ప్రమాదకరమైన లేదా అసాధ్యమైన పరిస్థితి',
+      categoryTransporterNoShow: 'ట్రాన్స్‌పోర్టర్ సమయానికి రాకపోవడం',
+      categoryPickupDelayed: 'పికప్ ఆలస్యం కావడం',
+      categoryTransporterCancellation: 'ట్రాన్స్‌పోర్టర్ ట్రిప్ రద్దు చేయడం',
+      categoryFreightDiscrepancy: 'అదనపు ఛార్జీలు డిమాండ్ చేయడం',
+      categoryVehicleCapacityMismatch: 'వాహన సామర్థ్యం సరిపోలకపోవడం',
+      categoryTransporterMisconduct: 'డ్రైవర్ దురుసు ప్రవర్తన / దించడానికి నిరాకరణ',
+      categoryDeliveryHandoverIssue: 'డెలివరీ హ్యాండ్‌ఓవర్ సమస్య',
+      // Promised vs Actual Comparison & Counterparty
+      promisedVsActualTitle: 'హామీ ఇచ్చిన vs వాస్తవ పోలిక',
+      promisedMetric: 'పారామీటర్ / ప్రమాణం',
+      promisedContracted: 'ఒప్పందం ప్రకారం',
+      promisedDelivered: 'వాస్తవంగా అందినది',
+      promisedShortfall: 'తేడా / లోటు',
+      promisedNotRecorded: 'నమోదు కాలేదు',
+      promisedScheduledPickup: 'షెడ్యూల్ చేసిన పికప్ సమయం',
+      promisedActualArrival: 'వాస్తవ వచ్చిన సమయం',
+      promisedScheduledDelivery: 'షెడ్యూల్ చేసిన డెలివరీ సమయం',
+      promisedActualDelivery: 'వాస్తవ డెలివరీ సమయం',
+      promisedAgreedFreight: 'ఒప్పుకున్న రవాణా ఛార్జీ',
+      promisedClaimedFreight: 'క్లెయిమ్ చేసిన ఛార్జీ',
+      promisedAgreedPrice: 'ఒప్పుకున్న ధర / క్వింటాల్',
+      promisedBilledPrice: 'బిల్ ధర / క్వింటాల్',
+      promisedAgreedVariety: 'ఒప్పుకున్న పంట రకం',
+      promisedDeliveredVariety: 'అందిన పంట రకం',
+      promisedAgreedGrade: 'ఒప్పుకున్న నాణ్యత గ్రేడ్',
+      promisedVerifiedGrade: 'ధృవీకరించిన నాణ్యత గ్రేడ్',
+      counterpartyFarmer: 'రైతు',
+      counterpartyBuyer: 'కొనుగోలుదారు',
+      counterpartyTransporter: 'ట్రాన్స్‌పోర్టర్',
+      complaintAgainst: 'ఎదుటి పార్టీపై ఫిర్యాదు',
+      complaintFrom: 'నుండి వచ్చిన ఫిర్యాదు',
+      waitingHoursLabel: 'అదనపు వేచి ఉన్న గంటలు',
+      extraKmLabel: 'అదనపు కిలోమీటర్లు',
+      excessWeightLabel: 'అదనపు బరువు / సంచులు (క్వింటాళ్ళు)',
+      deliveredWeightLabel: 'వాస్తవంగా అందిన బరువు (క్వింటాళ్ళు)',
+
     },
     calculator: {
       title: 'నికర రాబడి గణన ఇంజిన్',
@@ -3607,6 +4876,21 @@ export const translations: Record<Locale, TranslationDictionary> = {
       calculateNetRealisation: 'నికర రాబడిని లెక్కించండి',
       archTitle: 'దశ 1 ఆర్కిటెక్చర్ ఫౌండేషన్',
       archDesc: 'ఈ డేటా డేటాబేస్ స్కీమాలోని మార్కెట్, మార్కెట్ ప్రైస్ మరియు మార్కెట్ అరైవల్ పట్టికలకు అనుసంధానించబడింది.',
+      trendChartTitle: "మండీ చారిత్రక ధరల ధోరణి",
+      trendChartSubtitle: "మహారాష్ట్ర & ఎపి మార్కెట్లలో మోడల్ ధరల మార్పులు, రాకలు మరియు శాతం మార్పులను పరిశీలించండి.",
+      trendDemoNotice: "చారిత్రక ధోరణి — డెమో మార్కెట్ డేటా (అగ్మార్క్‌నెట్ సిమ్యులేషన్)",
+      trendSevenDays: "7 రోజులు",
+      trendFifteenDays: "15 రోజులు",
+      trendThirtyDays: "30 రోజులు",
+      trendModalPrice: "మోడల్ ధర",
+      trendPriceRange: "ధర పరిధి (కనిష్ట - గరిష్ట)",
+      trendPeriodChange: "వ్యవధి మార్పు",
+      trendArrivals: "రోజువారీ రాకలు",
+      trendSelectCrop: "పంటను ఎంచుకోండి",
+      trendSelectMandi: "మండీని ఎంచుకోండి",
+      trendBadgeRising: "పెరుగుతున్న ధోరణి",
+      trendBadgeSoftening: "తగ్గుతున్న ధోరణి",
+      trendBadgeSteady: "స్థిరమైన ధోరణి",
     },
     voice: {
       buttonLabel: 'మాట్లాడండి',
@@ -3629,6 +4913,13 @@ export const translations: Record<Locale, TranslationDictionary> = {
       queryTransport: 'నా సరుకు కోసం రవాణాను కనుగొనండి.',
       queryOffers: 'నా ఆఫర్‌లను చూపించు.',
       queryTxns: 'నా లావాదేవీలను చూపించు.',
+    typeQueryPlaceholder: "లేదా మీ ప్రశ్నను ఇక్కడ టైప్ చేయండి (ఉదా. 'నా పంటలను చూపించు', 'కొనుగోలుదారులను వెతకండి')...",
+    askKisanSetu: "కిసాన్‌సేతును అడగండి",
+    confirmActionTitle: "ధృవీకరణ అవసరం",
+    confirmActionPrompt: "మీరు ఒక ముఖ్యమైన చర్యను అమలు చేయబోతున్నారు. దయచేసి కొనసాగించడానికి నిర్ధారించండి:",
+    confirmButton: "నిర్ధారించండి",
+    cancelButton: "రద్దు చేయండి",
+    unrecognizedHelp: "నాకు అర్థం కాలేదు. మీరు ఇలా అడగవచ్చు లేదా టైప్ చేయవచ్చు:",
     },
   },
   hi: {
@@ -3706,8 +4997,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "summaryDiscrepancy": "विसंगति का सारांश:",
       "adjudicationNotes": "अधिकारी निर्णय एवं टिप्पणी",
       "noGrievancesFound": "वर्तमान फ़िल्टर अनुसार कोई शिकायत नहीं मिली।",
-      "monitoredActiveTrades": "निगरानी अधीन सक्रिय सौदे"
-    ,
+      "monitoredActiveTrades": "निगरानी अधीन सक्रिय सौदे",
       authLoginTitle: "किसानसेतु पोर्टल प्रवेश",
       authLoginSubtitle: "अपने समर्पित बाज़ार कार्यक्षेत्र में प्रवेश करने के लिए अपनी कृषि भूमिका चुनें।",
       authChooseRole: "चुनें कि आप किसानसेतु का उपयोग किस प्रकार कर रहे हैं",
@@ -3731,6 +5021,17 @@ export const translations: Record<Locale, TranslationDictionary> = {
       authRolePillTransporter: "ट्रांसपोर्टर",
       authCurrentRole: "सक्रिय भूमिका",
       authLoggedOut: "लॉगआउट हो गया",
+    
+      unitKg: "किलोग्राम (किग्रा)",
+      unitTonnes: "टन (मीट्रिक टन)",
+      unitQuintal: "क्विंटल",
+      dismiss: "खारिज करें",
+      allPublicPortals: "सार्वजनिक पोर्टल",
+      mandiPricesNav: "मंडी भाव",
+      storageNav: "भंडारण सुविधाएं",
+      fpoNav: "एफपीओ केंद्र",
+      calculatorNav: "शुद्ध प्राप्ति",
+      marketplaceNav: "उपज मार्केट",
     },
     home: {
       "transparentProcess": "पारदर्शी प्रक्रिया",
@@ -3835,13 +5136,27 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "speak": "बोलें",
       "inspector": "गुणवत्ता निरीक्षक",
       "disputes": "विवाद व शिकायतें",
-      "admin": "राज्य प्रशासन"
-    ,
+      "admin": "राज्य प्रशासन",
       login: "लॉगिन",
       logout: "लॉगआउट",
       switchRole: "भूमिका बदलें",
       myDashboard: "मेरा डैशबोर्ड",
       account: "खाता",
+      storage: "भंडारण एवं गोदाम",
+      fpo: "एफपीओ एकत्रीकरण (FPO)",
+    
+      sellCropBtn: "+ मेरी फसल बेचें",
+      myCrops: "मेरी फसलें",
+      findBuyers: "खरीदार खोजें",
+      myDeliveries: "मेरी डिलीवरी",
+      history: "इतिहास",
+      marketplace: "मार्केटप्लेस",
+      myPurchases: "मेरी खरीद",
+      demands: "मांगें",
+      availableRequests: "उपलब्ध अनुरोध",
+      earnings: "कमाई व इतिहास",
+      switchRoleDemo: "भूमिका बदलें",
+      moreServices: "अन्य सेवाएं",
     },
     "hero": {
       "badge": "महाराष्ट्र एवं विजाग कृषि बाजार लिंकेज",
@@ -3961,7 +5276,108 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "qualityDesc": "AI दृश्य स्क्रीनिंग हेतु फोटो अपलोड करें और अधिकृत परीक्षकों द्वारा प्रमाणित भौतिक गुणवत्ता रिपोर्ट प्राप्त करें।",
       "qualityAction": "गुणवत्ता परीक्षण प्रोटोकॉल",
       "noticeTitle": "फेज 2 आर्किटेक्चर आधार",
-      "noticeDesc": "यह रूट SQLite में FarmerProfile, FPO, ProduceLot और Offer मॉडल्स से सीधे जुड़ा हुआ है।"
+      "noticeDesc": "यह रूट SQLite में FarmerProfile, FPO, ProduceLot और Offer मॉडल्स से सीधे जुड़ा हुआ है。",
+      sellMyCropHero: "+ मेरी फसल बेचें",
+      viewOffers: "ऑफर देखें",
+      tabMyCrops: "मेरी फसलें",
+      tabFindBuyers: "खरीदार खोजें",
+      tabMyDeliveries: "मेरी डिलीवरी",
+      tabHistory: "इतिहास",
+      tabComplaints: "शिकायतें एवं विवाद",
+      wizardTitle: "मेरी फसल बेचें",
+      wizardSubtitle: "सीधे मंडी लिंकेज और तत्काल एआई दृश्य स्क्रीनिंग के साथ फसल सूची",
+      step1Title: "फसल विवरण",
+      step1Subtitle: "उपज का नाम, कुल मात्रा और अपेक्षित मूल्य",
+      step2Title: "तस्वीरें अपलोड करें",
+      step2Subtitle: "सीधे कैमरे से फोटो लें या गैलरी से चुनें",
+      step3Title: "एआई गुणवत्ता स्क्रीनिंग",
+      step3Subtitle: "त्वरित विजुअल स्क्रीनिंग — गैर-बाध्यकारी प्रारंभिक अनुमान",
+      step4Title: "समीक्षा करें और प्रकाशित करें",
+      step4Subtitle: "विवरण की पुष्टि करें और सक्रिय खरीदारों के लिए प्रकाशित करें",
+      takePhotoBtn: "कैमरे से फोटो लें",
+      uploadPhotoBtn: "गैलरी / फाइल से चुनें",
+      cameraNotAvailable: "इस डिवाइस पर कैमरा उपलब्ध नहीं है। कृपया फ़ाइल चुनें।",
+      photoCount: "फसल की तस्वीरें ({count}/4)",
+      removePhoto: "हटाएं",
+      retakePhoto: "पुनः लें",
+      aiScreeningNotice: "एआई स्क्रीनिंग — असत्यापित। डिलीवरी अथवा निरीक्षण के समय आधिकारिक ग्रेडिंग तय की जाती है।",
+      aiEstimatedGrade: "अनुमानित ग्रेड",
+      aiColorObservation: "रंग और एकरूपता",
+      aiDamageObservation: "दृश्यमान दाग व दोष",
+      publishBtn: "मेरी फसल प्रकाशित करें",
+      publishSuccess: "फसल सफलतापूर्वक प्रकाशित हो गई! अब खरीदार ऑफर दे सकते हैं।",
+      stageAvailable: "उपलब्ध",
+      stageSold: "बिक चुकी — सुपुर्दगी लंबित",
+      stageHandedOver: "सुपुर्द कर दिया",
+      stagePaymentProcessing: "भुगतान प्रक्रियाधीन",
+      stageCompleted: "पूर्ण हुआ",
+      chooseTransporterBtn: "किसानसेतु ट्रांसपोर्टर चुनें",
+      ownTransportBtn: "मैं स्वयं परिवहन की व्यवस्था करूंगा",
+      transporterProximity: "खेत से दूरी",
+      routeDeliveryDistance: "डिलीवरी रूट दूरी",
+      freightEstimate: "अनुमानित भाड़ा",
+      noLotsTitle: "कोई सक्रिय फसल सूचीबद्ध नहीं है",
+      noLotsDesc: "सीधे खरीदारों को बेचने के लिए '+ मेरी फसल बेचें' पर क्लिक करें।",
+      historyTitle: "पूर्ण बिक्री का इतिहास",
+      historyEmpty: "अभी तक कोई पूर्ण बिक्री नहीं हुई है। पूरे हुए सौदे यहां रसीद के साथ संग्रहीत होंगे।",
+      settlementReceipt: "अंतिम निपटान रसीद",
+      netPaidToBank: "बैंक/यूपीआई में जमा शुद्ध राशि",
+      grossAmount: "सकल बिक्री मूल्य",
+      transportDeduction: "परिवहन भाड़ा कटौती",
+      mandiFeeDeduction: "मंडी उपकर / शुल्क",
+      platformFee: "प्लेटफ़ॉर्म सुविधा शुल्क",
+      freePromo: "₹0 (शासकीय नि:शुल्क छूट)",
+      stepNext: "अगला चरण",
+      stepBack: "पीछे",
+      closeWizard: "बंद करें",
+      fpoDeskTitle: "एफपीओ छोटे लॉट एकत्रीकरण केंद्र",
+      fpoDeskSubtitle: "छोटे किसानों की उपज को मिलाकर संस्थागत खरीदारों के लिए बड़ा लॉट बनाएं और बेहतर भाव पाएं।",
+      fpoBadge: "किसान समूह एकत्रीकरण",
+      fpoName: "नासिक एग्रो किसान उत्पादक कंपनी",
+      fpoRegNo: "पंजीकरण: MH-NSK-FPO-2024-8841",
+      fpoEligibleLotsTitle: "एकत्रीकरण हेतु उपलब्ध छोटे किसान लॉट",
+      fpoEligibleLotsSub: "थोक आपूर्ति के लिए छोटे लॉट चुनें।",
+      fpoSelectedCount: "चयनित लॉट",
+      fpoTotalAggregatedQty: "कुल एकत्रित मात्रा",
+      fpoAvgPrice: "औसत भाव",
+      fpoTotalValuation: "कुल माल का मूल्य",
+      fpoTargetBuyerDemandTitle: "लक्षित संस्थागत खरीदार मांग",
+      fpoTargetBuyerDemandSub: "इस एकत्रीकरण से पूरी होने वाली कॉर्पोरेट खरीदार की मांग।",
+      fpoPricePremium: "एफपीओ थोक प्रीमियम",
+      fpoCreateAggregatedLotBtn: "एकत्रित थोक लॉट बनाएं",
+      fpoAggregationSuccess: "थोक लॉट सफलतापूर्वक एकत्रित किया गया!",
+      fpoAggregatedLotCode: "एकत्रित लॉट कोड",
+      fpoViewInMarketplace: "मार्केटप्लेस में देखें",
+    
+      clarityHarvestInventory: "1. फसल सूची",
+      clarityWhatCanSell: "मैं क्या बेच सकता हूँ?",
+      clarityBuyerLinkages: "2. खरीदार लिंकेज",
+      clarityWhoWantsBuy: "इसे कौन खरीदना चाहता है?",
+      clarityDirectBids: "3. प्रत्यक्ष बोलियां",
+      clarityOffersReceived: "मुझे क्या ऑफर मिले हैं?",
+      clarityNextAction: "4. अगला कदम",
+      clarityWhatNext: "मुझे आगे क्या करना चाहिए?",
+      browseBuyerDemandsBtn: "खरीदार की मांगें देखें →",
+      inspectOffersBtn: "ऑफर जांचें",
+      reviewPendingBidsBtn: "लंबित बोलियों की समीक्षा करें",
+      whyPhotosTitle: "फसल की तस्वीरें क्यों अपलोड करें?",
+      whyPhotosDesc: "रंग, दाने का आकार और एकरूपता की त्वरित जांच के लिए तस्वीरों का उपयोग किया जाता है ताकि खरीदार सीधी बोली लगा सकें।",
+      unitLabel: "इकाई",
+      districtLabel: "जिला",
+      mandiBenchmark: "मंडी बेंचमार्क",
+      estGrossPayout: "अनुमानित कुल भुगतान",
+      uploadedPhotos: "अपलोड की गई तस्वीरें",
+      transportArrangement: "परिवहन व्यवस्था",
+      selfTransport: "स्वयं-व्यवस्थित परिवहन",
+      changeBtn: "बदलें",
+      availTransporters: "उपलब्ध सत्यापित ट्रांसपोर्टर",
+      amountYouReceive: "आपको मिलने वाली शुद्ध राशि",
+      estAmountYouReceive: "अनुमानित मिलने वाली राशि",
+      supplyThisCrop: "यह फसल आपूर्ति करें",
+      ownTransportOption: "स्वयं का परिवहन / फार्म-गेट डिलीवरी (₹0 भाड़ा)",
+      bookTransporter: "किसानसेतु ट्रांसपोर्टर चुनें",
+      bestNetRealisation: "सर्वोत्तम शुद्ध प्राप्ति",
+      estDeductionsNotice: "अपेक्षित परिवहन और कटौती के बाद अनुमानित राशि। खरीदार का प्रस्ताव स्वीकार होने तक यह गारंटीकृत भुगतान नहीं है।",
     },
     "lots": {
       "totalRegisteredLots": "कुल पंजीकृत लॉट",
@@ -3973,6 +5389,29 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "activeLotsSub": "खरीदार मिलान और परिवहन प्रेषण के लिए सक्रिय लॉट",
       "notGraded": "ग्रेड नहीं किया गया",
       "offersCount": "प्रस्ताव",
+      "readyForPickup": "पिकअप के लिए तैयार",
+      "actionRequiredBadge": "कार्रवाई आवश्यक",
+      "dealAgreedBadge": "सौदा पक्का",
+      "inTransitBadge": "पारगमन में",
+      "settledBadge": "सौदा पूरा हुआ",
+      "marketplaceLiveBadge": "बाज़ार लाइव",
+      "reviewOffersBtn": "ऑफ़र देखें",
+      "viewMatchedBuyersBtn": "योग्य खरीदार देखें",
+      "checkSaleWindowBtn": "बिक्री खिड़की सलाह देखें",
+      "viewDispatchStatusBtn": "डिस्पैच स्थिति देखें",
+      "viewSettlementReceiptBtn": "भुगतान रसीद देखें",
+      "preliminaryRecorded": "प्रारंभिक जांच दर्ज की गई",
+      "physicalPending": "भौतिक सत्यापन लंबित है। प्रमाणित गुणवत्ता निरीक्षक व्यक्तिगत रूप से भौतिक परीक्षण करेंगे।",
+      "capturedByFarmer": "सूचीकरण के दौरान किसान द्वारा ली गई फोटो",
+      "submittedCropPhoto": "जमा की गई फसल फोटो",
+      "representativeLabel": "प्रतिनिधि",
+      "buyerTargetPrice": "खरीदार का अपेक्षित मूल्य",
+      "requiredQuantity": "आवश्यक मात्रा",
+      "targetGrade": "अपेक्षित ग्रेड",
+      "anyGrade": "कोई भी ग्रेड",
+      "distanceAndTrips": "दूरी और फेरे",
+      "vehicleLabel": "वाहन",
+      "totalFreightLabel": "कुल भाड़ा",
       "badge": "डिजिटल फसल लॉट्स",
       "title": "डिजिटल फसल लॉट्स",
       "subtitle": "किसानों और FPO द्वारा वजन, अपेक्षित मूल्य और गुणवत्ता विवरण के साथ तैयार किए गए मानकीकृत डिजिटल लॉट।",
@@ -4005,6 +5444,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "cropLabel": "उपज / फसल चुनें",
       "selectCrop": "फसल चुनें",
       "cropCustomPlaceholder": "या अन्य फसल का नाम लिखें",
+      "selectOrTypeCrop": "नीचे से चुनें या अन्य फसल लिखें",
       "varietyLabel": "किस्म / प्रजाति",
       "varietyPlaceholder": "उदा. नासिक लाल गरवा, जेएस-335, सांबर...",
       "quantityLabel": "उपज मात्रा (वजन)",
@@ -4222,7 +5662,11 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "confirmCancel": "क्या आप इस ऑफर को रद्द करना चाहते हैं?",
       "trustNoticeTitle": "व्यापार अनुबंध एवं निष्पक्षता",
       "trustNoticeDesc": "ऑफर स्वीकृत होते ही लॉट लॉक हो जाता है और लॉजिस्टिक्स व भुगतान प्रक्रिया शुरू होती है।",
-      "demoNotice": "प्रोटोटाइप वातावरण: सभी ऑफर वास्तविक अनुबंध नियम व शर्तों का अनुकरण करते हैं।"
+      "demoNotice": "प्रोटोटाइप वातावरण: सभी ऑफर वास्तविक अनुबंध नियम व शर्तों का अनुकरण करते हैं。",
+      tabDemands: "सक्रिय खरीदार मांग",
+      tabHistory: "खरीद इतिहास",
+      historyTitle: "पूर्ण खरीद का इतिहास",
+      historyEmpty: "अभी तक कोई पूर्ण खरीद नहीं हुई है। पूर्ण अनुबंध यहां दिखाई देंगे।",
     },
     "transport": {
       "refreshNetwork": "नेटवर्क रिफ्रेश करें",
@@ -4305,7 +5749,11 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "bookingSuccess": "परिवहन सफलतापूर्वक बुक हो गया!",
       "activeBookingsTitle": "सक्रिय बुकिंग विवरण",
       "noBookingsYet": "अभी तक कोई बुकिंग नहीं की गई है।",
-      "demoNotice": "प्रोटोटाइप वातावरण: लाइव जीपीएस ट्रैकिंग का अनुकरण किया गया है।"
+      "demoNotice": "प्रोटोटाइप वातावरण: लाइव जीपीएस ट्रैकिंग का अनुकरण किया गया है。",
+      tabAvailableTrips: "उपलब्ध भाड़ा ऑर्डर",
+      tabHistory: "ट्रिप इतिहास",
+      historyTitle: "पूर्ण परिवहन ट्रिप",
+      historyEmpty: "अभी तक कोई पूर्ण डिलीवरी नहीं हुई है। पूर्ण फेरे यहां दर्ज किए जाएंगे।",
     },
     "netRealisation": {
       ledgerTitle: "शुद्ध प्राप्ति बहीखाता",
@@ -4363,7 +5811,55 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "noOptionsAvailable": "अद्याप कोणतेही विक्री पर्याय तपासलेले नाहीत.",
       "mandiYardLabel": "नियमित कृषी उत्पन्न बाजार समिती",
       "directBuyerLabel": "खेत पर सीधा खरीदार",
-      "storageProjectionLabel": "गोदाम साठवणूक अंदाज"
+      "storageProjectionLabel": "गोदाम साठवणूक अंदाज",
+      storageTitle: "निकटवर्ती कृषि गोदाम एवं कोल्ड स्टोरेज",
+      storageSubtitle: "फसल के औने-पौने दामों में बिकवाली रोकने के लिए निकटतम अधिकृत गोदाम और कोल्ड स्टोरेज खोजें।",
+      storageBadge: "शासकीय एमएसडब्ल्यूसी नेटवर्क",
+      storageDemoNotice: "गोदाम खोज एवं दर कैलकुलेटर (डेमो प्रोटोटाइप — एमएसडब्ल्यूसी नेटवर्क)",
+      storageDryWarehouse: "शुष्क अनाज गोदाम",
+      storageColdStorage: "शीतगृह (कोल्ड स्टोरेज)",
+      storageVentilatedChawl: "हवादार प्याज भंडारण चाळ",
+      storageAvailableCapacity: "उपलब्ध भंडारण क्षमता",
+      storageDistanceFromFarm: "आपके खेत से दूरी",
+      storageSuitableCrops: "उपयुक्त फसलें",
+      storageCalcTitle: "भंडारण बनाम तुरंत बिक्री तुलना कैलकुलेटर",
+      storageCalcSub: "आज बेचने और 30 दिन गोदाम में रखकर बेचने के शुद्ध लाभ की स्पष्ट तुलना करें।",
+      storageCurrentValue: "आज का त्वरित बिक्री मूल्य",
+      storageEstimatedCost: "गोदाम किराया (30 दिन)",
+      storageProjectedValue: "30 दिनों बाद अनुमानित बिक्री मूल्य",
+      storageNetAdvantage: "भंडारण से शुद्ध अतिरिक्त लाभ",
+      storageReserveBtn: "गोदाम स्थान आरक्षित करें",
+      storageReservationSuccess: "गोदाम प्रवेश रसीद जारी की गई!",
+      storageReceiptNumber: "प्रवेश रसीद सं.",
+      storageCloseModal: "बंद करें",
+      storageViewFacilities: "गोदाम देखें",
+      storageScientificChawl: "वैज्ञानिक प्याज भंडारण",
+      filterByCrop: "फसल अनुसार फिल्टर",
+      allDistricts: "सभी जिले",
+      environment: "भंडारण वातावरण",
+      recommendedDuration: "अनुशंसित अवधि",
+      suitableForYourCrop: "चयनित फसल हेतु उपयुक्त",
+      sellNowOption: "अभी बेचें (तत्काल मंडी बिक्री)",
+      holding15d: "15 दिन भंडारण",
+      holding30d: "30 दिन भंडारण",
+      holding60d: "60 दिन भंडारण",
+      holding90d: "90 दिन भंडारण",
+      highestEstimatedOption: "★ उच्चतम अनुमानित लाभ",
+      shrinkageLoss: "अनुमानित नमी व सड़न नुकसान",
+      storageNotEconomic: "भंडारण आर्थिक रूप से उपयुक्त नहीं — अभी बेचें",
+      advisoryPriceNotice: "भविष्य के मूल्य अनुमान मौसमी मंडी रुझानों पर आधारित हैं, वित्तीय गारंटी नहीं। वास्तविक मूल्य और नमी नुकसान फसल की गुणवत्ता पर निर्भर करते हैं।",
+      windowCardTitle: "अनुशंसित बिक्री समय (विंडो)",
+      windowBadge: "बाजार आसूचना",
+      windowRecommendedAction: "अनुशंसित कार्रवाई",
+      windowSellSoon: "जल्द बेचें",
+      windowHoldAndStore: "गोदाम में रखें",
+      windowWaitAndWatch: "ठहरें और देखें",
+      windowSignalsTitle: "क्यों? (प्रमुख बाजार संकेत)",
+      windowDemandSignal: "संस्थागत मांग",
+      windowPriceTrendSignal: "मंडी भाव रुझान",
+      windowArrivalsSignal: "निकटवर्ती मंडी आवक",
+      windowHoldingUpsideSignal: "भंडारण से शुद्ध लाभ",
+      windowDisclaimer: "वर्तमान बाजार संकेतों पर आधारित पारदर्शी नियम-आधारित मूल्यांकन। यह कोई सट्टा आधारित वित्तीय सलाह नहीं है।",
     },
     "transactions": {
       "activeContracts": "सक्रिय अनुबंध",
@@ -4444,7 +5940,100 @@ export const translations: Record<Locale, TranslationDictionary> = {
       "resolveDisputeBtn": "विवाद का समाधान करें",
       "closeDisputeBtn": "शिकायत बंद करें",
       "grievanceRecordedNotice": "आपकी शिकायत डिजिटल साक्ष्यों सहित दर्ज कर ली गई है।",
-      "noDisputesFound": "कोई सक्रिय विवाद नहीं है।"
+      "noDisputesFound": "कोई सक्रिय विवाद नहीं है。",
+      "reportIssueBtn": "शिकायत दर्ज करें",
+      "tabComplaints": "शिकायतें एवं विवाद",
+      "complaintsSub": "सक्रिय विवाद, निरीक्षण समीक्षा और आधिकारिक समाधान स्थिति ट्रैक करें।",
+      "stepSelectProblem": "समस्या का चयन करें",
+      "stepVerifyDetails": "व्यापार विवरण सत्यापित करें",
+      "stepAddEvidence": "विवरण एवं साक्ष्य जोड़ें",
+      "stepReviewSubmit": "समीक्षा एवं जमा करें",
+      "autoAttachedNotice": "सौदा, लॉट, खरीदार, परिवहन और एस्क्रो रिकॉर्ड स्वतः संलग्न कर दिए गए हैं।",
+      "categoryPaymentNotReceived": "भुगतान प्राप्त नहीं हुआ",
+      "categoryPaymentIncorrect": "भुगतान राशि गलत है",
+      "categoryBuyerIssue": "खरीदार संबंधी समस्या",
+      "categoryTransportIssue": "परिवहन / वाहन समस्या",
+      "categoryProduceDamaged": "परिवहन के दौरान उपज क्षतिग्रस्त",
+      "categoryDeliveryIssue": "डिलीवरी / सुपुर्दगी समस्या",
+      "categoryContractIssue": "अनुबंध / ऑफर शर्तों की समस्या",
+      "evidenceOptional": "साक्ष्य जोड़ें (वैकल्पिक)",
+      "photoOrDocUpload": "तस्वीर / धर्मकांटा पर्ची / रसीद अपलोड करें",
+      "voiceDictationBtn": "बोलकर विवरण दें",
+      "voiceDictationActive": "सुन रहे हैं... बोलिए",
+      "confirmSubmissionTitle": "शिकायत जमा करने की पुष्टि",
+      "confirmSubmissionDesc": "अधिकृत अधिकारी डिजिटल अनुबंध के साथ आपके साक्ष्यों की जांच करेंगे।",
+      "complaintSubmittedTitle": "शिकायत सफलतापूर्वक दर्ज",
+      "complaintSubmittedDesc": "आपकी शिकायत दर्ज हो गई है। अधिकारी डिजिटल साक्ष्यों की जांच करेंगे।",
+      "trackComplaintBtn": "शिकायत की स्थिति देखें",
+      "decisionOutcomeLabel": "अधिकारिक निर्णय",
+      "financialAdjustmentLabel": "वित्तीय / एस्क्रो समायोजन",
+      "resolvedOnLabel": "समाधान की तारीख",
+      "officialNotesLabel": "समीक्षक की आधिकारिक टिप्पणी",
+      "timelineSubmitted": "दर्ज",
+      "timelineReview": "समीक्षाधीन",
+      "timelineVerification": "साक्ष्य सत्यापन",
+      "timelineDecision": "निर्णय",
+      "timelineResolved": "समाधान संपन्न",
+      "statusOpenDesc": "आपकी शिकायत प्राप्त हो गई है और अधिकारी आवंटन की प्रतीक्षा में है।",
+      "statusReviewDesc": "अधिकारी धर्मकांटा पर्ची और व्यापार साक्ष्यों की समीक्षा कर रहे हैं।",
+      "statusResolvedDesc": "औपचारिक टिप्पणियों के साथ समाधान दर्ज कर दिया गया है।",
+      "statusClosedDesc": "प्रशासनिक टिप्पणियों के साथ मामला बंद कर दिया गया है।",
+      "noComplaintsDesc": "सभी व्यापारिक सौदे सामान्य रूप से चल रहे हैं। कोई शिकायत दर्ज नहीं है।",
+      // Buyer specific categories
+      categoryCropVarietyMismatch: 'फसल की किस्म में अंतर',
+      categoryQuantityShortfall: 'मात्रा में कमी / वजन कम मिलना',
+      categoryMoistureOrForeignMatter: 'अधिक नमी या कचरा होना',
+      categoryProduceNotAsListed: 'उपज विवरण के अनुसार नहीं (खराब/सड़ा हुआ)',
+      categoryFarmerFailedToDeliver: 'किसान द्वारा डिलीवरी न करना / अनुपस्थिति',
+      categoryContractOrOfferIssue: 'अनुबंध की शर्तों का उल्लंघन',
+      categoryFarmerCancellation: 'किसान द्वारा अचानक सौदा रद्द करना',
+      categoryProduceDamagedInTransit: 'परिवहन के दौरान फसल का नुकसान',
+      categoryWrongDeliveryLocation: 'गलत स्थान पर डिलीवरी करना',
+      // Transporter specific categories
+      categoryFarmerNotReady: 'निर्धारित समय पर किसान/फसल तैयार नहीं',
+      categoryPickupLocationIssue: 'पिकअप स्थान पर पहुंचना मुश्किल / खराब रास्ता',
+      categoryLoadingIssue: 'लोडिंग में अत्यधिक देरी / लोड करने से मना करना',
+      categoryBuyerDeliveryIssue: 'खरीदार द्वारा अनलोडिंग में समस्या / गोदाम बंद',
+      categoryDeliveryInstructionChanged: 'रास्ते में डिलीवरी स्थान बदलना',
+      categoryFreightPaymentIssue: 'भाड़े का भुगतान बकाया या विलंबित',
+      categoryCancellationAfterConfirmation: 'पुष्टि के बाद रद्द करना / खाली वाहन',
+      categoryUnsafeOrImpossiblePickup: 'असुरक्षित या असंभव पिकअप स्थिति',
+      categoryTransporterNoShow: 'ट्रांसपोर्टर समय पर नहीं पहुंचा',
+      categoryPickupDelayed: 'पिकअप में अत्यधिक देरी',
+      categoryTransporterCancellation: 'ट्रांसपोर्टर ने ट्रिप रद्द की',
+      categoryFreightDiscrepancy: 'अतिरिक्त नकद मांग / भाड़े में विसंगति',
+      categoryVehicleCapacityMismatch: 'वाहन की क्षमता अनुपयुक्त',
+      categoryTransporterMisconduct: 'ड्राइवर का दुर्व्यवहार / उतारने से इनकार',
+      categoryDeliveryHandoverIssue: 'डिलिवरी हैंडओवर में समस्या',
+      // Promised vs Actual Comparison & Counterparty
+      promisedVsActualTitle: 'अनुबंधित बनाम वास्तविक सत्यापन',
+      promisedMetric: 'पैरामीटर / मानक',
+      promisedContracted: 'अनुबंधित / तय किया गया',
+      promisedDelivered: 'वास्तविक दर्ज',
+      promisedShortfall: 'अंतर / कमी',
+      promisedNotRecorded: 'दर्ज नहीं',
+      promisedScheduledPickup: 'निर्धारित पिकअप समय',
+      promisedActualArrival: 'वास्तविक आगमन समय',
+      promisedScheduledDelivery: 'निर्धारित डिलीवरी समय',
+      promisedActualDelivery: 'वास्तविक डिलीवरी समय',
+      promisedAgreedFreight: 'तय किया गया भाड़ा',
+      promisedClaimedFreight: 'मांगा गया / विवादित भाड़ा',
+      promisedAgreedPrice: 'तय भाव / क्विंटल',
+      promisedBilledPrice: 'बिल किया गया भाव / क्विंटल',
+      promisedAgreedVariety: 'तय फसल किस्म',
+      promisedDeliveredVariety: 'वास्तविक मिली किस्म',
+      promisedAgreedGrade: 'तय गुणवत्ता ग्रेड',
+      promisedVerifiedGrade: 'सत्यापित गुणवत्ता ग्रेड',
+      counterpartyFarmer: 'किसान',
+      counterpartyBuyer: 'खरीदार',
+      counterpartyTransporter: 'ट्रांसपोर्टर',
+      complaintAgainst: 'के विरुद्ध शिकायत',
+      complaintFrom: 'से प्राप्त शिकायत',
+      waitingHoursLabel: 'अतिरिक्त प्रतीक्षा घंटे',
+      extraKmLabel: 'अतिरिक्त किलोमीटर',
+      excessWeightLabel: 'अतिरिक्त वजन / बोरियां (क्विंटल)',
+      deliveredWeightLabel: 'वास्तविक प्राप्त वजन (क्विंटल)',
+
     },
     calculator: {
       title: 'शुद्ध प्राप्ति खोज इंजन',
@@ -4500,6 +6089,21 @@ export const translations: Record<Locale, TranslationDictionary> = {
       calculateNetRealisation: 'शुद्ध प्राप्ति की गणना करें',
       archTitle: 'चरण १ वास्तुकला आधार',
       archDesc: 'यह डेटा डेटाबेस स्कीमा में मार्केट, मार्केट प्राइस और मार्केट अराइवल टेबल से जुड़ा हुआ है।',
+      trendChartTitle: "मंडी ऐतिहासिक भाव रुझान (ट्रेंड)",
+      trendChartSubtitle: "महाराष्ट्र एवं आंध्र प्रदेश की मंडियों में मॉडल भाव परिवर्तन, दैनिक आवक और प्रतिशत रुझान देखें।",
+      trendDemoNotice: "ऐतिहासिक रुझान — डेमो/सीडेड बाजार डेटा (एगमार्कनेट सिमुलेशन)",
+      trendSevenDays: "7 दिन",
+      trendFifteenDays: "15 दिन",
+      trendThirtyDays: "30 दिन",
+      trendModalPrice: "मॉडल भाव",
+      trendPriceRange: "न्यूनतम - अधिकतम भाव दायरा",
+      trendPeriodChange: "अवधि में बदलाव",
+      trendArrivals: "दैनिक आवक",
+      trendSelectCrop: "फसल चुनें",
+      trendSelectMandi: "मंडी चुनें",
+      trendBadgeRising: "बढ़ता रुझान",
+      trendBadgeSoftening: "गिरावट का रुझान",
+      trendBadgeSteady: "स्थिर रुझान",
     },
     voice: {
       buttonLabel: 'बोलें',
@@ -4522,6 +6126,13 @@ export const translations: Record<Locale, TranslationDictionary> = {
       queryTransport: 'मेरे माल के लिए परिवहन खोजें।',
       queryOffers: 'मेरे ऑफर्स दिखाएं।',
       queryTxns: 'मेरे सौदे दिखाएं।',
+    typeQueryPlaceholder: "या अपना प्रश्न यहाँ लिखें (जैसे 'मेरी फसलें दिखाओ', 'खरीदार खोजें')...",
+    askKisanSetu: "किसानसेतु से पूछें",
+    confirmActionTitle: "पुष्टिकरण आवश्यक है",
+    confirmActionPrompt: "आप एक महत्वपूर्ण कार्रवाई करने वाले हैं। कृपया आगे बढ़ने के लिए पुष्टि करें:",
+    confirmButton: "पुष्टि करें",
+    cancelButton: "रद्द करें",
+    unrecognizedHelp: "मुझे समझ नहीं आया। आप इस प्रकार बोल या लिख सकते हैं:",
     },
   },
 };

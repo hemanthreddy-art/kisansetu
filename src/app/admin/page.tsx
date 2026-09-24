@@ -130,6 +130,11 @@ export default function AdminPortalPage() {
   }, []);
 
   const handleAdjudicate = async (disputeId: string, status: string) => {
+    if (['RESOLVED', 'REJECTED', 'CLOSED'].includes(status) && notesInput.trim().length < 10) {
+      setFeedbackMsg({ type: 'error', text: 'Official adjudication resolution notes (minimum 10 characters) are strictly required to resolve, reject, or close a grievance.' });
+      return;
+    }
+
     if (!notesInput.trim()) {
       setFeedbackMsg({ type: 'error', text: 'Official adjudication notes are required to update or resolve a dispute.' });
       return;

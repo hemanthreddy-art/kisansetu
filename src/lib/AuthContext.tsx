@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-export type DemoRole = 'FARMER' | 'BUYER' | 'TRANSPORTER';
+export type DemoRole = 'FARMER' | 'BUYER' | 'TRANSPORTER' | 'INSPECTOR' | 'ADMIN';
 
 export interface DemoUser {
   id: string;
@@ -55,6 +55,30 @@ export const DEMO_USERS: Record<DemoRole, DemoUser> = {
     portalPath: '/transporter',
     isDemo: true,
   },
+  INSPECTOR: {
+    id: 'inspector-demo-shinde',
+    role: 'INSPECTOR',
+    fullName: 'Dr. Vilas Shinde (डॉ. विलास शिंदे)',
+    organization: 'MSAMB Quality Assurance Cell',
+    phone: '+919822998877',
+    email: 'vilas.shinde@msamb.gov.in',
+    district: 'Nashik',
+    location: 'Nashik, Maharashtra',
+    portalPath: '/inspector',
+    isDemo: true,
+  },
+  ADMIN: {
+    id: 'admin-demo-officer',
+    role: 'ADMIN',
+    fullName: 'MSAMB Grievance Officer',
+    organization: 'Maharashtra State Agricultural Marketing Board',
+    phone: '+919822990000',
+    email: 'admin@msamb.gov.in',
+    district: 'Pune',
+    location: 'Pune Head Office',
+    portalPath: '/admin',
+    isDemo: true,
+  },
 };
 
 interface AuthContextType {
@@ -102,6 +126,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (e) {
       console.warn('Failed to save demo user to localStorage:', e);
     }
+    // Role-based post-login routing:
+    // Farmer → /farmer, Buyer → /buyer, Transporter → /transporter, Quality Inspector → /inspector, Admin → /admin
     router.push(loggedUser.portalPath);
   };
 

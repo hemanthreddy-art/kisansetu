@@ -16,6 +16,11 @@ export type LotStatus =
   | 'AVAILABLE'
   | 'RESERVED'
   | 'SOLD'
+  | 'TRANSPORT_SELECTED'
+  | 'IN_TRANSIT'
+  | 'HANDED_OVER'
+  | 'PAYMENT_PROCESSING'
+  | 'COMPLETED'
   | 'CANCELLED';
 
 export type OfferStatus = 'PENDING' | 'ACCEPTED' | 'COUNTERED' | 'REJECTED' | 'EXPIRED' | 'CANCELLED';
@@ -152,6 +157,7 @@ export interface ProduceLot {
   location?: string | null;
   description?: string | null;
   lotPhotosJson?: string | null;
+  images?: string | null;
   status: LotStatus;
   createdAt: string;
   updatedAt: string;

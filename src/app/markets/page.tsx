@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { SAMPLE_MARKET_PRICES } from '@/lib/constants';
+import { HistoricalPriceTrendChart } from '@/components/markets/HistoricalPriceTrendChart';
 import {
   TrendingUp,
   Scale,
@@ -31,7 +32,12 @@ const getCropId = (commodity: string): string => {
   if (lower.includes('onion') || lower.includes('कांदा')) return 'onion';
   if (lower.includes('tomato') || lower.includes('टोमॅटो')) return 'tomato';
   if (lower.includes('soybean') || lower.includes('सोयाबीन')) return 'soybean';
+  if (lower.includes('wheat') || lower.includes('गहू') || lower.includes('गेहूँ')) return 'wheat';
+  if (lower.includes('cotton') || lower.includes('कापूस') || lower.includes('कपास')) return 'cotton';
+  if (lower.includes('maize') || lower.includes('corn') || lower.includes('मका') || lower.includes('मक्का')) return 'maize';
+  if (lower.includes('grapes') || lower.includes('द्राक्षे') || lower.includes('अंगूर')) return 'grapes';
   if (lower.includes('pomegranate') || lower.includes('डाळिंब')) return 'pomegranate';
+  if (lower.includes('turmeric') || lower.includes('हळद') || lower.includes('हल्दी')) return 'turmeric';
   if (lower.includes('jaggery') || lower.includes('गूळ') || lower.includes('బెల్లం')) return 'jaggery';
   if (lower.includes('paddy') || lower.includes('rice') || lower.includes('వరి')) return 'paddy';
   if (lower.includes('cashew') || lower.includes('काजू') || lower.includes('జీడిపప్పు')) return 'cashew';
@@ -43,9 +49,18 @@ const getCropId = (commodity: string): string => {
 const getMarketDistance = (marketName: string): number => {
   const lower = marketName.toLowerCase();
   if (lower.includes('lasalgaon')) return 35;
+  if (lower.includes('niphad')) return 25;
+  if (lower.includes('nashik')) return 45;
   if (lower.includes('pune')) return 160;
-  if (lower.includes('akola')) return 280;
+  if (lower.includes('ahmednagar')) return 140;
+  if (lower.includes('jalgaon')) return 210;
   if (lower.includes('solapur')) return 240;
+  if (lower.includes('sangli')) return 290;
+  if (lower.includes('kolhapur')) return 330;
+  if (lower.includes('dhule')) return 120;
+  if (lower.includes('akola')) return 280;
+  if (lower.includes('vashi')) return 195;
+  if (lower.includes('nagpur')) return 510;
   if (lower.includes('anakapalle')) return 40;
   if (lower.includes('visakhapatnam')) return 30;
   if (lower.includes('palasa')) return 180;
@@ -229,9 +244,14 @@ export default function MarketIntelligencePage() {
                 <option value="all">{t.common.allCommodities} ({availableCrops.length})</option>
                 <option value="onion">Onion (कांदा)</option>
                 <option value="tomato">Tomato (टोमॅटो)</option>
+                <option value="wheat">Wheat (गहू)</option>
                 <option value="soybean">Soybean (सोयाबीन)</option>
+                <option value="cotton">Cotton (कापूस)</option>
+                <option value="grapes">Grapes (द्राक्षे)</option>
                 <option value="pomegranate">Pomegranate (डाळिंब)</option>
+                <option value="maize">Maize (मका)</option>
                 <option value="jaggery">Jaggery (गूळ / బెల్లం)</option>
+                <option value="turmeric">Turmeric (हळद)</option>
                 <option value="paddy">Paddy / Rice (धान / వరి)</option>
                 <option value="cashew">Raw Cashew Nut (काजू)</option>
                 <option value="coffee">Arabica Coffee (कॉफ़ी)</option>
@@ -265,6 +285,11 @@ export default function MarketIntelligencePage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Historical Price Trend Visualization */}
+      <HistoricalPriceTrendChart
+        initialCrop={selectedCrop !== 'all' ? selectedCrop : 'onion'}
+      />
 
       {/* Market Prices Table / List */}
       <Card className="shadow-none border-[#D8D2C4]">

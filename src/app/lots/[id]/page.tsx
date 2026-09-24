@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback, useRef, Suspense } from 'react
 import Link from 'next/link';
 import { useParams, useSearchParams } from 'next/navigation';
 import { useLanguage } from '@/i18n/LanguageContext';
+import { useAuth } from '@/lib/AuthContext';
 import { MAHARASHTRA_DISTRICTS } from '@/lib/constants';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -11,7 +12,7 @@ import { Badge } from '@/components/ui/Badge';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { VerificationBadge } from '@/components/ui/VerificationBadge';
 import { ReputationCluster } from '@/components/ui/ReputationCluster';
-import { formatINR } from '@/lib/utils';
+import { formatINR, calculateNetRealisation } from '@/lib/utils';
 import {
   Package,
   ArrowLeft,
@@ -55,6 +56,7 @@ import {
 import { ProduceLot } from '@/types';
 import { TransportOption } from '@/lib/transportMatching';
 import { RecommendationResult } from '@/lib/recommendation';
+import { SellingWindowCard } from '@/components/farmer/SellingWindowCard';
 
 interface BuyerReputationData {
   ratingScore: number;
@@ -115,6 +117,14 @@ interface QualityAssessmentDetails {
   visibleDefects?: string | null;
   notes?: string | null;
   assessedAt: string;
+  displayLabel?: string;
+  label?: string;
+  maturityCuringStatus?: string | null;
+  foreignMatterPercent?: number | null;
+  nonObservableNotice?: string | null;
+  retakeRecommendations?: string[] | null;
+  suggestedAction?: string | null;
+  visualParameters?: string | null;
 }
 
 interface QualityVerificationDetails {
@@ -162,6 +172,7 @@ interface TransportRequestDetails {
 
 function LotDetailPageContent() {
   const { t, locale } = useLanguage();
+  const { user } = useAuth();
   const params = useParams();
   const searchParams = useSearchParams();
 
@@ -367,6 +378,20 @@ function LotDetailPageContent() {
       const dataLot = await resLot.json();
       if (dataLot.success && dataLot.data) {
         setLot(dataLot.data);
+        if (dataLot.data.lotPhotosJson) {
+          try {
+            const parsed = JSON.parse(dataLot.data.lotPhotosJson);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              setPersistedPhoto(parsed[0]);
+            } else if (typeof parsed === 'string') {
+              setPersistedPhoto(parsed);
+            }
+          } catch {
+            if (typeof dataLot.data.lotPhotosJson === 'string') {
+              setPersistedPhoto(dataLot.data.lotPhotosJson);
+            }
+          }
+        }
         const l = dataLot.data;
         setEditFormData({
           quantity: String(l.quantity),
@@ -830,16 +855,37 @@ function LotDetailPageContent() {
   const latestAi = qualityOverview?.tier1_aiAssessment?.details || null;
   const latestPhysical = qualityOverview?.tier2_physicalVerification?.details || null;
 
+  // Extract all photos attached to the lot
+  let lotPhotos: string[] = [];
+  if (lot?.lotPhotosJson) {
+    try {
+      const parsed = JSON.parse(lot.lotPhotosJson);
+      if (Array.isArray(parsed)) {
+        lotPhotos = parsed.filter((p: unknown) => typeof p === 'string' && (p as string).length > 0);
+      } else if (typeof parsed === 'string') {
+        lotPhotos = [parsed];
+      }
+    } catch {
+      if (typeof lot.lotPhotosJson === 'string' && lot.lotPhotosJson.length > 10) {
+        lotPhotos = [lot.lotPhotosJson];
+      }
+    }
+  }
+  if (lotPhotos.length === 0 && persistedPhoto) {
+    lotPhotos = [persistedPhoto];
+  }
+
   return (
     <PageContainer maxWidth="7xl" className="space-y-6 sm:space-y-8">
       {/* Back Link & Navigation */}
       <div className="flex items-center justify-between">
         <Link
-          href="/lots"
+          href={user?.role === 'FARMER' ? '/farmer' : '/lots'}
           className="inline-flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-emerald-700 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>{t.lots.backToList}</span>
+          <span>{user?.role === 'FARMER' ? (t.nav?.myCrops || 'My Crops') : t.lots.backToList}</span>
+          <span className="sr-only">{t.lots.backToList}</span>
         </Link>
 
         <div className="flex items-center gap-2">
@@ -945,10 +991,262 @@ function LotDetailPageContent() {
             <div className="text-sm font-bold text-[#262320] mt-1">
               {new Date(lot.readyForPickupDate).toLocaleDateString()}
             </div>
-            <span className="text-xs text-emerald-700 font-medium">Ready for pickup</span>
+            <span className="text-xs text-emerald-700 font-medium">{t.lots.readyForPickup || "Ready for pickup"}</span>
           </div>
         </div>
       </div>
+
+      {/* ========================================================================= */}
+      {/* PRIMARY ACTION HERO CARD (FARMER IMMEDIATE ACTION DESK) */}
+      {/* ========================================================================= */}
+      {(() => {
+        const pendingOffers = offers.filter((o) => o.status === 'PENDING');
+        const acceptedOffer = offers.find((o) => o.status === 'ACCEPTED');
+        const hasActiveTransport = transportRequests && transportRequests.length > 0;
+        const hasInTransitTransport = transportRequests && transportRequests.some((r) => r.status === 'IN_TRANSIT' || r.status === 'PICKUP_COMPLETED');
+        const hasDelivered = lot.status === 'SOLD' || lot.status === 'COMPLETED' || (transportRequests && transportRequests.some((r) => r.status === 'DELIVERED'));
+
+        if (pendingOffers.length > 0) {
+          return (
+            <div className="bg-gradient-to-r from-amber-500/10 via-amber-50 to-white border-2 border-amber-400 rounded-[8px] p-5 sm:p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="bg-amber-600 text-white text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full">
+                    {t.lots.actionRequiredBadge || "Action Required"}
+                  </span>
+                  <span className="text-xs font-bold text-amber-900">
+                    High Commercial Demand
+                  </span>
+                </div>
+                <h2 className="text-xl sm:text-2xl font-heading font-black text-[#262320]">
+                  {pendingOffers.length} {pendingOffers.length === 1 ? 'Direct Purchase Offer Waiting for Your Review' : 'Direct Purchase Offers Waiting for Your Review'}
+                </h2>
+                <p className="text-xs sm:text-sm text-amber-950/80 max-w-2xl">
+                  Commercial buyers have placed binding purchase offers. Review offer prices, quantity terms, and buyer ratings to accept and initiate trade contract.
+                </p>
+              </div>
+              <div className="flex items-center gap-2.5 shrink-0">
+                <a
+                  href="#incoming-offers"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[6px] text-xs sm:text-sm font-black bg-amber-600 hover:bg-amber-700 text-white shadow-xs transition-colors"
+                >
+                  <TrendingUp className="w-4 h-4" />
+                  <span>{(t.lots.reviewOffersBtn || "Review Offers").toUpperCase()} ({pendingOffers.length})</span>
+                </a>
+                <a
+                  href="#net-realisation"
+                  className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-[6px] text-xs font-semibold border border-amber-300 bg-white text-amber-900 hover:bg-amber-50 transition-colors"
+                >
+                  <span>{t.lots.calculateRealisation || "Compare Net Realisation"}</span>
+                </a>
+              </div>
+            </div>
+          );
+        }
+
+        if (acceptedOffer || lot.status === 'RESERVED') {
+          return (
+            <div className="bg-gradient-to-r from-emerald-500/10 via-emerald-50 to-white border-2 border-emerald-400 rounded-[8px] p-5 sm:p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="bg-emerald-600 text-white text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full">
+                    {t.lots.dealAgreedBadge || "Deal Agreed"}
+                  </span>
+                  <span className="text-xs font-bold text-emerald-900">
+                    Contract Initialized
+                  </span>
+                </div>
+                <h2 className="text-xl sm:text-2xl font-heading font-black text-[#262320]">
+                  Offer Accepted with {acceptedOffer?.buyerCompanyName || 'Commercial Buyer'}
+                </h2>
+                <p className="text-xs sm:text-sm text-emerald-950/80 max-w-2xl">
+                  {hasActiveTransport
+                    ? 'Transport logistics are arranged and farm pickup is scheduled. Escrow payment is secured.'
+                    : 'Sales contract confirmed. Next step: Book a verified transporter from the logistics corridors below to schedule farm dispatch.'}
+                </p>
+              </div>
+              <div className="flex items-center gap-2.5 shrink-0">
+                {!hasActiveTransport ? (
+                  <a
+                    href="#transport-fulfillment"
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[6px] text-xs sm:text-sm font-black bg-[#1B4332] hover:bg-[#2D6A4F] text-white shadow-xs transition-colors"
+                  >
+                    <Truck className="w-4 h-4" />
+                    <span>{(t.transport.bookTransportBtn || "Book Transport").toUpperCase()}</span>
+                  </a>
+                ) : (
+                  <Link
+                    href="/transactions"
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[6px] text-xs sm:text-sm font-black bg-[#1B4332] hover:bg-[#2D6A4F] text-white shadow-xs transition-colors"
+                  >
+                    <CreditCard className="w-4 h-4" />
+                    <span>{(t.transactions.viewTransactionBtn || "View Transaction & Escrow").toUpperCase()}</span>
+                  </Link>
+                )}
+              </div>
+            </div>
+          );
+        }
+
+        if (hasInTransitTransport) {
+          return (
+            <div className="bg-gradient-to-r from-blue-500/10 via-blue-50 to-white border-2 border-blue-400 rounded-[8px] p-5 sm:p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="bg-blue-600 text-white text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full">
+                    {t.lots.inTransitBadge || "In Transit"}
+                  </span>
+                  <span className="text-xs font-bold text-blue-900">
+                    Dispatch Active
+                  </span>
+                </div>
+                <h2 className="text-xl sm:text-2xl font-heading font-black text-[#262320]">
+                  Crop is On the Road with Transporter
+                </h2>
+                <p className="text-xs sm:text-sm text-blue-950/80 max-w-2xl">
+                  Cargo picked up from your farm. Payment is held securely in digital escrow and will release upon delivery acceptance.
+                </p>
+              </div>
+              <div className="flex items-center gap-2.5 shrink-0">
+                <a
+                  href="#transport-fulfillment"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[6px] text-xs sm:text-sm font-black bg-blue-700 hover:bg-blue-800 text-white shadow-xs transition-colors"
+                >
+                  <Truck className="w-4 h-4" />
+                  <span>{(t.lots.viewDispatchStatusBtn || "View Dispatch Status").toUpperCase()}</span>
+                </a>
+              </div>
+            </div>
+          );
+        }
+
+        if (hasDelivered) {
+          return (
+            <div className="bg-gradient-to-r from-emerald-500/10 via-emerald-50 to-white border-2 border-emerald-400 rounded-[8px] p-5 sm:p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="bg-emerald-600 text-white text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full">
+                    {t.lots.settledBadge || "Settled"}
+                  </span>
+                  <span className="text-xs font-bold text-emerald-900">
+                    Payment Disbursed
+                  </span>
+                </div>
+                <h2 className="text-xl sm:text-2xl font-heading font-black text-[#262320]">
+                  Delivery Verified & Trade Complete
+                </h2>
+                <p className="text-xs sm:text-sm text-emerald-950/80 max-w-2xl">
+                  Buyer inspected and verified the produce lot. Payment settlement has been transferred directly to your account.
+                </p>
+              </div>
+              <div className="flex items-center gap-2.5 shrink-0">
+                <Link
+                  href="/transactions"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[6px] text-xs sm:text-sm font-black bg-[#1B4332] hover:bg-[#2D6A4F] text-white shadow-xs transition-colors"
+                >
+                  <CreditCard className="w-4 h-4" />
+                  <span>{(t.lots.viewSettlementReceiptBtn || "View Settlement Receipt").toUpperCase()}</span>
+                </Link>
+              </div>
+            </div>
+          );
+        }
+
+        return (
+          <div className="bg-gradient-to-r from-[#1B4332]/10 via-[#EAF2ED] to-white border border-[#B7D5C4] rounded-[8px] p-5 sm:p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="bg-[#1B4332] text-white text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full">
+                  {t.lots.marketplaceLiveBadge || "Marketplace Live"}
+                </span>
+                <span className="text-xs font-bold text-[#1B4332]">
+                  {matches.length > 0 ? `${matches.length} Matched Buyers Found` : 'Published to APMC Network'}
+                </span>
+              </div>
+              <h2 className="text-xl sm:text-2xl font-heading font-black text-[#262320]">
+                {matches.length > 0
+                  ? `${matches.length} Institutional Buyer(s) Actively Sourcing ${lot.commodity}`
+                  : `${lot.commodity} Lot Published for Commercial Procurement`}
+              </h2>
+              <p className="text-xs sm:text-sm text-[#262320]/80 max-w-2xl">
+                {matches.length > 0
+                  ? 'Active commercial demands match your commodity, grade, and volume parameters. Check matching demands and market recommendations below.'
+                  : 'Your crop is discoverable by buyers across regional mandis. Check the sale window recommendation below to decide when to sell or store.'}
+              </p>
+            </div>
+            <div className="flex items-center gap-2.5 shrink-0">
+              {matches.length > 0 ? (
+                <a
+                  href="#matched-buyers"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[6px] text-xs sm:text-sm font-black bg-[#1B4332] hover:bg-[#2D6A4F] text-white shadow-xs transition-colors"
+                >
+                  <Building2 className="w-4 h-4" />
+                  <span>{(t.lots.viewMatchedBuyersBtn || "View Matched Buyers").toUpperCase()}</span>
+                </a>
+              ) : (
+                <a
+                  href="#selling-window-section"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[6px] text-xs sm:text-sm font-black bg-[#1B4332] hover:bg-[#2D6A4F] text-white shadow-xs transition-colors"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  <span>{(t.lots.checkSaleWindowBtn || "Check Sale Window").toUpperCase()}</span>
+                </a>
+              )}
+              <a
+                href="#net-realisation"
+                className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-[6px] text-xs font-semibold border border-[#D8D2C4] bg-white text-[#1B4332] hover:bg-[#ECE7DE] transition-colors"
+              >
+                <span>{t.lots.calculateRealisation || "Calculate Net Realisation"}</span>
+              </a>
+            </div>
+          </div>
+        );
+      })()}
+
+
+      {/* Produce Photos Hero Gallery — Only shown if photos were attached */}
+      {lotPhotos.length > 0 && (
+        <div className="bg-white border border-[#D8D2C4] rounded-[8px] p-5 shadow-none space-y-3">
+          <div className="flex items-center justify-between pb-2 border-b border-[#ECE7DE]">
+            <div className="flex items-center gap-2">
+              <Camera className="w-5 h-5 text-[#1B4332]" />
+              <h3 className="font-heading font-bold text-base text-[#262320]">
+                Produce Lot Photos ({lotPhotos.length})
+              </h3>
+              <span className="text-[11px] font-semibold text-[#92400E] bg-[#FEF3C7] px-2 py-0.5 rounded border border-[#FDE68A]">
+                AI Screening — Not Verified
+              </span>
+            </div>
+            <span className="text-xs text-[#635E59]">
+              {t.lots.capturedByFarmer || "Captured by farmer during listing"}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {lotPhotos.map((imgSrc, idx) => (
+              <div
+                key={idx}
+                className="relative aspect-square rounded-[6px] overflow-hidden border border-[#D8D2C4] bg-stone-100 group shadow-xs hover:border-[#1B4332] transition-all"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={imgSrc}
+                  alt={`${lot.commodity} photo ${idx + 1}`}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                />
+                <div className="absolute bottom-1 left-1 bg-black/60 text-white text-[10px] font-mono px-1.5 py-0.5 rounded">
+                  Photo #{idx + 1}
+                </div>
+                <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="bg-[#1B4332] text-white text-[9px] px-1.5 py-0.5 rounded font-bold">
+                    Visual Screen
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* ========================================================================= */}
       {/* 2-TIER QUALITY VERIFICATION SECTION */}
@@ -967,19 +1265,28 @@ function LotDetailPageContent() {
             <p className="text-gray-600 text-sm">{t.quality.sectionSubtitle}</p>
           </div>
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              setAiErrors({});
-              setAiSuccessMessage(null);
-              setIsAiModalOpen(true);
-            }}
-            className="gap-2 shrink-0 border-emerald-700 text-[#1B4332] hover:bg-emerald-50"
-          >
-            <Camera className="w-4 h-4 text-emerald-700" />
-            <span>{t.quality.requestAiAssessment}</span>
-          </Button>
+          {latestAi ? (
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-[#2D6A4F] bg-[#EAF2ED] px-3 py-1.5 rounded-full border border-[#B7D5C4] font-medium flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-[#1B4332]" />
+                <span>{t.lots.preliminaryRecorded || "Preliminary Screening Recorded"}</span>
+              </span>
+            </div>
+          ) : (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setAiErrors({});
+                setAiSuccessMessage(null);
+                setIsAiModalOpen(true);
+              }}
+              className="gap-2 shrink-0 border-emerald-700 text-[#1B4332] hover:bg-emerald-50"
+            >
+              <Camera className="w-4 h-4 text-emerald-700" />
+              <span>{t.quality.requestAiAssessment}</span>
+            </Button>
+          )}
         </div>
 
         {/* Safety / Trust Architectural Principle Alert */}
@@ -1021,18 +1328,18 @@ function LotDetailPageContent() {
                 </div>
 
                 {/* Photo preview in Tier 1 card if available */}
-                {(persistedPhoto || selectedPhoto) && (
+                {(lotPhotos.length > 0 || persistedPhoto || selectedPhoto) && (
                   <div className="rounded-xl overflow-hidden border border-amber-200 bg-amber-50/40 relative">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={persistedPhoto || selectedPhoto || ''}
+                      src={lotPhotos[0] || persistedPhoto || selectedPhoto || ''}
                       alt="Submitted Produce Photo"
                       className="w-full h-36 object-contain bg-black/5"
                     />
                     <div className="p-2 bg-amber-100/90 border-t border-amber-200 text-[11px] text-amber-900 font-medium flex items-center justify-between">
                       <span className="flex items-center gap-1.5">
                         <Camera className="w-3.5 h-3.5 text-amber-700" />
-                        Submitted Produce Photo
+                        {t.lots.submittedCropPhoto || "Submitted Produce Photo"}
                       </span>
                       <Badge variant="amber" className="text-[9px] font-bold py-0 px-1.5">
                         {t.quality.tier1Badge}
@@ -1055,6 +1362,14 @@ function LotDetailPageContent() {
                       </div>
                     </div>
 
+                    {/* Preliminary Visual Screening Header */}
+                    <div className="p-2 rounded bg-amber-100/60 border border-amber-200/80 flex items-center justify-between">
+                      <span className="font-bold text-amber-950 text-[11px]">AI Visual Assessment — Preliminary</span>
+                      <span className="font-bold text-[#1B4332] text-[11px] bg-white/80 px-2 py-0.5 rounded border border-[#B7D5C4]">
+                        {Math.round(latestAi.confidenceScore * 100)}% Reliable
+                      </span>
+                    </div>
+
                     <div className="flex justify-between py-1.5 border-b border-gray-100">
                       <span className="text-gray-500">{t.quality.colorLabel}:</span>
                       <span className="font-semibold text-[#262320]">{latestAi.color || 'Standard color'}</span>
@@ -1073,6 +1388,28 @@ function LotDetailPageContent() {
                     <div className="flex justify-between py-1.5 border-b border-gray-100">
                       <span className="text-gray-500">{t.quality.visibleDefectsLabel}:</span>
                       <span className="font-semibold text-[#262320]">{latestAi.visibleDefects || 'N/A'}</span>
+                    </div>
+
+                    {latestAi.maturityCuringStatus && (
+                      <div className="flex justify-between py-1.5 border-b border-gray-100">
+                        <span className="text-gray-500">Maturity / Curing:</span>
+                        <span className="font-semibold text-[#262320]">{latestAi.maturityCuringStatus}</span>
+                      </div>
+                    )}
+
+                    {latestAi.foreignMatterPercent !== undefined && latestAi.foreignMatterPercent !== null && (
+                      <div className="flex justify-between py-1.5 border-b border-gray-100">
+                        <span className="text-gray-500">Visible Foreign Matter:</span>
+                        <span className="font-semibold text-[#262320]">{latestAi.foreignMatterPercent}%</span>
+                      </div>
+                    )}
+
+                    {/* Strict Non-Fabrication Notice */}
+                    <div className="p-2.5 bg-stone-50 border border-stone-200 rounded-[6px] text-[11px] text-stone-700 space-y-0.5">
+                      <span className="font-bold text-stone-900 block">Physical measurement required</span>
+                      <p className="text-stone-600">
+                        Moisture %, internal quality, and chemical residue cannot be determined from photographs and require official physical assaying.
+                      </p>
                     </div>
 
                     {latestAi.notes && (
@@ -1221,7 +1558,7 @@ function LotDetailPageContent() {
                   <div className="py-8 text-center space-y-2">
                     <FileCheck2 className="w-8 h-8 text-gray-300 mx-auto" />
                     <p className="text-xs text-gray-500 max-w-xs mx-auto">
-                      Physical verification pending. Certified quality inspectors will conduct in-person physical assaying.
+                      {t.lots.physicalPending || "Physical verification pending. Certified quality inspectors will conduct in-person physical assaying."}
                     </p>
                   </div>
                 )}
@@ -1380,44 +1717,274 @@ function LotDetailPageContent() {
         </CardContent>
       </Card>
 
-      {/* Net Realisation Action Card */}
-      <Card className="border-[#B7D5C4] bg-[#FAFAF8]">
-        <CardHeader className="pb-2">
-          <div className="flex items-center gap-2">
-            <Badge variant="emerald">CORE USP</Badge>
-            <span className="text-xs text-[#1B4332] font-mono font-bold">NET REALISATION</span>
+      {/* ========================================================================= */}
+      {/* INCOMING DIGITAL OFFERS SECTION (FARMER ACTION DESK) */}
+      {/* ========================================================================= */}
+      <section id="incoming-offers" className="space-y-4 pt-4 border-t border-[#D8D2C4]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <div className="flex items-center gap-2">
+              <Badge variant="amber">Module D • Direct Contracting</Badge>
+              <span className="text-xs text-gray-500 font-mono font-bold">DIGITAL OFFERS</span>
+            </div>
+            <h2 className="text-xl font-bold text-[#262320] mt-1 flex items-center gap-2">
+              <TrendingUp className="w-5 h-5 text-amber-700" />
+              <span>{t.buyerMatching.incomingOffersTitle}</span>
+            </h2>
+            <p className="text-xs sm:text-sm text-gray-600">
+              {t.buyerMatching.incomingOffersSubtitle}
+            </p>
           </div>
-          <CardTitle className="text-xl text-[#1B4332] mt-1">
-            {t.lots.futureNetTitle}
-          </CardTitle>
-          <CardDescription className="text-[#1B4332]">
-            {t.lots.futureNetDesc}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="pt-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="text-sm text-[#1B4332]">
-            Compare expected ₹{lot.expectedPricePerQuintal}/Qtl against Lasalgaon, Pune, Solapur mandis with real freight and cess deductions.
+
+          <Badge variant={offers.length > 0 ? 'amber' : 'gray'} className="text-xs font-bold self-start sm:self-auto">
+            {offers.length} {offers.length === 1 ? 'Offer' : 'Offers'} Received
+          </Badge>
+        </div>
+
+        {/* Reserved Status Alert if Lot is Reserved */}
+        {lot.status === 'RESERVED' && (
+          <div className="p-4 rounded-[8px] bg-blue-50 border border-blue-200 text-blue-900 flex items-start gap-3">
+            <Lock className="w-5 h-5 text-blue-700 shrink-0 mt-0.5" />
+            <div className="text-xs sm:text-sm">
+              <span className="font-bold block">{t.buyerMatching.lotReservedNotice}</span>
+              <p className="text-blue-800 text-xs mt-0.5">
+                An offer was accepted by the farmer. The lot is now blocked from competing bids while transport logistics and bank escrow are confirmed.
+              </p>
+            </div>
           </div>
-          <Link
-            href={`/calculator?price=${lot.expectedPricePerQuintal || lot.expectedPrice}&crop=${encodeURIComponent(lot.commodity)}&quantity=${lot.quantityQuintals || lot.quantity}&market=Lasalgaon+APMC&distance=35&lotId=${lot.lotCode}`}
-          >
-            <Button variant="primary" className="gap-2 shrink-0 shadow-none">
-              <Scale className="w-4 h-4" />
-              <span>{t.lots.calculateRealisation}</span>
-            </Button>
-          </Link>
-        </CardContent>
-      </Card>
+        )}
 
-      {/* Phase 4-6 Future Module Placeholders */}
-      <div className="space-y-4 pt-4">
-        <h2 className="text-xl font-bold text-[#262320]">Integrated Market Modules</h2>
+        {/* Offer Action Toast Feedback */}
+        {offerActionSuccess && (
+          <div className="p-3 rounded-xl bg-emerald-50 border border-[#B7D5C4] text-[#1B4332] text-xs flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+            <span>{offerActionSuccess}</span>
+          </div>
+        )}
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {offerActionError && (
+          <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-900 text-xs flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+            <span>{offerActionError}</span>
+          </div>
+        )}
+
+        {offers.length === 0 ? (
+          <Card className="border-dashed border-[#D8D2C4] bg-gray-50/50">
+            <CardContent className="py-8 text-center space-y-3">
+              <TrendingUp className="w-10 h-10 text-gray-300 mx-auto" />
+              <div className="space-y-1">
+                <p className="text-sm font-semibold text-gray-700">
+                  {t.buyerMatching.noOffersReceived}
+                </p>
+                <p className="text-xs text-gray-500 max-w-md mx-auto">
+                  When verified commercial buyers dispatch binding offers on this lot, they will appear here with price, payment terms, and instant accept/reject options.
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsMakeOfferOpen(true)}
+                className="gap-2 text-xs mt-2"
+              >
+                <Send className="w-3.5 h-3.5 text-sky-600" />
+                <span>Simulate Digital Buyer Bid</span>
+              </Button>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="space-y-3">
+            {offers.map((offer) => {
+              const isPending = offer.status === 'PENDING';
+              const isAccepted = offer.status === 'ACCEPTED';
+              const isRejected = offer.status === 'REJECTED';
+
+              const statusVariant = isAccepted
+                ? 'emerald'
+                : isPending
+                ? 'amber'
+                : isRejected
+                ? 'red'
+                : 'gray';
+
+              const lotCorridorDist = 45;
+              const offerNetCalc = calculateNetRealisation({
+                pricePerQuintal: offer.offeredPricePerQtl,
+                quantityQuintals: offer.quantityQuintals,
+                distanceKm: lotCorridorDist,
+              });
+
+              return (
+                <Card
+                  key={offer.id}
+                  className={`border transition-all ${
+                    isAccepted
+                      ? 'border-emerald-300 ring-1 ring-emerald-500/20 bg-emerald-50/10'
+                      : isPending
+                      ? 'border-amber-200 bg-amber-50/10'
+                      : 'border-[#D8D2C4]'
+                  }`}
+                >
+                  <CardHeader className="pb-3 border-b border-gray-100">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-bold text-[#262320] text-base">
+                            {offer.buyerCompanyName}
+                          </span>
+                          <VerificationBadge
+                            type={offer.isBuyerVerified ? 'identity' : 'provisional'}
+                            customLabel={offer.isBuyerVerified ? t.buyerMatching.buyerIdentityVerified : t.buyerMatching.buyerIdentityUnverified}
+                          />
+                          <Badge variant={statusVariant} className="text-[11px] font-bold px-2 py-0.5">
+                            {offer.status === 'PENDING'
+                              ? t.buyerMatching.statusPending
+                              : offer.status === 'ACCEPTED'
+                              ? t.buyerMatching.statusAccepted
+                              : offer.status === 'REJECTED'
+                              ? t.buyerMatching.statusRejected
+                              : offer.status === 'CANCELLED'
+                              ? t.buyerMatching.statusCancelled
+                              : offer.status}
+                          </Badge>
+                        </div>
+                        <div className="text-xs text-gray-500 flex items-center gap-3 pt-1">
+                          <span>{t.lots.representativeLabel || "Representative"}: {offer.buyerName}</span>
+                          <span>•</span>
+                          <ReputationCluster
+                            ratingScore={offer.reputation?.ratingScore || 4.5}
+                            completedDealsCount={offer.reputation?.completedTradesCount || 0}
+                            onTimeDeliveryPercent={offer.reputation?.paymentPunctualityPercent || 95}
+                            size="sm"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="text-left sm:text-right bg-[#EAF2ED] border border-[#52B788] p-2.5 rounded-[8px] shrink-0">
+                        <span className="text-[10px] text-[#1B4332] block uppercase font-bold">
+                          💰 {t.farmer.amountYouReceive || 'Amount You Receive'}
+                        </span>
+                        <span className="text-xl font-heading font-black text-[#1B4332]">
+                          {formatINR(offerNetCalc.netRealisation)}
+                        </span>
+                        <span className="text-[11px] text-[#2D6A4F] block font-semibold">
+                          ₹{offerNetCalc.netRealisationPerQuintal} / Qtl (Net) • Gross: {formatINR(offer.totalOfferValue)}
+                        </span>
+                      </div>
+                    </div>
+                  </CardHeader>
+
+                  <CardContent className="pt-3 pb-3 space-y-3 text-xs">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-gray-50 p-2.5 rounded-xl border border-[#D8D2C4]">
+                      <div>
+                        <span className="text-gray-500 block text-[11px]">{t.buyerMatching.offeredPrice}:</span>
+                        <strong className="text-[#1B4332] font-bold text-sm">
+                          ₹{offer.offeredPricePerQtl}/Qtl
+                        </strong>
+                      </div>
+                      <div>
+                        <span className="text-gray-500 block text-[11px]">{t.buyerMatching.offeredQuantity}:</span>
+                        <strong className="text-[#262320] font-bold text-sm">
+                          {offer.quantityQuintals} Quintals
+                        </strong>
+                      </div>
+                      <div>
+                        <span className="text-gray-500 block text-[11px]">{t.buyerMatching.paymentTerms}:</span>
+                        <span className="text-[#262320] font-medium text-xs truncate block">
+                          {offer.paymentTerms || 'Bank Escrow'}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-gray-500 block text-[11px]">{t.buyerMatching.validUntil}:</span>
+                        <span className="text-[#262320] font-medium text-xs block">
+                          {offer.validUntil ? new Date(offer.validUntil).toLocaleDateString() : '7 Days'}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="p-2.5 bg-[#F4F1EA] border border-[#D8D2C4] rounded-[6px] text-xs flex flex-wrap items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 text-[11px] flex-wrap text-[#635E59]">
+                        <span>Gross: <strong className="text-[#262320]">₹{offer.offeredPricePerQtl}/Qtl ({formatINR(offer.totalOfferValue)})</strong></span>
+                        <span>•</span>
+                        <span className="text-red-700">Est. Freight (45km): <strong>-{formatINR(offerNetCalc.transportCost)}</strong></span>
+                        <span>•</span>
+                        <span className="text-emerald-700 font-semibold">Mandi Cess: ₹0 (Direct Trade)</span>
+                      </div>
+                      <span className="text-[11px] font-black text-[#1B4332]">
+                        Take-Home Net: {formatINR(offerNetCalc.netRealisation)}
+                      </span>
+                    </div>
+
+                    {offer.notes && (
+                      <p className="text-xs text-gray-700 bg-amber-50/40 p-2 rounded-lg border border-amber-100">
+                        <span className="font-semibold text-[#262320]">Buyer Notes: </span>
+                        {offer.notes}
+                      </p>
+                    )}
+
+                    {/* Farmer Action Buttons if Offer is Pending */}
+                    {isPending && lot.status !== 'SOLD' && (
+                      <div className="pt-2 flex flex-col sm:flex-row items-center gap-2 justify-end">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={actionOfferId === offer.id}
+                          onClick={() => handleRejectOffer(offer.id)}
+                          className="gap-2 text-xs border-red-200 text-red-700 hover:bg-red-50 w-full sm:w-auto"
+                        >
+                          {actionOfferId === offer.id ? (
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          ) : (
+                            <XCircle className="w-3.5 h-3.5" />
+                          )}
+                          <span>{t.buyerMatching.rejectOfferBtn}</span>
+                        </Button>
+
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          disabled={actionOfferId === offer.id}
+                          onClick={() => handleAcceptOffer(offer.id)}
+                          className="gap-2 text-xs shadow-none bg-emerald-700 hover:bg-emerald-800 text-white w-full sm:w-auto"
+                        >
+                          {actionOfferId === offer.id ? (
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          ) : (
+                            <CheckCircle2 className="w-3.5 h-3.5" />
+                          )}
+                          <span>{t.buyerMatching.acceptOfferBtn}</span>
+                        </Button>
+                      </div>
+                    )}
+
+                    {/* Trade Contract Activated Notice & Direct Link to Transactions */}
+                    {isAccepted && (
+                      <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 bg-emerald-50/80 p-3 rounded-xl border border-[#B7D5C4]">
+                        <div className="flex items-center gap-2 text-xs text-[#1B4332] font-bold">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
+                          <span>Commercial Trade Contract Activated • Lot Reserved for Logistics</span>
+                        </div>
+                        <Link href="/transactions">
+                          <Button size="sm" variant="primary" className="text-xs gap-1.5 bg-emerald-800 hover:bg-emerald-900 text-white shadow-xs w-full sm:w-auto">
+                            <CreditCard className="w-3.5 h-3.5" />
+                            <span>View Trade Transaction & Settlement</span>
+                            <ArrowRight className="w-3.5 h-3.5" />
+                          </Button>
+                        </Link>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
       {/* ========================================================================= */}
       {/* PHASE 4: MATCHED COMMERCIAL BUYERS SECTION */}
       {/* ========================================================================= */}
-      <section className="space-y-4 pt-2">
+      <section id="matched-buyers" className="space-y-4 pt-4 border-t border-[#D8D2C4]">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
@@ -1542,7 +2109,7 @@ function LotDetailPageContent() {
                       {/* Pricing and demand parameters */}
                       <div className="grid grid-cols-2 gap-2 bg-gray-50 p-2.5 rounded-xl border border-[#D8D2C4]">
                         <div>
-                          <span className="text-gray-500 block text-[11px]">Buyer Target Price:</span>
+                          <span className="text-gray-500 block text-[11px]">{t.lots.buyerTargetPrice || "Buyer Target Price"}:</span>
                           <strong className="text-[#1B4332] font-bold text-sm">
                             ₹{m.targetPricePerQtl}/Qtl
                           </strong>
@@ -1553,12 +2120,12 @@ function LotDetailPageContent() {
                           )}
                         </div>
                         <div>
-                          <span className="text-gray-500 block text-[11px]">Required Quantity:</span>
+                          <span className="text-gray-500 block text-[11px]">{t.lots.requiredQuantity || "Required Quantity"}:</span>
                           <strong className="text-[#262320] font-bold text-sm">
                             {m.requiredQuantityQtl} Quintals
                           </strong>
                           <span className="text-[10px] text-gray-500 block">
-                            Target Grade: {m.requiredGrade || 'Any Grade'}
+                            {t.lots.targetGrade || "Target Grade"}: {m.requiredGrade || t.lots.anyGrade || "Any Grade"}
                           </span>
                         </div>
                       </div>
@@ -1627,250 +2194,12 @@ function LotDetailPageContent() {
       </section>
 
       {/* ========================================================================= */}
-      {/* INCOMING DIGITAL OFFERS SECTION (FARMER ACTION DESK) */}
-      {/* ========================================================================= */}
-      <section className="space-y-4 pt-2">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div>
-            <div className="flex items-center gap-2">
-              <Badge variant="amber">Module D • Direct Contracting</Badge>
-              <span className="text-xs text-gray-500 font-mono font-bold">DIGITAL OFFERS</span>
-            </div>
-            <h2 className="text-xl font-bold text-[#262320] mt-1 flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-amber-700" />
-              <span>{t.buyerMatching.incomingOffersTitle}</span>
-            </h2>
-            <p className="text-xs sm:text-sm text-gray-600">
-              {t.buyerMatching.incomingOffersSubtitle}
-            </p>
-          </div>
-
-          <Badge variant={offers.length > 0 ? 'amber' : 'gray'} className="text-xs font-bold self-start sm:self-auto">
-            {offers.length} {offers.length === 1 ? 'Offer' : 'Offers'} Received
-          </Badge>
-        </div>
-
-        {/* Reserved Status Alert if Lot is Reserved */}
-        {lot.status === 'RESERVED' && (
-          <div className="p-4 rounded-[8px] bg-blue-50 border border-blue-200 text-blue-900 flex items-start gap-3">
-            <Lock className="w-5 h-5 text-blue-700 shrink-0 mt-0.5" />
-            <div className="text-xs sm:text-sm">
-              <span className="font-bold block">{t.buyerMatching.lotReservedNotice}</span>
-              <p className="text-blue-800 text-xs mt-0.5">
-                An offer was accepted by the farmer. The lot is now blocked from competing bids while transport logistics and bank escrow are confirmed.
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* Offer Action Toast Feedback */}
-        {offerActionSuccess && (
-          <div className="p-3 rounded-xl bg-emerald-50 border border-[#B7D5C4] text-[#1B4332] text-xs flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>{offerActionSuccess}</span>
-          </div>
-        )}
-
-        {offerActionError && (
-          <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-900 text-xs flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
-            <span>{offerActionError}</span>
-          </div>
-        )}
-
-        {offers.length === 0 ? (
-          <Card className="border-dashed border-[#D8D2C4] bg-gray-50/50">
-            <CardContent className="py-8 text-center space-y-3">
-              <TrendingUp className="w-10 h-10 text-gray-300 mx-auto" />
-              <div className="space-y-1">
-                <p className="text-sm font-semibold text-gray-700">
-                  {t.buyerMatching.noOffersReceived}
-                </p>
-                <p className="text-xs text-gray-500 max-w-md mx-auto">
-                  When verified commercial buyers dispatch binding offers on this lot, they will appear here with price, payment terms, and instant accept/reject options.
-                </p>
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setIsMakeOfferOpen(true)}
-                className="gap-2 text-xs mt-2"
-              >
-                <Send className="w-3.5 h-3.5 text-sky-600" />
-                <span>Simulate Digital Buyer Bid</span>
-              </Button>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="space-y-3">
-            {offers.map((offer) => {
-              const isPending = offer.status === 'PENDING';
-              const isAccepted = offer.status === 'ACCEPTED';
-              const isRejected = offer.status === 'REJECTED';
-
-              const statusVariant = isAccepted
-                ? 'emerald'
-                : isPending
-                ? 'amber'
-                : isRejected
-                ? 'red'
-                : 'gray';
-
-              return (
-                <Card
-                  key={offer.id}
-                  className={`border transition-all ${
-                    isAccepted
-                      ? 'border-emerald-300 ring-1 ring-emerald-500/20 bg-emerald-50/10'
-                      : isPending
-                      ? 'border-amber-200 bg-amber-50/10'
-                      : 'border-[#D8D2C4]'
-                  }`}
-                >
-                  <CardHeader className="pb-3 border-b border-gray-100">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-bold text-[#262320] text-base">
-                            {offer.buyerCompanyName}
-                          </span>
-                          <VerificationBadge
-                            type={offer.isBuyerVerified ? 'identity' : 'provisional'}
-                            customLabel={offer.isBuyerVerified ? t.buyerMatching.buyerIdentityVerified : t.buyerMatching.buyerIdentityUnverified}
-                          />
-                          <Badge variant={statusVariant} className="text-[11px] font-bold px-2 py-0.5">
-                            {offer.status === 'PENDING'
-                              ? t.buyerMatching.statusPending
-                              : offer.status === 'ACCEPTED'
-                              ? t.buyerMatching.statusAccepted
-                              : offer.status === 'REJECTED'
-                              ? t.buyerMatching.statusRejected
-                              : offer.status === 'CANCELLED'
-                              ? t.buyerMatching.statusCancelled
-                              : offer.status}
-                          </Badge>
-                        </div>
-                        <div className="text-xs text-gray-500 flex items-center gap-3 pt-1">
-                          <span>Representative: {offer.buyerName}</span>
-                          <span>•</span>
-                          <ReputationCluster
-                            ratingScore={offer.reputation?.ratingScore || 4.5}
-                            completedDealsCount={offer.reputation?.completedTradesCount || 0}
-                            onTimeDeliveryPercent={offer.reputation?.paymentPunctualityPercent || 95}
-                            size="sm"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="text-left sm:text-right">
-                        <span className="text-[11px] text-gray-500 block uppercase font-bold">
-                          {t.buyerMatching.totalOfferValue}
-                        </span>
-                        <span className="text-xl font-heading font-black text-[#1B4332]">
-                          {formatINR(offer.totalOfferValue)}
-                        </span>
-                      </div>
-                    </div>
-                  </CardHeader>
-
-                  <CardContent className="pt-3 pb-3 space-y-3 text-xs">
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-gray-50 p-2.5 rounded-xl border border-[#D8D2C4]">
-                      <div>
-                        <span className="text-gray-500 block text-[11px]">{t.buyerMatching.offeredPrice}:</span>
-                        <strong className="text-[#1B4332] font-bold text-sm">
-                          ₹{offer.offeredPricePerQtl}/Qtl
-                        </strong>
-                      </div>
-                      <div>
-                        <span className="text-gray-500 block text-[11px]">{t.buyerMatching.offeredQuantity}:</span>
-                        <strong className="text-[#262320] font-bold text-sm">
-                          {offer.quantityQuintals} Quintals
-                        </strong>
-                      </div>
-                      <div>
-                        <span className="text-gray-500 block text-[11px]">{t.buyerMatching.paymentTerms}:</span>
-                        <span className="text-[#262320] font-medium text-xs truncate block">
-                          {offer.paymentTerms || 'Bank Escrow'}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-gray-500 block text-[11px]">{t.buyerMatching.validUntil}:</span>
-                        <span className="text-[#262320] font-medium text-xs block">
-                          {offer.validUntil ? new Date(offer.validUntil).toLocaleDateString() : '7 Days'}
-                        </span>
-                      </div>
-                    </div>
-
-                    {offer.notes && (
-                      <p className="text-xs text-gray-700 bg-amber-50/40 p-2 rounded-lg border border-amber-100">
-                        <span className="font-semibold text-[#262320]">Buyer Notes: </span>
-                        {offer.notes}
-                      </p>
-                    )}
-
-                    {/* Farmer Action Buttons if Offer is Pending */}
-                    {isPending && lot.status !== 'SOLD' && (
-                      <div className="pt-2 flex flex-col sm:flex-row items-center gap-2 justify-end">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          disabled={actionOfferId === offer.id}
-                          onClick={() => handleRejectOffer(offer.id)}
-                          className="gap-2 text-xs border-red-200 text-red-700 hover:bg-red-50 w-full sm:w-auto"
-                        >
-                          {actionOfferId === offer.id ? (
-                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                          ) : (
-                            <XCircle className="w-3.5 h-3.5" />
-                          )}
-                          <span>{t.buyerMatching.rejectOfferBtn}</span>
-                        </Button>
-
-                        <Button
-                          variant="primary"
-                          size="sm"
-                          disabled={actionOfferId === offer.id}
-                          onClick={() => handleAcceptOffer(offer.id)}
-                          className="gap-2 text-xs shadow-none bg-emerald-700 hover:bg-emerald-800 text-white w-full sm:w-auto"
-                        >
-                          {actionOfferId === offer.id ? (
-                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                          ) : (
-                            <CheckCircle2 className="w-3.5 h-3.5" />
-                          )}
-                          <span>{t.buyerMatching.acceptOfferBtn}</span>
-                        </Button>
-                      </div>
-                    )}
-
-                    {/* Trade Contract Activated Notice & Direct Link to Transactions */}
-                    {isAccepted && (
-                      <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 bg-emerald-50/80 p-3 rounded-xl border border-[#B7D5C4]">
-                        <div className="flex items-center gap-2 text-xs text-[#1B4332] font-bold">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
-                          <span>Commercial Trade Contract Activated • Lot Reserved for Logistics</span>
-                        </div>
-                        <Link href="/transactions">
-                          <Button size="sm" variant="primary" className="text-xs gap-1.5 bg-emerald-800 hover:bg-emerald-900 text-white shadow-xs w-full sm:w-auto">
-                            <CreditCard className="w-3.5 h-3.5" />
-                            <span>View Trade Transaction & Settlement</span>
-                            <ArrowRight className="w-3.5 h-3.5" />
-                          </Button>
-                        </Link>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        )}
-      </section>
-
-      {/* ========================================================================= */}
       {/* MODULE L & M: NET REALISATION & SMART SELLING RECOMMENDATION (PHASE 6) */}
       {/* ========================================================================= */}
       <section id="net-realisation" className="space-y-6 pt-6 border-t border-[#D8D2C4]">
+        {/* Actionable Sale-Window Recommendation Advisory (SIH PS 26132) */}
+        
+
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
@@ -1888,6 +2217,17 @@ function LotDetailPageContent() {
             <p className="text-sm text-gray-600 max-w-3xl">
               {t.netRealisation.hubSubtitle}
             </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Link
+              href={`/calculator?price=${lot.expectedPricePerQuintal || lot.expectedPrice}&crop=${encodeURIComponent(lot.commodity)}&quantity=${lot.quantityQuintals || lot.quantity}&market=Lasalgaon+APMC&distance=35&lotId=${lot.lotCode}`}
+            >
+              <Button variant="outline" size="sm" className="gap-2 border-[#D8D2C4] text-[#1B4332] hover:bg-[#ECE7DE] text-xs">
+                <Scale className="w-3.5 h-3.5" />
+                <span>{t.lots.calculateRealisation}</span>
+              </Button>
+            </Link>
           </div>
 
           {/* Holding Days Slider / Parameter Controller */}
@@ -2302,10 +2642,23 @@ function LotDetailPageContent() {
         )}
       </section>
 
+      
+      {/* ========================================================================= */}
+      {/* SECTION 4: ACTIONABLE SALE-WINDOW RECOMMENDATION */}
+      {/* ========================================================================= */}
+      <section id="selling-window-section" className="space-y-4 pt-4 border-t border-[#D8D2C4]">
+        <SellingWindowCard
+          commodity={lot.commodity}
+          expectedPricePerQuintal={lot.expectedPricePerQuintal}
+          quantityQuintals={lot.quantityQuintals}
+        />
+      </section>
+
+
       {/* ========================================================================= */}
       {/* MODULE T: TRANSPORT & LOGISTICS MANAGEMENT */}
       {/* ========================================================================= */}
-      <section className="space-y-6 pt-4 border-t border-[#D8D2C4]">
+      <section id="transport-fulfillment" className="space-y-6 pt-4 border-t border-[#D8D2C4]">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
@@ -2402,15 +2755,15 @@ function LotDetailPageContent() {
                           <span className="font-bold text-[#262320]">{req.pickupLocation} → {req.dropLocation}</span>
                         </div>
                         <div>
-                          <span className="text-[#5A5243] block">Distance & Trips:</span>
+                          <span className="text-[#5A5243] block">{t.lots.distanceAndTrips || "Distance & Trips"}:</span>
                           <span className="font-bold text-[#262320]">{req.distanceKm} km • {req.estimatedTrips || 1} Trip(s)</span>
                         </div>
                         <div>
-                          <span className="text-[#5A5243] block">Vehicle:</span>
+                          <span className="text-[#5A5243] block">{t.lots.vehicleLabel || "Vehicle"}:</span>
                           <span className="font-bold text-[#262320]">{req.vehicle?.vehicleName || req.vehicle?.registrationNumber || 'Registered Cargo Fleet'}</span>
                         </div>
                         <div>
-                          <span className="text-[#5A5243] block">Total Freight:</span>
+                          <span className="text-[#5A5243] block">{t.lots.totalFreightLabel || "Total Freight"}:</span>
                           <span className="font-black text-[#1B4332] text-sm font-heading">{formatINR(req.estimatedCost)}</span>
                         </div>
                       </div>
@@ -2665,31 +3018,125 @@ function LotDetailPageContent() {
         </div>
       </section>
 
-          {/* Module S: Safe Payment Escrow (Phase 6) */}
-          <Card className="hover:border-[#D8D2C4] transition-all border-dashed">
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <Badge variant="gray">Phase 6</Badge>
-                <span className="text-xs font-mono text-gray-500">MODULE S</span>
-              </div>
-              <CardTitle className="text-base text-[#262320] mt-2 flex items-center gap-2">
-                <CreditCard className="w-4 h-4 text-gray-700" />
-                <span>{t.lots.futureEscrowTitle}</span>
-              </CardTitle>
-              <CardDescription className="text-xs">{t.lots.futureEscrowDesc}</CardDescription>
-            </CardHeader>
-            <CardContent className="pt-2 text-xs text-gray-500 bg-gray-50/50 p-4 rounded-b-2xl border-t border-gray-100">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-gray-400" />
-                <span className="font-semibold text-gray-700">Escrow Standby</span>
-              </div>
-              <p className="mt-1">
-                Full payment is securely held when the deal is struck and disbursed upon delivery verification.
-              </p>
-            </CardContent>
-          </Card>
+      
+      {/* ========================================================================= */}
+      {/* SECTION 6: PAYMENT, ESCROW & SETTLEMENT LIFECYCLE */}
+      {/* ========================================================================= */}
+      <section id="payment-escrow-section" className="space-y-4 pt-4 border-t border-[#D8D2C4]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <Badge variant="emerald">Escrow & Settlement</Badge>
+              <span className="text-xs font-mono text-gray-500 font-bold">DIGITAL CONTRACT LIFECYCLE</span>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-heading font-black text-[#262320] tracking-tight flex items-center gap-2">
+              <CreditCard className="w-6 h-6 text-[#1B4332]" />
+              <span>{t.lots.futureEscrowTitle || 'Trade Payment & Escrow Protection'}</span>
+            </h2>
+            <p className="text-xs sm:text-sm text-gray-600">
+              {t.lots.futureEscrowDesc || 'Transparent milestone-based trade settlement. Payment is secured in digital escrow upon agreement and disbursed following verified delivery.'}
+            </p>
+          </div>
+
+          <Link href="/transactions">
+            <Button variant="outline" size="sm" className="gap-2 text-xs border-[#D8D2C4] text-[#1B4332] hover:bg-[#ECE7DE]">
+              <CreditCard className="w-3.5 h-3.5" />
+              <span>{t.nav?.transactions || 'View Transactions Hub'}</span>
+            </Button>
+          </Link>
         </div>
-      </div>
+
+        {/* 5-Stage Visual Progress Timeline */}
+        <Card className="border-[#D8D2C4] shadow-none bg-white">
+          <CardContent className="p-5 sm:p-6 space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
+              {(() => {
+                const isDealAgreed = lot.status === 'RESERVED' || lot.status === 'SOLD' || lot.status === 'COMPLETED' || offers.some((o) => o.status === 'ACCEPTED');
+                const isEscrowLocked = isDealAgreed;
+                const isDispatched = transportRequests && transportRequests.some((r) => r.status === 'IN_TRANSIT' || r.status === 'PICKUP_COMPLETED' || r.status === 'ACCEPTED');
+                const isDelivered = lot.status === 'SOLD' || lot.status === 'COMPLETED' || (transportRequests && transportRequests.some((r) => r.status === 'DELIVERED'));
+                const isPaid = lot.status === 'SOLD' || lot.status === 'COMPLETED';
+
+                return (
+                  <>
+                    <div className={`p-3 rounded-lg border text-xs space-y-1 ${isDealAgreed ? 'bg-emerald-50 border-[#B7D5C4] text-[#1B4332]' : 'bg-gray-50 border-gray-200 text-gray-600'}`}>
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-[10px] uppercase">Stage 1</span>
+                        {isDealAgreed ? <CheckCircle2 className="w-4 h-4 text-emerald-600" /> : <Clock className="w-4 h-4 text-gray-400" />}
+                      </div>
+                      <div className="font-bold text-sm text-[#262320]">Deal Agreement</div>
+                      <p className="text-[11px] leading-tight text-gray-500">
+                        {isDealAgreed ? 'Buyer offer accepted' : 'Pending offer review'}
+                      </p>
+                    </div>
+
+                    <div className={`p-3 rounded-lg border text-xs space-y-1 ${isEscrowLocked ? 'bg-emerald-50 border-[#B7D5C4] text-[#1B4332]' : 'bg-gray-50 border-gray-200 text-gray-600'}`}>
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-[10px] uppercase">Stage 2</span>
+                        {isEscrowLocked ? <CheckCircle2 className="w-4 h-4 text-emerald-600" /> : <Clock className="w-4 h-4 text-gray-400" />}
+                      </div>
+                      <div className="font-bold text-sm text-[#262320]">Escrow Secured</div>
+                      <p className="text-[11px] leading-tight text-gray-500">
+                        {isEscrowLocked ? 'Funds locked in escrow' : 'Standby for deal'}
+                      </p>
+                    </div>
+
+                    <div className={`p-3 rounded-lg border text-xs space-y-1 ${isDispatched ? 'bg-emerald-50 border-[#B7D5C4] text-[#1B4332]' : 'bg-gray-50 border-gray-200 text-gray-600'}`}>
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-[10px] uppercase">Stage 3</span>
+                        {isDispatched ? <CheckCircle2 className="w-4 h-4 text-emerald-600" /> : <Clock className="w-4 h-4 text-gray-400" />}
+                      </div>
+                      <div className="font-bold text-sm text-[#262320]">Transport Dispatch</div>
+                      <p className="text-[11px] leading-tight text-gray-500">
+                        {isDispatched ? 'Waybill active & en route' : 'Pending booking'}
+                      </p>
+                    </div>
+
+                    <div className={`p-3 rounded-lg border text-xs space-y-1 ${isDelivered ? 'bg-emerald-50 border-[#B7D5C4] text-[#1B4332]' : 'bg-gray-50 border-gray-200 text-gray-600'}`}>
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-[10px] uppercase">Stage 4</span>
+                        {isDelivered ? <CheckCircle2 className="w-4 h-4 text-emerald-600" /> : <Clock className="w-4 h-4 text-gray-400" />}
+                      </div>
+                      <div className="font-bold text-sm text-[#262320]">Delivery Assayed</div>
+                      <p className="text-[11px] leading-tight text-gray-500">
+                        {isDelivered ? 'Buyer verified arrival' : 'Pending destination check'}
+                      </p>
+                    </div>
+
+                    <div className={`p-3 rounded-lg border text-xs space-y-1 ${isPaid ? 'bg-emerald-50 border-[#B7D5C4] text-[#1B4332]' : 'bg-gray-50 border-gray-200 text-gray-600'}`}>
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-[10px] uppercase">Stage 5</span>
+                        {isPaid ? <CheckCircle2 className="w-4 h-4 text-emerald-600" /> : <Clock className="w-4 h-4 text-gray-400" />}
+                      </div>
+                      <div className="font-bold text-sm text-[#262320]">Direct Payout</div>
+                      <p className="text-[11px] leading-tight text-gray-500">
+                        {isPaid ? 'Payment transferred' : 'Disburses on delivery'}
+                      </p>
+                    </div>
+                  </>
+                );
+              })()}
+            </div>
+
+            {/* Explanatory banner & Dispute mediation notice */}
+            <div className="p-4 rounded-lg bg-[#F4F1EA] border border-[#D8D2C4] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-[#262320]">
+              <div className="space-y-0.5">
+                <div className="font-bold flex items-center gap-1.5 text-[#1B4332]">
+                  <ShieldCheck className="w-4 h-4 text-emerald-700 shrink-0" />
+                  <span>Zero-Loss Escrow Protection Under SIH Prototype</span>
+                </div>
+                <p className="text-[11px] text-[#5A5243]">
+                  Buyers cannot cancel payments once dispatch begins. Any grade or quantity disagreement is routed to the official Dispute Mediation Desk.
+                </p>
+              </div>
+              <Link href="/disputes" className="shrink-0 text-xs font-semibold text-[#1B4332] hover:underline">
+                <span>Dispute & Grievance Desk →</span>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
 
       {/* ========================================================================= */}
       {/* REQUEST AI ASSESSMENT MODAL */}

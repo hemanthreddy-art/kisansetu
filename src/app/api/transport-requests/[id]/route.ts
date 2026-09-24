@@ -134,3 +134,70 @@ export async function PATCH(
     );
   }
 }
+
+/**
+ * DELETE /api/transport-requests/[id]
+ * Cancels and removes a transport request.
+ * Strictly prevents cancellation if involved in active transit/delivery/transaction.
+ */
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { id } = params;
+
+    const existing = await db.transportRequest.findUnique({
+      where: { id },
+      include: {
+        lot: {
+          include: {
+            transactions: true,
+          },
+        },
+      },
+    });
+
+    if (!existing) {
+      return NextResponse.json(
+        { success: false, error: 'Transport request not found' },
+        { status: 404 }
+      );
+    }
+
+    // Active delivery prevention
+    if (['IN_TRANSIT', 'DELIVERED'].includes(existing.status)) {
+      return NextResponse.json(
+        { success: false, error: 'Cannot remove while transaction is active' },
+        { status: 400 }
+      );
+    }
+
+    // Check if associated lot is part of an active transaction
+    if (existing.lot?.transactions?.some((tx) => !['COMPLETED', 'CANCELLED', 'REFUNDED'].includes(tx.status))) {
+      return NextResponse.json(
+        { success: false, error: 'Cannot remove while transaction is active' },
+        { status: 400 }
+      );
+    }
+
+    const updated = await db.transportRequest.update({
+      where: { id },
+      data: { status: 'CANCELLED' },
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: 'Transport request cancelled successfully',
+      transportRequest: updated,
+    });
+  } catch (error: unknown) {
+    console.error('Error deleting transport request:', error);
+    const msg = error instanceof Error ? error.message : 'Failed to delete transport request';
+    return NextResponse.json(
+      { success: false, error: msg },
+      { status: 500 }
+    );
+  }
+}
+

@@ -103,6 +103,7 @@ export async function GET(request: NextRequest, { params }: RouteContext) {
     return NextResponse.json({
       success: true,
       transaction,
+      data: transaction,
     });
   } catch (error: unknown) {
     console.error('Error fetching transaction detail:', error);

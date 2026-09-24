@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { Card, CardHeader, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -23,7 +24,9 @@ import {
   RefreshCw,
   Info,
   Snowflake,
+  History,
 } from 'lucide-react';
+import { RoleHistoryView } from '@/components/shared/RoleHistoryView';
 
 interface TransporterVehicleItem {
   id: string;
@@ -125,13 +128,21 @@ const DEMO_TRANSPORTERS_META = [
   },
 ];
 
-type ActiveTab = 'requests' | 'dispatches' | 'fleet';
+type ActiveTab = 'requests' | 'dispatches' | 'fleet' | 'history';
 
 function TransporterHubContent() {
   const { t } = useLanguage();
+  const searchParams = useSearchParams();
 
   const [activeKey, setActiveKey] = useState<string>('SAHYADRI_LOGISTICS');
   const [activeTab, setActiveTab] = useState<ActiveTab>('requests');
+
+  useEffect(() => {
+    const tabParam = searchParams?.get('tab');
+    if (tabParam && ['requests', 'dispatches', 'fleet', 'history'].includes(tabParam)) {
+      setActiveTab(tabParam as ActiveTab);
+    }
+  }, [searchParams]);
   const [transporters, setTransporters] = useState<TransporterProfileItem[]>([]);
   const [allRequests, setAllRequests] = useState<TransportRequestItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -231,6 +242,34 @@ function TransporterHubContent() {
     }
   };
 
+  // Cancel / Decline Request State & Handler
+  const [requestToDecline, setRequestToDecline] = useState<TransportRequestItem | null>(null);
+  const [isDeclining, setIsDeclining] = useState(false);
+  const [declineError, setDeclineError] = useState<string | null>(null);
+
+  const handleConfirmDecline = async (requestId: string) => {
+    try {
+      setIsDeclining(true);
+      setDeclineError(null);
+      const res = await fetch(`/api/transport-requests/${encodeURIComponent(requestId)}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setDeclineError(data.error || 'Cannot remove while transaction is active');
+        return;
+      }
+      setRequestToDecline(null);
+      setActionSuccess('Transport request declined and removed successfully');
+      await fetchData();
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Failed to decline transport request';
+      setDeclineError(msg);
+    } finally {
+      setIsDeclining(false);
+    }
+  };
+
   return (
     <PageContainer maxWidth="7xl" className="py-6 space-y-6 animate-fadeIn">
       {/* Page Header */}
@@ -264,7 +303,7 @@ function TransporterHubContent() {
             <span>{t.transport.demoTransporterSelector}</span>
           </span>
           <span className="text-[11px] text-[#5A5243] font-mono bg-[#F4F1EA] px-2.5 py-0.5 rounded border border-[#D8D2C4]">
-            [Prototype Demo Profiles]
+            [{t.common.prototypeDemo || 'Prototype Demo'}]
           </span>
         </div>
 
@@ -380,6 +419,19 @@ function TransporterHubContent() {
         >
           <Building2 className="w-4 h-4" />
           <span>{t.transport.tabFleet} ({activeProfile?.vehicles?.length || 0})</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('history')}
+          className={`px-4 py-2.5 rounded-lg font-bold text-xs sm:text-sm transition-all flex items-center gap-2 min-h-[44px] ${
+            activeTab === 'history'
+              ? 'bg-[#1B4332] text-[#FDFBF7] shadow-sm'
+              : 'text-[#5A5243] hover:text-[#262320] hover:bg-[#F4F1EA]'
+          }`}
+        >
+          <History className="w-4 h-4" />
+          <span>{t.transport.tabHistory || 'Trip History'}</span>
         </button>
       </div>
 
@@ -504,7 +556,10 @@ function TransporterHubContent() {
                       variant="outline"
                       size="sm"
                       disabled={actionReqId === req.id}
-                      onClick={() => handleUpdateStatus(req.id, 'REJECTED')}
+                      onClick={() => {
+                        setDeclineError(null);
+                        setRequestToDecline(req);
+                      }}
                       className="gap-1.5 text-xs text-red-700 border-red-200 hover:bg-red-50 min-h-[36px]"
                     >
                       <XCircle className="w-3.5 h-3.5" />
@@ -528,6 +583,59 @@ function TransporterHubContent() {
                   </div>
                 </Card>
               ))}
+            </div>
+          )}
+
+          {/* Visual Confirmation Modal for Transport Request Decline / Removal */}
+          {requestToDecline && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+              <div className="bg-white rounded-[10px] border border-[#D8D2C4] max-w-md w-full p-6 shadow-xl space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center shrink-0">
+                    <XCircle className="w-5 h-5 text-red-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-bold text-[#262320]">Decline Transport Request</h3>
+                    <p className="text-xs text-[#5A5243]">Requires explicit confirmation</p>
+                  </div>
+                </div>
+
+                <p className="text-xs text-[#262320] leading-relaxed">
+                  Are you sure you want to decline and remove this transport request for <strong>{requestToDecline.lot?.commodity || 'Produce'}</strong> ({requestToDecline.quantityQuintals || requestToDecline.lot?.quantityQuintals || 'Lot'} Qtl • LOT #{requestToDecline.lot?.lotCode || requestToDecline.lotId})?
+                </p>
+
+                {declineError && (
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-[6px] text-xs text-red-700 flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
+                    <span>{declineError}</span>
+                  </div>
+                )}
+
+                <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#D8D2C4]">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={isDeclining}
+                    onClick={() => {
+                      setRequestToDecline(null);
+                      setDeclineError(null);
+                    }}
+                    className="text-xs border-[#D8D2C4] text-[#262320]"
+                  >
+                    Keep Request
+                  </Button>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    disabled={isDeclining}
+                    onClick={() => handleConfirmDecline(requestToDecline.id)}
+                    className="text-xs bg-red-600 hover:bg-red-700 text-white gap-1"
+                  >
+                    {isDeclining && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                    Confirm Decline
+                  </Button>
+                </div>
+              </div>
             </div>
           )}
         </div>
@@ -772,6 +880,11 @@ function TransporterHubContent() {
             ))}
           </div>
         </div>
+      )}
+
+      {/* History Tab */}
+      {activeTab === 'history' && (
+        <RoleHistoryView role="TRANSPORTER" />
       )}
     </PageContainer>
   );

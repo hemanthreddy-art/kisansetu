@@ -26,6 +26,7 @@ import {
   Package,
   FileCheck2,
 } from 'lucide-react';
+import { FarmerDisputeModal } from '@/components/disputes/FarmerDisputeModal';
 
 interface TransactionDetail {
   id: string;
@@ -354,6 +355,9 @@ export default function TransactionDetailPage() {
       setActionLoading(false);
     }
   };
+  void handleRaiseDispute;
+  void setDisputeReason;
+  void disputeEvidence;
 
   if (loading) {
     return (
@@ -962,79 +966,17 @@ export default function TransactionDetailPage() {
       {/* RAISE DISPUTE MODAL */}
       {/* ========================================================================= */}
       {showDisputeModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-[8px] max-w-lg w-full p-6 space-y-4 shadow-xl border border-[#D8D2C4]">
-            <div className="flex items-center justify-between border-b border-[#D8D2C4] pb-3">
-              <h3 className="text-base font-black font-heading text-[#262320] flex items-center gap-2">
-                <Scale className="w-5 h-5 text-rose-700" />
-                <span>{t.disputes.raiseGrievanceTitle}</span>
-              </h3>
-              <button
-                onClick={() => setShowDisputeModal(false)}
-                className="text-[#635E59] hover:text-[#262320] font-bold p-1"
-              >
-                ✕
-              </button>
-            </div>
-
-            <form onSubmit={handleRaiseDispute} className="space-y-3 text-xs">
-              <div>
-                <label className="block font-bold text-[#262320] mb-1">{t.disputes.categoryLabel}</label>
-                <select
-                  value={disputeReason}
-                  onChange={(e) => setDisputeReason(e.target.value)}
-                  className="w-full p-2.5 border border-[#D8D2C4] rounded-[4px] bg-white text-xs font-medium"
-                >
-                  <option value="QUALITY_MISMATCH">{t.disputes.categoryQualityMismatch}</option>
-                  <option value="DELIVERY_DELAY">{t.disputes.categoryDeliveryDelay}</option>
-                  <option value="PAYMENT_DELAY">{t.disputes.categoryPaymentDelay}</option>
-                  <option value="WEIGHT_DISCREPANCY">{t.disputes.categoryWeightDiscrepancy}</option>
-                  <option value="PRICE_DISAGREEMENT">{t.disputes.categoryPriceDisagreement}</option>
-                  <option value="CANCELLATION">{t.disputes.categoryCancellation}</option>
-                  <option value="OTHER">{t.disputes.categoryOther}</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block font-bold text-[#262320] mb-1">{t.disputes.descriptionLabel}</label>
-                <textarea
-                  rows={4}
-                  required
-                  value={disputeEvidence}
-                  onChange={(e) => setDisputeEvidence(e.target.value)}
-                  placeholder={t.disputes.descriptionPlaceholder}
-                  className="w-full p-2.5 border border-[#D8D2C4] rounded-[4px] text-xs bg-white"
-                />
-              </div>
-
-              <div className="p-3 bg-amber-50/50 rounded-[4px] border border-amber-200 text-[#92400E] text-[11px] leading-relaxed">
-                <strong>Important Principle:</strong> {t.disputes.humanAdjudicationNote}
-              </div>
-
-              <div className="flex items-center justify-end gap-2 pt-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowDisputeModal(false)}
-                  className="border-[#D8D2C4]"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  variant="primary"
-                  size="sm"
-                  disabled={actionLoading}
-                  className="bg-rose-700 hover:bg-rose-800 text-white rounded-[4px]"
-                >
-                  {actionLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
-                  <span>{t.disputes.submitGrievanceBtn}</span>
-                </Button>
-              </div>
-            </form>
-          </div>
-        </div>
+        <FarmerDisputeModal
+          isOpen={showDisputeModal}
+          onClose={() => setShowDisputeModal(false)}
+          initialTransactionId={transaction.id}
+          initialReason={disputeReason}
+          onDisputeSubmitted={() => {
+            setShowDisputeModal(false);
+            setSuccessMessage(`Dispute formally registered. An authorized grievance officer will review digital evidence.`);
+            fetchTransaction();
+          }}
+        />
       )}
     </PageContainer>
   );

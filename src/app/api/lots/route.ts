@@ -20,8 +20,14 @@ export async function GET() {
         createdAt: 'desc',
       },
       include: {
-        offers: {
-          select: { id: true, status: true },
+        offers: true,
+        aiAssessments: true,
+        physicalVerifications: true,
+        transportRequests: {
+          include: { transporter: true },
+        },
+        transactions: {
+          include: { payments: true },
         },
       },
     });
@@ -110,6 +116,7 @@ export async function POST(request: NextRequest) {
         locationDistrict: cleanedData.district,
         location: cleanedData.location,
         description: cleanedData.description || null,
+        lotPhotosJson: cleanedData.lotPhotosJson || null,
         status: cleanedData.status,
       },
     });

@@ -28,16 +28,92 @@ export const PAYMENT_STATUSES = [
 export type PaymentStatus = typeof PAYMENT_STATUSES[number];
 
 export const DISPUTE_REASONS = [
-  'QUALITY_MISMATCH',
-  'DELIVERY_DELAY',
-  'PAYMENT_DELAY',
+  // Core & Farmer-first (Preserved baseline)
+  'PAYMENT_NOT_RECEIVED',
+  'PAYMENT_INCORRECT',
   'WEIGHT_DISCREPANCY',
+  'QUALITY_MISMATCH',
+  'BUYER_ISSUE',
+  'TRANSPORT_ISSUE',
+  'PRODUCE_DAMAGED',
+  'DELIVERY_ISSUE',
+  'CONTRACT_ISSUE',
+  'PAYMENT_DELAY',
+  'DELIVERY_DELAY',
   'PRICE_DISAGREEMENT',
   'CANCELLATION',
+  // Buyer-specific
+  'CROP_VARIETY_MISMATCH',
+  'QUANTITY_SHORTFALL',
+  'MOISTURE_OR_FOREIGN_MATTER',
+  'PRODUCE_NOT_AS_LISTED',
+  'FARMER_FAILED_TO_DELIVER',
+  'CONTRACT_OR_OFFER_ISSUE',
+  'FARMER_CANCELLATION',
+  // Transporter-specific
+  'FARMER_NOT_READY',
+  'PICKUP_LOCATION_ISSUE',
+  'LOADING_ISSUE',
+  'BUYER_DELIVERY_ISSUE',
+  'DELIVERY_INSTRUCTION_CHANGED',
+  'FREIGHT_PAYMENT_ISSUE',
+  'CANCELLATION_AFTER_CONFIRMATION',
+  'UNSAFE_OR_IMPOSSIBLE_PICKUP',
+  // Cross-persona (Farmer/Buyer <-> Transporter)
+  'TRANSPORTER_NO_SHOW',
+  'PICKUP_DELAYED',
+  'TRANSPORTER_CANCELLATION',
+  'FREIGHT_DISCREPANCY',
+  'PRODUCE_DAMAGED_IN_TRANSIT',
+  'VEHICLE_CAPACITY_MISMATCH',
+  'WRONG_DELIVERY_LOCATION',
+  'TRANSPORTER_MISCONDUCT',
+  'DELIVERY_HANDOVER_ISSUE',
   'OTHER',
 ] as const;
 
 export type DisputeReason = typeof DISPUTE_REASONS[number];
+
+export const BUYER_DISPUTE_REASONS: DisputeReason[] = [
+  'CROP_VARIETY_MISMATCH',
+  'QUALITY_MISMATCH',
+  'QUANTITY_SHORTFALL',
+  'MOISTURE_OR_FOREIGN_MATTER',
+  'PRODUCE_NOT_AS_LISTED',
+  'FARMER_FAILED_TO_DELIVER',
+  'DELIVERY_DELAY',
+  'CONTRACT_OR_OFFER_ISSUE',
+  'FARMER_CANCELLATION',
+  'PRODUCE_DAMAGED_IN_TRANSIT',
+  'WRONG_DELIVERY_LOCATION',
+  'OTHER',
+];
+
+export const TRANSPORTER_DISPUTE_REASONS: DisputeReason[] = [
+  'FARMER_NOT_READY',
+  'WEIGHT_DISCREPANCY',
+  'PICKUP_LOCATION_ISSUE',
+  'LOADING_ISSUE',
+  'BUYER_DELIVERY_ISSUE',
+  'DELIVERY_INSTRUCTION_CHANGED',
+  'FREIGHT_PAYMENT_ISSUE',
+  'CANCELLATION_AFTER_CONFIRMATION',
+  'UNSAFE_OR_IMPOSSIBLE_PICKUP',
+  'OTHER',
+];
+
+export const TRANSPORTER_COUNTERPARTY_REASONS: DisputeReason[] = [
+  'TRANSPORTER_NO_SHOW',
+  'PICKUP_DELAYED',
+  'TRANSPORTER_CANCELLATION',
+  'FREIGHT_DISCREPANCY',
+  'PRODUCE_DAMAGED_IN_TRANSIT',
+  'VEHICLE_CAPACITY_MISMATCH',
+  'WRONG_DELIVERY_LOCATION',
+  'TRANSPORTER_MISCONDUCT',
+  'DELIVERY_HANDOVER_ISSUE',
+  'OTHER',
+];
 
 export const DISPUTE_STATUSES = [
   'OPEN',
@@ -555,15 +631,16 @@ export async function submitTransactionRating(params: {
  */
 export async function raiseTransactionDispute(params: {
   transactionId: string;
-  raisedById: string;
+  raisedById?: string;
+  role?: 'FARMER' | 'BUYER' | 'TRANSPORTER';
   reason: DisputeReason;
   evidenceSummary: string;
   evidenceFilesJson?: string;
 }) {
-  const { transactionId, raisedById, reason, evidenceSummary, evidenceFilesJson } = params;
+  const { transactionId, reason, evidenceSummary, evidenceFilesJson, role } = params;
 
-  if (!evidenceSummary || evidenceSummary.trim().length < 10) {
-    throw new Error('Evidence summary must be at least 10 characters detailing the discrepancy.');
+  if (!evidenceSummary || evidenceSummary.trim().length < 5) {
+    throw new Error('Evidence summary must detail the discrepancy (minimum 5 characters).');
   }
 
   const txn = await db.transaction.findUnique({
@@ -579,6 +656,17 @@ export async function raiseTransactionDispute(params: {
     throw new Error(`Transaction ${transactionId} not found.`);
   }
 
+  let effectiveRaisedById = params.raisedById;
+  if (!effectiveRaisedById) {
+    if (role === 'BUYER') {
+      effectiveRaisedById = txn.buyer.userId;
+    } else if (role === 'TRANSPORTER' && txn.transporter?.userId) {
+      effectiveRaisedById = txn.transporter.userId;
+    } else {
+      effectiveRaisedById = txn.farmer.userId;
+    }
+  }
+
   // Verify caller is part of this transaction
   const allowedUserIds = [
     txn.farmer.userId,
@@ -586,7 +674,7 @@ export async function raiseTransactionDispute(params: {
     txn.transporter?.userId,
   ].filter(Boolean);
 
-  if (!allowedUserIds.includes(raisedById)) {
+  if (!allowedUserIds.includes(effectiveRaisedById)) {
     throw new Error('Unauthorized: Only transaction parties can raise a grievance.');
   }
 
@@ -597,7 +685,7 @@ export async function raiseTransactionDispute(params: {
       data: {
         disputeCode,
         transactionId,
-        raisedById,
+        raisedById: effectiveRaisedById,
         reason,
         evidenceSummary: evidenceSummary.trim(),
         evidenceFilesJson: evidenceFilesJson || null,
@@ -624,6 +712,10 @@ export async function resolveTransactionDispute(params: {
   adminUserId?: string;
 }) {
   const { disputeId, targetStatus, resolutionNotes } = params;
+
+  if (!resolutionNotes || resolutionNotes.trim().length < 10) {
+    throw new Error('A detailed resolution/reason note (minimum 10 characters) is required to record adjudication.');
+  }
 
   const dispute = await db.dispute.findUnique({
     where: { id: disputeId },

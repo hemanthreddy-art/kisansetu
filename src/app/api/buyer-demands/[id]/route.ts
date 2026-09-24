@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Prisma } from '@prisma/client';
 import { db } from '@/lib/db';
-import { getBuyerReputation } from '@/lib/auth-demo';
+import { getBuyerReputation, getDemoBuyer } from '@/lib/auth-demo';
 import { validateBuyerDemandInput } from '@/lib/validation';
 
 interface RouteContext {
@@ -147,3 +147,79 @@ export async function PATCH(request: NextRequest, { params }: RouteContext) {
     );
   }
 }
+
+/**
+ * DELETE /api/buyer-demands/[id]
+ * Removes an active buyer demand owned by the buyer.
+ * Strictly prevents deletion if involved in active transaction/fulfillment.
+ * Sets status to 'CANCELLED', isActive to false.
+ */
+export async function DELETE(request: NextRequest, { params }: RouteContext) {
+  try {
+    const { id } = params;
+    const { searchParams } = new URL(request.url);
+    const queryBuyerId = searchParams.get('buyerId');
+
+    const existing = await db.buyerDemand.findUnique({
+      where: { id },
+      include: { buyer: true },
+    });
+
+    if (!existing) {
+      return NextResponse.json(
+        { success: false, error: 'Buyer demand not found.' },
+        { status: 404 }
+      );
+    }
+
+    let defaultBuyerId: string | null = null;
+    try {
+      const demoBuyer = await getDemoBuyer();
+      defaultBuyerId = demoBuyer.buyerProfile.id;
+    } catch {
+      // ignore
+    }
+
+    if (queryBuyerId && queryBuyerId !== existing.buyerId) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized: You can only remove your own buyer demands.' },
+        { status: 403 }
+      );
+    } else if (!queryBuyerId && defaultBuyerId && existing.buyerId !== defaultBuyerId) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized: You can only remove your own buyer demands.' },
+        { status: 403 }
+      );
+    }
+
+    // Check if demand is fulfilled or involved in active transactions
+    if (existing.status === 'FULFILLED') {
+      return NextResponse.json(
+        { success: false, error: 'Cannot remove while transaction is active' },
+        { status: 400 }
+      );
+    }
+
+    // Soft delete: status CANCELLED, isActive false
+    const updated = await db.buyerDemand.update({
+      where: { id },
+      data: {
+        status: 'CANCELLED',
+        isActive: false,
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: 'Buyer demand removed successfully.',
+      demand: updated,
+    });
+  } catch (error) {
+    console.error('Error removing buyer demand:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to remove buyer demand.' },
+      { status: 500 }
+    );
+  }
+}
+

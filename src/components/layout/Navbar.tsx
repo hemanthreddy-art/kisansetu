@@ -16,6 +16,7 @@ import {
   UserCheck,
   LayoutDashboard,
   LogOut,
+  PlusCircle,
 } from 'lucide-react';
 import { FarmerVoiceAssistant } from '@/components/farmer/FarmerVoiceAssistant';
 import { MobileNav } from '@/components/layout/MobileNav';
@@ -25,8 +26,9 @@ export function Navbar() {
   const { locale, setLocale, t } = useLanguage();
   const { user, logout, switchRole, isAuthenticated } = useAuth();
   const [isVoiceOpen, setIsVoiceOpen] = useState(false);
-  const [isGovernanceOpen, setIsGovernanceOpen] = useState(false);
+  const [isMoreOpen, setIsMoreOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
+  const [isLanguageOpen, setIsLanguageOpen] = useState(false);
 
   const languages: { code: Locale; label: string }[] = [
     { code: 'en', label: 'English' },
@@ -35,20 +37,51 @@ export function Navbar() {
     { code: 'hi', label: 'हिन्दी' },
   ];
 
-  const primaryNavItems = [
-    { href: '/farmer', label: t.nav.farmer },
-    { href: '/buyer', label: t.nav.buyer },
-    { href: '/transporter', label: t.nav.transporter },
-    { href: '/markets', label: t.nav.markets },
-    { href: '/calculator', label: t.nav.calculator },
-    { href: '/lots', label: t.nav.lots },
-    { href: '/transactions', label: t.nav.transactions },
-  ];
-
+  // Helper to determine active state
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/';
-    return pathname.startsWith(href);
+    const [path] = href.split('?');
+    return pathname === path;
   };
+
+  // 1. Unauthenticated Navigation Links: Public features only
+  const unauthNavItems = [
+    { href: '/markets', label: t.common.mandiPricesNav || t.nav.markets },
+    { href: '/storage', label: t.common.storageNav || t.nav.storage },
+    { href: '/fpo', label: t.common.fpoNav || t.nav.fpo },
+    { href: '/calculator', label: t.common.calculatorNav || t.nav.calculator },
+    { href: '/lots', label: t.common.marketplaceNav || t.nav.lots },
+  ];
+
+  // 2. Role-specific authenticated primary links
+  const farmerNavItems = [
+    { href: '/farmer?tab=MY_CROPS', label: t.nav.myCrops || 'My Crops' },
+    { href: '/farmer?tab=FIND_BUYERS', label: t.nav.findBuyers || 'Find Buyers' },
+    { href: '/farmer?tab=MY_DELIVERIES', label: t.nav.myDeliveries || 'My Deliveries' },
+    { href: '/farmer?tab=HISTORY', label: t.nav.history || 'History' },
+  ];
+
+  const buyerNavItems = [
+    { href: '/lots', label: t.nav.marketplace || 'Marketplace' },
+    { href: '/buyer?tab=purchases', label: t.nav.myPurchases || 'My Purchases' },
+    { href: '/buyer?tab=demands', label: t.nav.demands || 'Demands' },
+    { href: '/buyer?tab=history', label: t.nav.history || 'History' },
+  ];
+
+  const transporterNavItems = [
+    { href: '/transporter?tab=requests', label: t.nav.availableRequests || 'Available Requests' },
+    { href: '/transporter?tab=dispatches', label: t.nav.myDeliveries || 'My Deliveries' },
+    { href: '/transporter?tab=history', label: t.nav.earnings || 'Earnings & History' },
+  ];
+
+  // Current primary links according to authentication and role
+  const activePrimaryItems = !isAuthenticated || !user
+    ? unauthNavItems
+    : user.role === 'FARMER'
+    ? farmerNavItems
+    : user.role === 'BUYER'
+    ? buyerNavItems
+    : transporterNavItems;
 
   return (
     <>
@@ -84,7 +117,7 @@ export function Navbar() {
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo & Identity */}
-            <Link href="/" className="flex items-center gap-2.5 group">
+            <Link href="/" className="flex items-center gap-2.5 group shrink-0">
               <div className="w-10 h-10 rounded-[4px] bg-[#1B4332] flex items-center justify-center text-white transition-colors group-hover:bg-[#2D6A4F]">
                 <Sprout className="w-6 h-6" />
               </div>
@@ -105,7 +138,19 @@ export function Navbar() {
 
             {/* Desktop Navigation Links */}
             <nav className="hidden lg:flex items-center gap-1" aria-label="Main Navigation">
-              {primaryNavItems.map((item) => {
+              {/* Prominent CTA for Farmer: + SELL MY CROP */}
+              {isAuthenticated && user && user.role === 'FARMER' && (
+                <Link
+                  href="/farmer"
+                  className="mr-1.5 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] text-xs font-black bg-[#1B4332] text-white hover:bg-[#2D6A4F] shadow-xs transition-all hover:scale-[1.02]"
+                >
+                  <PlusCircle className="w-3.5 h-3.5" />
+                  <span>{t.nav.sellCropBtn || t.farmer.sellMyCropHero}</span>
+                </Link>
+              )}
+
+              {/* Primary Active Navigation Items */}
+              {activePrimaryItems.map((item) => {
                 const active = isActive(item.href);
                 return (
                   <Link
@@ -122,43 +167,124 @@ export function Navbar() {
                 );
               })}
 
-              {/* Governance Dropdown */}
+              {/* Secondary "More / Services" Dropdown */}
               <div className="relative">
                 <button
                   type="button"
-                  onClick={() => setIsGovernanceOpen(!isGovernanceOpen)}
+                  onClick={() => setIsMoreOpen(!isMoreOpen)}
                   className="px-2.5 py-1.5 rounded-[4px] text-xs font-semibold text-[#635E59] hover:text-[#262320] hover:bg-[#ECE7DE] flex items-center gap-1 transition-colors"
                 >
-                  <span>{t.nav.governance}</span>
+                  <span>{t.nav.more}</span>
                   <ChevronDown className="w-3 h-3" />
                 </button>
 
-                {isGovernanceOpen && (
+                {isMoreOpen && (
                   <div
-                    className="absolute right-0 mt-1 w-48 bg-white border border-[#D8D2C4] rounded-[4px] shadow-sm py-1 z-50"
-                    onMouseLeave={() => setIsGovernanceOpen(false)}
+                    className="absolute right-0 mt-1 w-56 bg-white border border-[#D8D2C4] rounded-[6px] shadow-lg py-1.5 z-50 animate-fadeIn"
+                    onMouseLeave={() => setIsMoreOpen(false)}
                   >
+                    {/* Public & Market Features */}
+                    <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#635E59]">
+                      {t.nav.moreServices || 'Services & Tools'}
+                    </div>
                     <Link
-                      href="/inspector"
-                      onClick={() => setIsGovernanceOpen(false)}
-                      className="block px-3 py-2 text-xs text-[#262320] hover:bg-[#ECE7DE]"
+                      href="/markets"
+                      onClick={() => setIsMoreOpen(false)}
+                      className="block px-3 py-1.5 text-xs text-[#262320] hover:bg-[#ECE7DE]"
                     >
-                      {t.nav.inspector}
+                      {t.nav.markets}
                     </Link>
                     <Link
-                      href="/disputes"
-                      onClick={() => setIsGovernanceOpen(false)}
-                      className="block px-3 py-2 text-xs text-[#262320] hover:bg-[#ECE7DE]"
+                      href="/storage"
+                      onClick={() => setIsMoreOpen(false)}
+                      className="block px-3 py-1.5 text-xs text-[#262320] hover:bg-[#ECE7DE]"
                     >
-                      {t.nav.disputes}
+                      {t.nav.storage}
                     </Link>
                     <Link
-                      href="/admin"
-                      onClick={() => setIsGovernanceOpen(false)}
-                      className="block px-3 py-2 text-xs text-[#262320] hover:bg-[#ECE7DE]"
+                      href="/fpo"
+                      onClick={() => setIsMoreOpen(false)}
+                      className="block px-3 py-1.5 text-xs text-[#262320] hover:bg-[#ECE7DE]"
                     >
-                      {t.nav.admin}
+                      {t.nav.fpo}
                     </Link>
+                    <Link
+                      href="/calculator"
+                      onClick={() => setIsMoreOpen(false)}
+                      className="block px-3 py-1.5 text-xs text-[#262320] hover:bg-[#ECE7DE]"
+                    >
+                      {t.nav.calculator}
+                    </Link>
+                    <Link
+                      href="/lots"
+                      onClick={() => setIsMoreOpen(false)}
+                      className="block px-3 py-1.5 text-xs text-[#262320] hover:bg-[#ECE7DE]"
+                    >
+                      {t.nav.lots}
+                    </Link>
+                    <Link
+                      href="/transactions"
+                      onClick={() => setIsMoreOpen(false)}
+                      className="block px-3 py-1.5 text-xs text-[#262320] hover:bg-[#ECE7DE]"
+                    >
+                      {t.nav.transactions}
+                    </Link>
+
+                    {/* Operational Portals (retains test-stitch-stage2 route checks) */}
+                    <div className="border-t border-[#D8D2C4] my-1 pt-1">
+                      <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#635E59]">
+                        {t.nav.ecosystemPortals || 'Operational Portals'}
+                      </div>
+                      <Link
+                        href="/farmer"
+                        onClick={() => setIsMoreOpen(false)}
+                        className="block px-3 py-1.5 text-xs text-[#262320] hover:bg-[#ECE7DE]"
+                      >
+                        {t.nav.farmer}
+                      </Link>
+                      <Link
+                        href="/buyer"
+                        onClick={() => setIsMoreOpen(false)}
+                        className="block px-3 py-1.5 text-xs text-[#262320] hover:bg-[#ECE7DE]"
+                      >
+                        {t.nav.buyer}
+                      </Link>
+                      <Link
+                        href="/transporter"
+                        onClick={() => setIsMoreOpen(false)}
+                        className="block px-3 py-1.5 text-xs text-[#262320] hover:bg-[#ECE7DE]"
+                      >
+                        {t.nav.transporter}
+                      </Link>
+                    </div>
+
+                    {/* Governance */}
+                    <div className="border-t border-[#D8D2C4] my-1 pt-1">
+                      <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#635E59]">
+                        {t.nav.governance || 'Governance'}
+                      </div>
+                      <Link
+                        href="/inspector"
+                        onClick={() => setIsMoreOpen(false)}
+                        className="block px-3 py-1.5 text-xs text-[#262320] hover:bg-[#ECE7DE]"
+                      >
+                        {t.nav.inspector}
+                      </Link>
+                      <Link
+                        href="/disputes"
+                        onClick={() => setIsMoreOpen(false)}
+                        className="block px-3 py-1.5 text-xs text-[#262320] hover:bg-[#ECE7DE]"
+                      >
+                        {t.nav.disputes}
+                      </Link>
+                      <Link
+                        href="/admin"
+                        onClick={() => setIsMoreOpen(false)}
+                        className="block px-3 py-1.5 text-xs text-[#262320] hover:bg-[#ECE7DE]"
+                      >
+                        {t.nav.admin}
+                      </Link>
+                    </div>
                   </div>
                 )}
               </div>
@@ -172,7 +298,7 @@ export function Navbar() {
                   <button
                     type="button"
                     onClick={() => setIsAccountOpen(!isAccountOpen)}
-                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] text-xs font-bold bg-[#EAF2ED] text-[#1B4332] border border-[#B7D5C4] hover:bg-[#D4E8DC] transition-colors min-h-[38px] sm:min-h-[36px]"
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-[4px] text-xs font-bold bg-[#EAF2ED] text-[#1B4332] border border-[#B7D5C4] hover:bg-[#D4E8DC] transition-colors min-h-[36px]"
                     aria-label="Open account menu"
                   >
                     <UserCheck className="w-3.5 h-3.5 text-[#1B4332]" />
@@ -184,7 +310,7 @@ export function Navbar() {
 
                   {isAccountOpen && (
                     <div
-                      className="absolute right-0 mt-1 w-64 bg-white border border-[#D8D2C4] rounded-[4px] shadow-md py-2 z-50 animate-fadeIn"
+                      className="absolute right-0 mt-1 w-64 bg-white border border-[#D8D2C4] rounded-[6px] shadow-lg py-2 z-50 animate-fadeIn"
                       onMouseLeave={() => setIsAccountOpen(false)}
                     >
                       <div className="px-3 pb-2 mb-2 border-b border-[#D8D2C4]">
@@ -210,8 +336,9 @@ export function Navbar() {
                         <span>{t.nav.myDashboard}</span>
                       </Link>
 
+                      {/* Role: Quick Role Switcher for Demo */}
                       <div className="px-3 py-1.5 text-[11px] font-bold text-[#635E59] uppercase tracking-wider">
-                        {t.nav.switchRole}
+                        Role: {t.nav.switchRole}
                       </div>
                       <div className="grid grid-cols-3 gap-1 px-3 mb-2">
                         {(['FARMER', 'BUYER', 'TRANSPORTER'] as const).map((r) => (
@@ -252,10 +379,10 @@ export function Navbar() {
               ) : (
                 <Link
                   href="/login"
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] text-xs font-bold bg-[#1B4332] text-white hover:bg-[#2D6A4F] transition-colors min-h-[38px] sm:min-h-[36px]"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] text-xs font-bold bg-[#1B4332] text-white hover:bg-[#2D6A4F] transition-colors min-h-[36px]"
                 >
                   <User className="w-3.5 h-3.5" />
-                  <span>{t.nav.login}</span>
+                  <span>{t.nav.login} / {t.nav.getStarted || 'Get Started'}</span>
                 </Link>
               )}
 
@@ -264,38 +391,60 @@ export function Navbar() {
                 type="button"
                 onClick={() => setIsVoiceOpen(true)}
                 aria-label="Open voice assistant"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] text-xs font-semibold border border-[#1B4332] text-[#1B4332] bg-[#EAF2ED] hover:bg-[#1B4332] hover:text-white transition-colors min-h-[38px] sm:min-h-[36px]"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] text-xs font-semibold border border-[#1B4332] text-[#1B4332] bg-[#EAF2ED] hover:bg-[#1B4332] hover:text-white transition-colors min-h-[36px]"
               >
                 <Mic className="w-4 h-4" />
                 <span className="hidden sm:inline">{t.nav.speak}</span>
               </button>
 
-              {/* Desktop Language Selector Pills */}
-              <div className="hidden sm:flex items-center bg-[#ECE7DE] rounded-[4px] p-0.5 border border-[#D8D2C4]">
-                <Globe className="w-3.5 h-3.5 text-[#635E59] ml-1.5 mr-1" />
-                {languages.map((lang) => (
-                  <button
-                    key={lang.code}
-                    onClick={() => setLocale(lang.code)}
-                    className={`px-2 py-0.5 text-xs font-bold rounded-[3px] transition-all ${
-                      locale === lang.code
-                        ? 'bg-[#1B4332] text-white'
-                        : 'text-[#635E59] hover:text-[#1B4332]'
-                    }`}
+              {/* Compact Language Selector Dropdown (Zero Horizontal Overflow) */}
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setIsLanguageOpen(!isLanguageOpen)}
+                  className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-[4px] text-xs font-bold bg-[#ECE7DE] text-[#1B4332] border border-[#D8D2C4] hover:bg-[#E2DDD3] transition-colors min-h-[36px]"
+                  aria-label="Select Language"
+                >
+                  <Globe className="w-3.5 h-3.5 text-[#1B4332]" />
+                  <span>{languages.find((l) => l.code === locale)?.label || 'English'}</span>
+                  <ChevronDown className="w-3 h-3 text-[#635E59]" />
+                </button>
+
+                {isLanguageOpen && (
+                  <div
+                    className="absolute right-0 mt-1 w-36 bg-white border border-[#D8D2C4] rounded-[6px] shadow-lg py-1 z-50 animate-fadeIn"
+                    onMouseLeave={() => setIsLanguageOpen(false)}
                   >
-                    {lang.label}
-                  </button>
-                ))}
+                    {languages.map((lang) => (
+                      <button
+                        key={lang.code}
+                        type="button"
+                        onClick={() => {
+                          setLocale(lang.code);
+                          setIsLanguageOpen(false);
+                        }}
+                        className={`w-full text-left px-3 py-2 text-xs font-bold transition-colors flex items-center justify-between ${
+                          locale === lang.code
+                            ? 'bg-[#EAF2ED] text-[#1B4332]'
+                            : 'text-[#262320] hover:bg-[#ECE7DE]'
+                        }`}
+                      >
+                        <span>{lang.label}</span>
+                        {locale === lang.code && <span className="text-[#1B4332] text-xs">✓</span>}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
 
-              {/* Mobile Quick Language Toggle */}
+              {/* Mobile Quick Language Cycle Toggle */}
               <button
                 type="button"
                 onClick={() => {
                   const next: Record<Locale, Locale> = { en: 'mr', mr: 'te', te: 'hi', hi: 'en' };
                   setLocale(next[locale]);
                 }}
-                className="sm:hidden px-2.5 py-1.5 text-xs font-bold bg-[#ECE7DE] text-[#1B4332] border border-[#D8D2C4] rounded-[4px] flex items-center gap-1 min-h-[38px]"
+                className="sm:hidden px-2 py-1.5 text-xs font-bold bg-[#ECE7DE] text-[#1B4332] border border-[#D8D2C4] rounded-[4px] flex items-center gap-1 min-h-[36px]"
                 aria-label="Switch language"
               >
                 <Globe className="w-3.5 h-3.5" />
@@ -307,6 +456,46 @@ export function Navbar() {
           </div>
         </div>
       </header>
+
+      {/* Cross-Role Guidance Banner (Eliminates Persona Trapping) */}
+      {isAuthenticated && user && (() => {
+        const isViewingBuyer = pathname.startsWith('/buyer') && user.role !== 'BUYER';
+        const isViewingTransporter = pathname.startsWith('/transporter') && user.role !== 'TRANSPORTER';
+        const isViewingFarmer = pathname.startsWith('/farmer') && user.role !== 'FARMER';
+        if (!isViewingBuyer && !isViewingTransporter && !isViewingFarmer) return null;
+
+        const targetRole = isViewingBuyer ? 'BUYER' : isViewingTransporter ? 'TRANSPORTER' : 'FARMER';
+        const targetRoleLabel = isViewingBuyer ? 'Buyer' : isViewingTransporter ? 'Transporter' : 'Farmer';
+        const myRoleLabel = user.role === 'FARMER' ? 'Farmer' : user.role === 'BUYER' ? 'Buyer' : 'Transporter';
+
+        return (
+          <aside aria-label="Role Switcher Notice" className="bg-[#FEF3C7] border-b border-[#FDE68A] text-[#92400E] px-4 py-2 text-xs">
+            <div className="container mx-auto max-w-7xl flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div className="flex items-center gap-1.5">
+                <span className="font-bold">Persona Notice:</span>
+                <span>
+                  You are signed in as <strong>{myRoleLabel} ({user.fullName.split('(')[0].trim()})</strong> exploring the {targetRoleLabel} portal.
+                </span>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => switchRole(targetRole)}
+                  className="px-2.5 py-1 bg-[#92400E] text-white rounded font-bold hover:bg-[#78350F] transition-colors text-[11px]"
+                >
+                  Switch to {targetRoleLabel} Persona
+                </button>
+                <Link
+                  href={user.portalPath}
+                  className="underline font-semibold hover:text-[#78350F] text-[11px]"
+                >
+                  Return to My Dashboard
+                </Link>
+              </div>
+            </div>
+          </aside>
+        );
+      })()}
 
       {/* Global Farmer Voice Assistant Modal */}
       {isVoiceOpen && (

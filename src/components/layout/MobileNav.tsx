@@ -23,6 +23,8 @@ import {
   UserCheck,
   LayoutDashboard,
   LogOut,
+  Warehouse,
+  Building2,
 } from 'lucide-react';
 
 interface MobileNavProps {
@@ -54,6 +56,8 @@ export function MobileNav({ onOpenVoice }: MobileNavProps) {
     { href: '/buyer', label: t.nav.buyer, icon: Users, desc: t.nav.descBuyer },
     { href: '/transporter', label: t.nav.transporter, icon: Truck, desc: t.nav.descTransporter },
     { href: '/calculator', label: t.nav.calculator, icon: Scale, desc: t.nav.descCalculator },
+    { href: '/storage', label: t.nav.storage, icon: Warehouse, desc: t.netRealisation.storageSubtitle || 'MSWC warehouses & cold storage discovery' },
+    { href: '/fpo', label: t.nav.fpo, icon: Building2, desc: t.farmer.fpoDeskSubtitle || 'FPO micro-lot pooling & aggregation desk' },
   ];
 
   const governanceLinks = [
